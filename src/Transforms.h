@@ -10,15 +10,8 @@
 class Transform
 {
 public:
-	Transform();
-	~Transform();
-
-	bool isGood() { return good; }
-
 	// Applies the transformation. 
 	virtual void apply() = 0;
-
-	virtual void print() = 0;
 
 protected:
 	bool good; // Indicates wether a transformation has been successfully created, so then we can choose what to do.
@@ -28,9 +21,8 @@ protected:
 class Translate : public Transform {
 public:
 	Translate(Point3d* to);
-	void apply();
 
-	void print();
+	void apply();
 
 private:
 	Point3d* to; // Position xyz to where the translation should be made
@@ -39,9 +31,8 @@ private:
 class Rotate : public Transform {
 public:
 	Rotate(char axis, float angle);
-	void apply();
 
-	void print();
+	void apply();
 
 private:
 	char axis; // 'x', 'y', 'z' -> rotation axis
@@ -51,9 +42,8 @@ private:
 class Scale : public Transform {
 public:
 	Scale(Point3d* factor);
-	void apply();
 
-	void print();
+	void apply();
 
 private:
 	Point3d* factor; // Scaling factor (x, y, z)

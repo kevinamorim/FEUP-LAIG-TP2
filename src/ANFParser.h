@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "Appearance.h"
 #include "Primitives.h"
-#include "Transform.h"
+#include "Transforms.h"
 
 #include <ctime>
 #include <string>

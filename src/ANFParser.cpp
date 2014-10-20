@@ -160,7 +160,9 @@ int ANFParser::Parse()
 
 	if(errors)
 	{
-		printf("\n\n> Found errors : please check 'debug.log'\n\n");
+		cout << endl << endl;
+		cout << "> Found errors : please check 'debug.log'";
+		cout << endl << endl;
 
 		state = ERROR;
 		return ERROR;

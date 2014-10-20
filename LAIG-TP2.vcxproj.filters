@@ -4,9 +4,6 @@
     <ClCompile Include="src\ANFParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Appearance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -32,6 +29,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transforms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,7 +63,7 @@
     <ClInclude Include="src\SceneData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Transform.h">
+    <ClInclude Include="src\Transforms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

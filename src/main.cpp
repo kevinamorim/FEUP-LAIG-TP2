@@ -35,8 +35,6 @@ int main(int argc, char* argv[] )
 	try {
 		app.init(&argc, argv);
 
-		cout << "INIT DONE" << endl;
-
 		ANFParser* parser = parse(filename);
 
 		if(parser->getState() == 0)
@@ -68,7 +66,7 @@ int main(int argc, char* argv[] )
 // Prints a message for pressing any key and awaits for key input.
 int getKey()
 {
-	printf("\nPress any key... \n");
+	cout << endl << "Press any key... " << endl;
 	getchar();
 
 	return 0;
@@ -84,11 +82,11 @@ ANFParser* parse(char* filename)
 
 	if(parser->getState() != 0)
 	{
-		printf("> Parsing failed.\n\n");
+		cout << endl <<  "> Parsing failed. " << endl;
 	}
 	else
 	{
-		printf("> Parsing succeeded.\n\n");
+		cout << endl <<  "> Parsing succeeded. " << endl;
 	}
 
 	return parser;
