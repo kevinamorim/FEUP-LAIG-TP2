@@ -16,10 +16,16 @@ SceneData::SceneData()
 
 	// Lights
 	this->lights = vector<Light* >();
+
+	// Appearances
+	this->appearances = vector<Appearance *>();
+
+	// Textures
+	this->textures = vector<Texture* >();
 }
 
 /*
-	Graph
+Graph
 */
 SceneGraph* SceneData::getSceneGraph()
 {
@@ -27,7 +33,7 @@ SceneGraph* SceneData::getSceneGraph()
 }
 
 /*
-	Globals
+Globals
 */
 void SceneData::setDrawing(string mode, string shading, Point4d* background) {
 
@@ -53,7 +59,7 @@ void SceneData::setLighting(bool doublesided, bool local, bool enabled, Point4d*
 }
 
 /*
-	Cameras
+Cameras
 */
 void SceneData::addCamera(Camera* cam)
 {
@@ -102,7 +108,7 @@ bool SceneData::hasCameras()
 }
 
 /*
-	Lights
+Lights
 */
 void SceneData::addLight(Light* light)
 {
@@ -129,7 +135,32 @@ bool SceneData::hasLights()
 	return !(lights.empty());
 }
 
-void printSpaces(int level);
+
+/*
+Appearances
+*/
+void SceneData::addAppearance(Appearance * app) {
+	this->appearances.push_back(app);
+}
+
+Appearance* SceneData::getAppearance(string id) {
+	for(unsigned int i = 0; i < this->appearances.size(); i++) {
+		if(this->appearances.at(i)->getID() == id) return this->appearances.at(i);
+	}
+	return NULL;
+}
+
+void SceneData::addTexture(Texture* tex)
+{
+	this->textures.push_back(tex);
+}
+
+Texture* SceneData::getTexture(string id) {
+	for(unsigned int i = 0; i < this->textures.size(); i++) {
+		if(this->textures.at(i)->getID() == id) return this->textures.at(i);
+	}
+	return NULL;
+}
 
 // ***********************************************************
 // ***********************************************************
@@ -145,7 +176,7 @@ SceneNode* SceneGraph::getNode(string id)
 {
 	for(unsigned int i = 0; i < nodes.size(); i++)
 	{
-		if(nodes.at(i)->getID() == id) // Already contains this node
+		if(nodes.at(i)->getID() == id)
 		{
 			return nodes.at(i);
 		}
@@ -209,13 +240,6 @@ void SceneGraph::Process()
 	root->Process();
 }
 
-void SceneGraph::print()
-{
-	printf("\nPRINTING GRAPH...\n\n");
-	root->print(0);
-	printf("\nDONE PRINTING GRAPH...\n\n");
-}
-
 // =======================
 //  SCENE NODE
 // =======================
@@ -232,7 +256,6 @@ SceneNode::SceneNode(string nodeID) : id(nodeID)
 	this->hasParent = false;
 
 	this->appearance = NULL;
-	this->texture = NULL;
 
 	this->hasAppearance = false;
 	this->hasTexture = false;
@@ -243,8 +266,6 @@ SceneNode::SceneNode(string nodeID) : id(nodeID)
 
 void SceneNode::addDescendant(SceneNode* node)
 {
-	node->setParent(this);
-
 	this->descendants.push_back(node);
 }
 
@@ -259,43 +280,10 @@ void SceneNode::setParent(SceneNode* node)
 	this->parent = node;
 }
 
-void SceneNode::setAppearance(CGFappearance* app)
+void SceneNode::setAppearance(Appearance* app)
 {
 	this->hasAppearance = true;
 	this->appearance = app;
-}
-
-void SceneNode::setTexture(Texture* tex)
-{
-	this->hasTexture = true;
-	this->texture = tex;
-}
-
-void SceneNode::print(int level)
-{
-	std::cout << endl;
-	for(int x = 0; x < level; x++)
-	{
-		std::cout << "  ";
-	}
-	std::cout << id << endl;
-
-	// PRINT PRIMITIVES
-	for(unsigned int i = 0; i < primitives.size(); i++)
-	{
-		printSpaces(level);
-		std::cout << " " << primitives.at(i)->Type();
-	}
-
-	for(unsigned int i = 0; i < descendants.size(); i++)
-	{
-		for(int x = 0; x < level; x++)
-		{
-			printf(" ");
-		}
-
-		descendants.at(i)->print(level + 1);
-	}
 }
 
 void SceneNode::setTransformMatrix()
@@ -323,7 +311,7 @@ Texture* SceneNode::getTexture()
 	{
 		if(hasTexture)
 		{
-			return texture;
+			return appearance->getTexture();
 		}
 		else 
 		{
@@ -345,7 +333,7 @@ std::vector<SceneNode*> SceneNode::getDescendants() {
 	return this->descendants;
 }
 
-CGFappearance* SceneNode::getAppearance()
+Appearance* SceneNode::getAppearance()
 {
 	if(inherits && hasParent)
 	{
@@ -400,7 +388,7 @@ void SceneNode::Process()
 
 	glMultMatrixf(getTransformMatrix());
 
-	CGFappearance* app = getAppearance();
+	Appearance* app = getAppearance();
 	if(app != NULL)
 	{
 		app->apply();
@@ -416,7 +404,7 @@ void SceneNode::Process()
 		}
 		this->primitives.at(i)->draw();
 	}
-	
+
 	for(unsigned int i = 0; i < descendants.size(); i++) 
 	{
 		descendants.at(i)->setParent(this); // is necessary because the same child can have different fathers depending on the node being processed
@@ -424,9 +412,4 @@ void SceneNode::Process()
 	}
 
 	glPopMatrix();
-}
-
-void printSpaces(int level) 
-{
-	for(int x = 0; x < level; x++) std::cout << "  ";
 }

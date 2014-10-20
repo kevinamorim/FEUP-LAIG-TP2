@@ -3,33 +3,23 @@
 // =======================
 //    Appearance
 // =======================
-Appearance::Appearance(string id, float shininess, Texture* texture, Point4d* ambient, Point4d* diffuse, Point4d* specular)
+Appearance::Appearance(string id, float shininess, Point4d* ambient, Point4d* diffuse, Point4d* specular, Texture* texture)
 {
 	this->id = id;
-	this->shininess = shininess;
 	this->texture = texture;
-	this->ambient = ambient;
-	this->diffuse = diffuse;
-	this->specular = specular;
+	this->hasTex = (texture != NULL);
 
-	this->tex = true;
+	this->setShininess(shininess);
+	this->setAmbient(ambient->getFloatv());
+	this->setDiffuse(diffuse->getFloatv());
+	this->setSpecular(specular->getFloatv());
 }
 
-Appearance::Appearance(string id, float shininess, Point4d* ambient, Point4d* diffuse, Point4d* specular)
-{
-	this->id = id;
-	this->shininess = shininess;
-	this->texture = texture;
-	this->ambient = ambient;
-	this->diffuse = diffuse;
-	this->specular = specular;
-
-	this->tex = false;
-}
+Appearance::~Appearance() { CGFappearance::~CGFappearance(); }
 
 bool Appearance::hasTexture()
 {
-	return this->tex;
+	return hasTex;
 }
 
 string Appearance::getID()
@@ -37,29 +27,9 @@ string Appearance::getID()
 	return id;
 }
 
-float Appearance::getShininess()
-{
-	return shininess;
-}
-
 Texture* Appearance::getTexture()
 {
 	return texture;
-}
-
-Point4d* Appearance::getAmbient()
-{
-	return ambient;
-}
-
-Point4d* Appearance::getDiffuse()
-{
-	return diffuse;
-}
-
-Point4d* Appearance::getSpecular()
-{
-	return specular;
 }
 
 // =======================
@@ -69,9 +39,7 @@ Texture::Texture(string id, string file, float length_s, float length_t)
 {
 	this->id = id;
 	this->file = file;
-
-	this->texlength_s = length_s;
-	this->texlength_t = length_t;
+	this->textLength = new Point2d(length_s, length_t);
 }
 
 string Texture::getID()
@@ -84,12 +52,12 @@ string Texture::getFile()
 	return this->file;
 }
 
-float Texture::getTexLengthS()
+float Texture::S()
 {
-	return this->texlength_s;
+	return this->textLength->X();
 }
 
-float Texture::getTexLengthT()
+float Texture::T()
 {
-	return this->texlength_t;
+	return this->textLength->Y();
 }

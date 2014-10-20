@@ -7,11 +7,11 @@
 #include "Point.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Appearance.h"
 
 #include <vector>
 #include <string>
 #include <queue>
-
 #include <iostream>
 #include <iomanip>
 
@@ -29,8 +29,7 @@ private:
 
 	float* transform; // Tranform matrix
 
-	CGFappearance* appearance;
-	Texture* texture;
+	Appearance* appearance;
 
 	bool hasAppearance;
 	bool hasTexture;
@@ -47,8 +46,7 @@ public:
 
 	void setParent(SceneNode* node);
 	void setTransformMatrix();
-	void setAppearance(CGFappearance* appearance);
-	void setTexture(Texture* tex);
+	void setAppearance(Appearance* appearance);
 
 	void addDescendant(SceneNode* descendant);
 	void addPrimitive(Primitive* primitive);
@@ -61,11 +59,10 @@ public:
 
 	float* getTransformMatrix();
 
-	CGFappearance* getAppearance();
-	SceneNode* getParent();
+	Appearance* getAppearance();
 	Texture* getTexture();
+	SceneNode* getParent();
 
-	void print(int level);
 	void Process();
 
 	bool Verify(ostream & out);
@@ -95,7 +92,6 @@ public:
 	SceneNode* getNode(string id);
 	vector<SceneNode*> getNodes();
 
-	void print();
 	void Process();
 
 	int Verify(ostream & out);
@@ -151,16 +147,22 @@ public:
 	bool lighting_local;
 	bool lighting_enabled;
 
+	// Appearances
+	Appearance* getAppearance(string id);
+	void addAppearance(Appearance * app);
+	Texture* getTexture(string id);
+	void addTexture(Texture * tex);
+
 private:
-	// Graph
 	SceneGraph* sceneGraph;
 
-	// Cameras
 	vector<Camera* > cameras;
 	bool initialCameraSet;
 
-	// Lights
 	vector<Light* > lights;
+
+	vector<Appearance *> appearances;
+	vector<Texture *> textures;
 };
 
 #endif

@@ -78,7 +78,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainScene.cpp" />
     <ClCompile Include="src\MyInterface.cpp" />
-    <ClCompile Include="src\ParserContainer.cpp" />
     <ClCompile Include="src\Point.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
     <ClCompile Include="src\SceneData.cpp" />
@@ -91,7 +90,6 @@
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\MainScene.h" />
     <ClInclude Include="src\MyInterface.h" />
-    <ClInclude Include="src\ParserContainer.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\SceneData.h" />

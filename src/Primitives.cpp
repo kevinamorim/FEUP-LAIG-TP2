@@ -10,7 +10,7 @@ Primitive::Primitive()
 
 void Primitive::setTexture(Texture* tex)
 {
-	this->tex.setPoint2d(tex->getTexLengthS(), tex->getTexLengthT());
+	this->tex.setPoint2d(tex->S(), tex->T());
 }
 
 

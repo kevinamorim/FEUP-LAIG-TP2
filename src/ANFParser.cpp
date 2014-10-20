@@ -28,6 +28,7 @@ unsigned int lightsID[] = {
 ANFParser::ANFParser(char* filename) : filename(filename)
 {
 	currentLight = 0;
+	this->descendants = vector<pair<string, string> >();
 }
 
 // ==================
@@ -78,7 +79,6 @@ int ANFParser::Parse()
 	// ***************************************************************
 
 	sceneData = new SceneData();
-	parserContainer = new ParserContainer();
 
 	out << "___________________________________" << endl;
 	out << "> Load : globals" << endl;
@@ -608,9 +608,7 @@ int ANFParser::loadTextures()
 				out << "        ___________________________" << endl;
 				out << "        > Tex : " << strID << " , " << strFile << " , "  << length_s << " , " << length_t << endl;
 
-				Texture* tex = new Texture(strID, strFile, length_s, length_t);
-
-				parserContainer->addTexture(tex);
+				sceneData->addTexture(new Texture(strID, strFile, length_s, length_t));
 			}
 			else
 			{
@@ -690,7 +688,7 @@ int ANFParser::loadAppearances()
 			{
 				if(!(strTexture.empty()))
 				{
-					Texture* tex = getTexture(strTexture);
+					Texture* tex = sceneData->getTexture(strTexture);
 
 					if(!tex)
 					{
@@ -703,9 +701,9 @@ int ANFParser::loadAppearances()
 					}
 					else
 					{
-						Appearance* app = new Appearance(strID, shininess, tex, ambient, diffuse, specular);
+						Appearance* app = new Appearance(strID, shininess, ambient, diffuse, specular, tex);
 
-						parserContainer->addAppearance(app);
+						sceneData->addAppearance(app);
 
 						printMsg(OK);
 					}
@@ -714,9 +712,8 @@ int ANFParser::loadAppearances()
 				{
 					Appearance* app = new Appearance(strID, shininess, ambient, diffuse, specular);
 
-					parserContainer->addAppearance(app);
+					sceneData->addAppearance(app);
 
-					//printMsg(INFO, "Creating appearance without texture");
 					printMsg(OK);
 				}
 			}
@@ -742,21 +739,6 @@ int ANFParser::loadAppearances()
 	}
 }
 
-Texture* ANFParser::getTexture(string id)
-{
-	for(unsigned int i = 0; i < parserContainer->getTextures().size(); i++)
-	{
-		Texture* tex = parserContainer->getTexture(i);
-
-		if(tex->getID() == id)
-		{
-			return tex;
-		}
-	}
-
-	return NULL;
-}
-
 int ANFParser::loadGraph()
 {
 	int localErrors = 0;
@@ -773,7 +755,6 @@ int ANFParser::loadGraph()
 	else
 	{
 		out << "        > id : \"" << strRootID << "\""<< endl;
-		parserContainer->setGraphRootID(strRootID);
 		printMsg(OK);
 	}
 
@@ -800,38 +781,35 @@ int ANFParser::loadGraph()
 			printMsg(OK);
 
 			// Create the parserGraph node
-			ParserNode* currentNode = new ParserNode(strID);
+			SceneNode* node = new SceneNode(strID);
+			sceneData->getSceneGraph()->addNode(node);
 
 			out << "        > Reading : transforms..." << endl;
-			if(readTransforms(nodeElement, currentNode) != OK)
+			if(readTransforms(nodeElement, node) != OK)
 			{
 				nodeErrors++;
 			}
 
 			out << "        > Reading : appearances..." << endl;
-			if(readAppearance(nodeElement, currentNode) != OK)
+			if(readAppearance(nodeElement, node) != OK)
 			{
 				nodeErrors++;
 			}
 
 			out << "        > Reading : primitives..." << endl;
-			if(readPrimitives(nodeElement, currentNode) != OK)
+			if(readPrimitives(nodeElement, node) != OK)
 			{
 				nodeErrors++;
 			}
 
 			out << "        > Reading : descendants..." << endl;
-			if(readDescendants(nodeElement, currentNode) != OK)
+			if(readDescendants(nodeElement, node) != OK)
 			{	
 				nodeErrors++;
 			}
 
 
-			if(!nodeErrors)
-			{
-				parserContainer->addGraphNode(currentNode);
-			}
-			else
+			if(nodeErrors)
 			{
 				localErrors++;
 				nodeErrors = 0;
@@ -1200,22 +1178,24 @@ int ANFParser::readSpotLight(TiXmlElement** lightElement)
 // ==================
 // READ TRANSFORMS
 // ==================
-int ANFParser::readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode)
+int ANFParser::readTransforms(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
 
 	TiXmlElement* transformsElement = nodeElement->FirstChildElement("transforms");
 
+	queue<Transform*> * transforms = new queue<Transform*>();
+
 	if (transformsElement)
 	{
-		TiXmlElement* transform = transformsElement->FirstChildElement("transform");
+		TiXmlElement* transformElement = transformsElement->FirstChildElement("transform");
 
 		string strType;
 
-		while (transform)
+		while (transformElement)
 		{
-			if(readString(&transform, &strType, "type", ERROR) != OK)
+			if(readString(&transformElement, &strType, "type", ERROR) != OK)
 			{
 				localErrors++;
 			}
@@ -1223,7 +1203,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode
 			{
 				if ("scale" == strType)
 				{
-					if(readScale(transform, currentNode) != OK)
+					if(readScale(transformElement, transforms) != OK)
 					{
 						printMsg(ERROR, "Scale attributes are not valid");
 						localErrors++;
@@ -1231,7 +1211,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode
 				}
 				else if ("rotate" == strType)
 				{
-					if(readRotate(transform, currentNode) != OK)
+					if(readRotate(transformElement, transforms) != OK)
 					{
 						printMsg(ERROR, "Rotation attributes are not valid");
 						localErrors++;
@@ -1239,7 +1219,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode
 				}
 				else if ("translate" == strType)
 				{
-					if(readTranslate(transform, currentNode) != OK)
+					if(readTranslate(transformElement, transforms) != OK)
 					{
 						printMsg(ERROR, "Translate attributes are not valid");
 						localErrors++;
@@ -1252,7 +1232,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode
 				}
 			}
 
-			transform = transform->NextSiblingElement("transform");
+			transformElement = transformElement->NextSiblingElement("transform");
 		}
 	}
 	else
@@ -1265,6 +1245,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode
 
 	if(!localErrors)
 	{
+		addTransformsToNode(node, transforms);
 		return OK;
 	}
 	else
@@ -1274,7 +1255,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode
 	}
 }
 
-int ANFParser::readRotate(TiXmlElement* transformElement, ParserNode* currentNode)
+int ANFParser::readRotate(TiXmlElement* transformElement, queue<Transform*> * transforms)
 {
 	out << "            > Rotate" << endl;
 
@@ -1295,7 +1276,7 @@ int ANFParser::readRotate(TiXmlElement* transformElement, ParserNode* currentNod
 
 	if(!localErrors)
 	{
-		currentNode->addTransform(new Rotate(axis, angle));
+		transforms->push(new Rotate(axis, angle));
 
 		printMsg(OK);
 		return OK;
@@ -1307,7 +1288,7 @@ int ANFParser::readRotate(TiXmlElement* transformElement, ParserNode* currentNod
 	}
 }
 
-int ANFParser::readTranslate(TiXmlElement* transformElement, ParserNode* currentNode)
+int ANFParser::readTranslate(TiXmlElement* transformElement, queue<Transform*> * transforms)
 {
 	int localErrors = 0;
 
@@ -1322,7 +1303,7 @@ int ANFParser::readTranslate(TiXmlElement* transformElement, ParserNode* current
 
 	if(!localErrors)
 	{
-		currentNode->addTransform(new Translate(to));
+		transforms->push(new Translate(to));
 
 		printMsg(OK);
 		return OK;
@@ -1334,7 +1315,7 @@ int ANFParser::readTranslate(TiXmlElement* transformElement, ParserNode* current
 	}
 }
 
-int ANFParser::readScale(TiXmlElement* transformElement, ParserNode* currentNode)
+int ANFParser::readScale(TiXmlElement* transformElement, queue<Transform*> * transforms)
 {
 	int localErrors = 0;
 
@@ -1349,7 +1330,7 @@ int ANFParser::readScale(TiXmlElement* transformElement, ParserNode* currentNode
 
 	if(!localErrors)
 	{
-		currentNode->addTransform(new Scale(factor));
+		transforms->push(new Scale(factor));
 
 		printMsg(OK);
 		return OK;
@@ -1361,10 +1342,31 @@ int ANFParser::readScale(TiXmlElement* transformElement, ParserNode* currentNode
 	}
 }
 
+int ANFParser::addTransformsToNode(SceneNode* node, queue<Transform* > * transforms)
+{
+	if(transforms->empty()) return OK;
+			printf("le size: %d\n", transforms->size());
+
+	glPushMatrix();
+	glLoadIdentity();
+
+	while(!transforms->empty())
+	{
+		transforms->front()->apply();
+		transforms->pop();
+	}
+
+	sceneData->getSceneGraph()->getNode(node->getID())->setTransformMatrix();
+
+	glPopMatrix();
+
+	return OK;
+}
+
 // ==================
 // READ APPEARANCES
 // ==================
-int ANFParser::readAppearance(TiXmlElement* nodeElement, ParserNode* currentNode)
+int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* currentNode)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1391,7 +1393,7 @@ int ANFParser::readAppearance(TiXmlElement* nodeElement, ParserNode* currentNode
 		{
 			out << "            > Appearance : " << strAppearance << endl;
 
-			currentNode->addAppearance(strAppearance);
+			currentNode->setAppearance(sceneData->getAppearance(strAppearance));
 		}
 	}
 
@@ -1411,7 +1413,7 @@ int ANFParser::readAppearance(TiXmlElement* nodeElement, ParserNode* currentNode
 // ==================
 // READ PRIMITIVES
 // ==================
-int ANFParser::readPrimitives(TiXmlElement* nodeElement, ParserNode* currentNode)
+int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* currentNode)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1498,7 +1500,7 @@ int ANFParser::readPrimitives(TiXmlElement* nodeElement, ParserNode* currentNode
 	}
 }
 
-int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, ParserNode* currentNode)
+int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, SceneNode* currentNode)
 {
 	out << "            > Rectangle" << endl;
 
@@ -1528,7 +1530,7 @@ int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, ParserNode* curre
 	}
 }
 
-int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, ParserNode* currentNode)
+int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, SceneNode* currentNode)
 {
 	out << "            > Triangle" << endl;
 
@@ -1568,7 +1570,7 @@ int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, ParserNode* curren
 	}
 }
 
-int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, ParserNode* currentNode)
+int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, SceneNode* currentNode)
 {
 	out << "            > Cylinder" << endl;
 
@@ -1613,7 +1615,7 @@ int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, ParserNode* curren
 	}
 }
 
-int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, ParserNode* currentNode)
+int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, SceneNode* currentNode)
 {
 	out << "            > Sphere" << endl;
 
@@ -1649,7 +1651,7 @@ int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, ParserNode* currentN
 	}
 }
 
-int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, ParserNode* currentNode)
+int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* currentNode)
 {
 	out << "            > Torus" << endl;
 
@@ -1692,7 +1694,7 @@ int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, ParserNode* currentNo
 // ==================
 // READ DESCENDANTS
 // ==================
-int ANFParser::readDescendants(TiXmlElement* nodeElement, ParserNode* currentNode)
+int ANFParser::readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1721,7 +1723,7 @@ int ANFParser::readDescendants(TiXmlElement* nodeElement, ParserNode* currentNod
 				{
 					out << "            > id : " << strID << endl;
 
-					currentNode->addDescendant(strID);
+					this->descendants.push_back(pair<string, string>(currentNode->getID(), strID));
 				}
 
 				noderefElement = noderefElement->NextSiblingElement("noderef");
@@ -1753,120 +1755,11 @@ int ANFParser::readDescendants(TiXmlElement* nodeElement, ParserNode* currentNod
 // ===========================================
 int ANFParser::createSceneGraph()
 {
-	if(verifyGraphCoherence() != OK )
-	{
-		// Cannot continue if the graph is not coherent
-		return ERROR;
-	}
 
-	// Verifies the existance of the root id.
-	if(parserContainer->getGraphRootID().empty())
-	{
-		printMsg(ERROR);
-		out << " : NULL root" << endl;
-		// If no root exists the parser cannot continue
-		return ERROR;
-	}
-
-	// Add all the nodes to scene graph
-	int localErrors = addNodesToSceneGraph();
-
-	if(localErrors)
-	{
-		errors += localErrors;
-		return ERROR;
-	}
-
-	// Get transforms, appearances, primitives and descendants for all the nodes
-	buildNodesOfSceneGraph();
-
-	if(verifyCicles() != OK)
-	{
-		return ERROR;
-	}
+	if(linkGraphNodes() != OK) return ERROR;
+	if(verifyCicles() != OK) return ERROR;
 
 	return OK;
-}
-
-int ANFParser::addTransforms(ParserNode* parserNode) 
-{
-	queue<Transform*> transforms = parserNode->getTransforms();
-
-	glPushMatrix();
-	glLoadIdentity();
-
-	while(!transforms.empty())
-	{
-		transforms.front()->apply();
-		transforms.pop();
-	}
-	sceneData->getSceneGraph()->getNode(parserNode->getID())->setTransformMatrix();
-
-	glPopMatrix();
-
-	return OK;
-}
-
-/*
-	Verifications
- */
-int ANFParser::verifyGraphCoherence()
-{
-	out << "    > Veriying graph coherence..." << endl;
-
-	int localErrors = parserContainer->verifyGraphCoherence(out);
-
-	if(!localErrors)
-	{
-		return OK;
-	}
-	else
-	{
-		errors += localErrors;
-		return ERROR;
-	}
-}
-
-int ANFParser::addNodesToSceneGraph() {
-
-	int localErrors = 0;
-
-	out << "    > Creating scene nodes..." << endl;
-	// Add the nodes to the sceneGraph
-	for(unsigned int i = 0; i < parserContainer->getGraphNodes().size(); i++)
-	{
-		ParserNode* parserNode = parserContainer->getGraphNode(i);
-
-		if(!parserNode)
-		{
-			string msg = "Cannot read parserNode at index (";
-			msg += i;
-			msg += ")";
-
-			printMsg(ERROR, msg);
-			localErrors++;
-		}
-		else
-		{
-			SceneNode* sceneNode = new SceneNode(parserNode->getID());
-
-			if(sceneData->getSceneGraph()->addNode(sceneNode) != OK)
-			{
-				printMsg(ERROR, " : Cannot add the scene node to the scene graph");
-				localErrors++;
-			}
-			else
-			{
-				// if the node's id is the root
-				if(sceneNode->getID() == parserContainer->getGraphRootID())
-				{
-					sceneData->getSceneGraph()->setRoot(sceneNode);
-				}
-			}
-		}
-	}
-
-	return localErrors;
 }
 
 int ANFParser::verifyCicles()
@@ -1886,92 +1779,25 @@ int ANFParser::verifyCicles()
 	}
 }
 
-void ANFParser::buildNodesOfSceneGraph() {
-
-	printMsg(OK);
-
-	out << "    > Configuring scene nodes..." << endl;
-
-	for(unsigned int i = 0; i < parserContainer->getGraphNodes().size(); i++)
-	{
-		ParserNode* parserNode = parserContainer->getGraphNode(i);
-		SceneNode* sceneNode = sceneData->getSceneGraph()->getNode(parserNode->getID());
-
-		out << "        > id : " << "\"" << sceneNode->getID() << "\"" << endl;
-
-		addDescendantsToNode(parserNode, sceneNode);
-		addAppearancesToNode(parserNode, sceneNode);
-		addPrimitivesToNode(parserNode, sceneNode);
-		addTransformsToNode(parserNode, sceneNode);
-	}
-}
-
 /*
 	Build nodes
  */
-void ANFParser::addDescendantsToNode(ParserNode* parserNode, SceneNode* sceneNode) {
+int ANFParser::linkGraphNodes() {
 
-	if(!parserNode->getDescendants().empty())
-	{
-		for(unsigned int j = 0; j < parserNode->getDescendants().size(); j++)
-		{
-			string descendantID = parserNode->getDescendants().at(j);
-
-			sceneNode->addDescendant(sceneData->getSceneGraph()->getNode(descendantID));
+	int localErrors = 0;
+	if(!this->descendants.empty()) {
+		for(unsigned int i = 0; i < this->descendants.size(); i++) {
+			SceneNode* n = sceneData->getSceneGraph()->getNode(this->descendants.at(i).first);
+			SceneNode* d = sceneData->getSceneGraph()->getNode(this->descendants.at(i).second);
+			if(d) n->addDescendant(d);
+			else localErrors++;
 		}
 	}
 
-}
-
-void ANFParser::addAppearancesToNode(ParserNode* parserNode, SceneNode* sceneNode)
-{
-	if(parserNode->getAppearance().size() > 0)
-	{
-		if(parserNode->getAppearance() == "inherit")
-		{
-			sceneNode->inherits = true;
-		}
-		else
-		{
-			Appearance* appearance = parserContainer->getAppearance(parserNode->getAppearance());
-
-			CGFappearance* app = new CGFappearance();
-			if(appearance->hasTexture()) // Verifiy texture existance
-			{
-				app->setTexture(new CGFtexture(appearance->getTexture()->getFile()));
-				app->setTextureWrap(GL_REPEAT, GL_REPEAT);
-
-				sceneNode->setTexture(appearance->getTexture());
-			}
-			app->setAmbient(appearance->getAmbient()->getFloatv());
-			app->setDiffuse(appearance->getDiffuse()->getFloatv());
-			app->setSpecular(appearance->getSpecular()->getFloatv());
-			app->setShininess(appearance->getShininess());
-
-			sceneNode->setAppearance(app);
-		}
-	}
-}
-
-void ANFParser::addPrimitivesToNode(ParserNode* parserNode, SceneNode* sceneNode) {
-
-	if(!parserNode->getPrimitives().empty())
-	{
-		for(unsigned int j = 0; j < parserNode->getPrimitives().size(); j++)
-		{
-			Primitive* primitive = parserNode->getPrimitive(j);
-
-			sceneNode->addPrimitive(primitive);
-		}
-	}
-
-}
-
-void ANFParser::addTransformsToNode(ParserNode* parserNode, SceneNode* sceneNode)
-{
-	if(!parserNode->getTransforms().empty())
-	{
-		addTransforms(parserNode);
+	if(!localErrors) return OK;
+	else {
+		errors += localErrors;
+		return ERROR;
 	}
 }
 

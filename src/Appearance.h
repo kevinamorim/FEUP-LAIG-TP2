@@ -1,6 +1,7 @@
 #ifndef _APPEARANCE_H_
 #define _APPEARANCE_H_
 
+#include "CGFappearance.h"
 #include "Point.h"
 
 #include <iostream>
@@ -19,49 +20,35 @@ public:
 	string getID();
 	string getFile();
 
-	float getTexLengthS();
-	float getTexLengthT();
+	float S();
+	float T();
 
 protected:
 	string id;
 	string file;
 
-	float texlength_s;
-	float texlength_t;
+	Point2d* textLength;
 };
 
 /*
 	Appearance
 */
-class Appearance {
+class Appearance : public CGFappearance {
 public:
-	Appearance(string id, float shininess, Texture* texture, Point4d* ambient, Point4d* diffuse, Point4d* specular);
-	Appearance(string id, float shininess, Point4d* ambient, Point4d* diffuse, Point4d* specular);
+	Appearance(string id, float shininess, Point4d* ambient, Point4d* diffuse, Point4d* specular, Texture* texture = NULL);
 	~Appearance();
 
 	string getID();
 
 	Texture* getTexture();
 
-	float getShininess();
-
-	Point4d* getAmbient();
-	Point4d* getDiffuse();
-	Point4d* getSpecular();
-
 	bool hasTexture();
 
 protected:
 	string id;
 
-	bool tex;
+	bool hasTex;
 	Texture* texture;
-
-	float shininess;
-
-	Point4d* ambient;
-	Point4d* diffuse;
-	Point4d* specular;
 };
 
 #endif

@@ -1,0 +1,1268 @@
+<anf>
+
+	<!-- Global CGF definitions -->
+	<globals>
+        <drawing mode="fill" shading="gouraud" background="0 0 0 1.0" />
+ 
+        <culling face="back" order="ccw" />
+ 
+        <lighting doublesided="true" local="false" enabled="true" ambient="0.4 0.4 0.4 1.0" />
+    </globals>
+
+	<!-- Cameras -->
+    <cameras initial="big brother" >
+	
+        <perspective id="big brother" near="1" far="100" angle="45" pos="20 10 20" target="5 3 5" />
+		<perspective id="working station" near="1" far="100" angle="45" pos="6 8 10" target="8 4 5" />
+        
+		<ortho id="right" direction="x" near="1" far="40" left="-20" right="1" top="20" bottom="-1" />
+		<ortho id="up" direction="y" near="1" far="40" left="-1" right="20" top="20" bottom="-1" />
+		<ortho id="front" direction="z" near="1" far="40" left="-1" right="20" top="20" bottom="-1" />
+    </cameras>
+	<!-- Luzes -->
+    <lights>
+            <light id="god light" type="omni" enabled="true" marker="false" pos="10 15 5" >
+			
+               <component type="ambient" value="0.2 0.2 0.2 0.8" />
+               <component type="diffuse" value="0.4 0.4 0.4 0.8" />
+               <component type="specular" value="0.4 0.4 0.4 0.8" />
+            </light>
+				
+            <light id="lamp light" type="spot" enabled="false" marker="true" pos="11.2 5.5 3.9" target="10 4 5" 
+                angle="20" exponent="2" >
+
+				<component type="ambient" value="0.6 0.6 0.6 0.5" />
+				<component type="diffuse" value="0.6 0.6 0.6 0.5" />
+				<component type="specular" value="0.1 0.1 0.1 0.5" />
+
+            </light>
+    </lights>
+	
+	<!-- Textures -->
+	<textures>
+		<texture id="tex_checkers" file="textures/checkers.png" texlength_s="10" texlength_t="10"/>
+		<texture id="tex_wood_fine" file="textures/wood_fine.png" texlength_s="2" texlength_t="2"/>
+		<texture id="tex_wood_floor" file="textures/wood_floor.png" texlength_s="10" texlength_t="10"/>
+		<texture id="tex_rubik" file="textures/rubik.png" texlength_s="1" texlength_t="1"/>
+		<texture id="tex_donut" file="textures/donut.png" texlength_s="2" texlength_t="2"/>
+		<texture id="tex_metal" file="textures/metal.png" texlength_s="1" texlength_t="1"/>
+		<texture id="tex_red" file="textures/red.png" texlength_s="1" texlength_t="1"/>
+		<texture id="tex_kbd" file="textures/keyboard.png" texlength_s="2.6" texlength_t="1"/>
+		<texture id="tex_bricks" file="textures/bricks.png" texlength_s="10" texlength_t="10"/>
+		<texture id="tex_wall2" file="textures/wall2.png" texlength_s="10" texlength_t="10"/>
+		
+		<texture id="tex_pc_tower_front" file="textures/pc_tower_front.png" texlength_s="0.7" texlength_t="1.9"/>
+		<texture id="tex_pc_tower_side" file="textures/pc_tower_side.png" texlength_s="2.3" texlength_t="1.9"/>
+		<texture id="tex_pc_tower_back" file="textures/pc_tower_back.png" texlength_s="0.7" texlength_t="1.9"/>
+	</textures>
+	
+	<!-- Appearances -->
+	<appearances>
+		<appearance id="app_checkers" shininess="1.0" textureref="tex_checkers">
+			<component type="ambient" value="1.0 1.0 1.0 1.0"/>
+			<component type="diffuse" value="1.0 1.0 1.0 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
+		
+		<appearance id="app_wood_table" shininess="1.0" textureref="tex_wood_fine">
+			<component type="ambient" value="1.0 1.0 1.0 1.0"/>
+			<component type="diffuse" value="1.0 1.0 1.0 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
+		
+		<appearance id="app_wood_floor" shininess="1.0" textureref="tex_wood_floor">
+			<component type="ambient" value="1.0 1.0 1.0 1.0"/>
+			<component type="diffuse" value="1.0 1.0 1.0 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
+		
+		<appearance id="app_mouse_pad" shininess="0" >
+			<component type="ambient" value="0.1 0.1 0.1 0.1"/>
+			<component type="diffuse" value="0 0 0 0.1"/>
+			<component type="specular" value="0 0 0 0"/>
+		</appearance>
+		
+		<appearance id="app_mouse" shininess="0.2" >
+			<component type="ambient" value="0.7 0.7 0.7 1"/>
+			<component type="diffuse" value="0.5 0.5 0.3 0.5"/>
+			<component type="specular" value="0.6 0.6 0.6 0.5"/>
+		</appearance>
+		
+		<appearance id="app_mouse_wheel" shininess="0.8" textureref="tex_red">
+			<component type="ambient" value="0.6 0.6 0.6 1"/>
+			<component type="diffuse" value="1 0.6 0.6 1"/>
+			<component type="specular" value="0.9 0.3 0.3 0.8"/>
+		</appearance>
+		
+		<appearance id="app_screen" shininess="0.9" >
+			<component type="ambient" value="0 0 0 0"/>
+			<component type="diffuse" value="0 0 0 0"/>
+			<component type="specular" value="0.7 0.7 0.7 0.2"/>
+		</appearance>
+		
+		<appearance id="app_metal" shininess="0.9">
+			<component type="ambient" value="0.5 0.5 0.5 0.5"/>
+			<component type="diffuse" value="0.3 0.3 0.3 0.2"/>
+			<component type="specular" value="0.9 0.9 0.9 0.7"/>
+		</appearance>
+		
+		<appearance id="app_rubik" shininess="0.7" textureref="tex_rubik">
+			<component type="ambient" value="0.9 0.9 0.9 0.8"/>
+			<component type="diffuse" value="0.3 0.3 0.3 0.2"/>
+			<component type="specular" value="0.8 0.8 0.8 0.8"/>
+		</appearance>
+		
+		<appearance id="app_donut" shininess="0.2" textureref="tex_donut">
+			<component type="ambient" value="0.9 0.9 0.9 0.8"/>
+			<component type="diffuse" value="0.8 0.8 0.8 0.8"/>
+			<component type="specular" value="0.2 0.2 0.2 0.2"/>
+		</appearance>
+		
+		<appearance id="app_kbd" shininess="0.5" textureref="tex_kbd">
+			<component type="ambient" value="0.9 0.9 0.9 0.8"/>
+			<component type="diffuse" value="0.8 0.8 0.8 0.8"/>
+			<component type="specular" value="0.2 0.2 0.2 0.2"/>
+		</appearance>
+	
+		<appearance id="app_pc_tower" shininess="0.1" >
+			<component type="ambient" value="0 0 0 0"/>
+			<component type="diffuse" value="0 0 0 0"/>
+			<component type="specular" value="0.2 0.2 0.2 0.5"/>
+		</appearance>
+		
+		<appearance id="app_pc_tower_front" shininess="0.8" textureref="tex_pc_tower_front">
+			<component type="ambient" value="1 1 1 0.8"/>
+			<component type="diffuse" value="0.8 0.8 0.8 1"/>
+			<component type="specular" value="0.2 0.2 0.2 0.5"/>
+		</appearance>
+		
+		<appearance id="app_pc_tower_side" shininess="0.8" textureref="tex_pc_tower_side">
+			<component type="ambient" value="1 1 1 0.8"/>
+			<component type="diffuse" value="0.8 0.8 0.8 1"/>
+			<component type="specular" value="0.2 0.2 0.2 0.5"/>
+		</appearance>
+		
+		<appearance id="app_pc_tower_back" shininess="0.8" textureref="tex_pc_tower_back">
+			<component type="ambient" value="1 1 1 0.8"/>
+			<component type="diffuse" value="0.8 0.8 0.8 1"/>
+			<component type="specular" value="0.2 0.2 0.2 0.5"/>
+		</appearance>
+	
+		<appearance id="app_plate" shininess="0.6" >
+			<component type="ambient" value="1 1 1 0.2"/>
+			<component type="diffuse" value="0.9 0.9 0.9 1"/>
+			<component type="specular" value="0.2 0.2 0.2 0.4"/>
+		</appearance>
+	
+		<appearance id="app_lamp" shininess="0.3" >
+			<component type="ambient" value="0.1 0.1 1 0.8"/>
+			<component type="diffuse" value="0.1 0.1 0.9 1"/>
+			<component type="specular" value="0.9 0.9 0.9 0.8"/>
+		</appearance>
+		
+		<appearance id="app_wall" shininess="0.5" textureref="tex_wall2">
+			<component type="ambient" value="0.9 0.9 0.9 1"/>
+			<component type="diffuse" value="0.7 0.7 0.7 0.5"/>
+			<component type="specular" value="0.1 0.1 0.1 0.1"/>
+		</appearance>
+	
+	</appearances>
+	
+	<!-- Graph -->
+	<graph rootid="room">
+	
+		<!-- ROOM -->
+		<node id="room">
+			<transforms>
+			</transforms>
+			
+			<appearanceref id="app_checkers" />
+			
+			<descendants>
+				<noderef id="floor" />
+				<noderef id="wall_left" />
+				<noderef id="wall_right" />
+			</descendants>
+		</node>
+	
+		<!-- FLOOR -->
+		<node id="floor">
+		
+			<transforms>
+				<transform type="translate" to="10 0 10" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="table" />
+				<noderef id="items_on_table" />
+				<noderef id="chair" />
+				<noderef id="pc" />
+				<noderef id="floor_per_se" />
+			</descendants>
+		</node>
+		
+		<node id="floor_per_se">
+		
+			<transforms>
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="app_wood_floor" />
+			
+			<primitives>
+				<rectangle xy1="-10 -10" xy2="10 10" />
+			</primitives>
+		</node>
+		
+		<node id="wall_left">
+		
+			<transforms>
+			</transforms>
+			
+			<appearanceref id="app_wall" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="20 15" />
+			</primitives>
+		</node>
+		
+		<node id="wall_right">
+		
+			<transforms>
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+			
+			<appearanceref id="app_wall" />
+			
+			<primitives>
+				<rectangle xy1="-20 0" xy2="0 15" />
+			</primitives>
+		</node>
+				
+		<!-- CHAIR -->
+		<node id="chair">
+			<transforms>
+				<transform type="translate" to="-3 2.5 -1" />
+				<transform type="rotate" axis="y" angle="-30" />
+			</transforms>
+			
+			<appearanceref id="app_wood_table" />
+			
+			<descendants>
+				<noderef id="chair_seat" />
+				<noderef id="chair_leg" />
+				<noderef id="chair_back" />
+				<noderef id="chair_base" />
+			</descendants>	
+		</node>
+		
+		<node id="chair_seat">
+			<transforms>
+				<transform type="scale" factor="2 0.2 2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>	
+		</node>
+		
+		<node id="chair_leg">
+			<transforms>
+				<transform type="translate" to="0 -1.2 -0.9" />
+				<transform type="scale" factor="2 2.2 0.2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>	
+		</node>
+		
+		<node id="chair_base">
+			<transforms>
+				<transform type="translate" to="0 -2.4 0" />
+				<transform type="scale" factor="2 0.2 2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>	
+		</node>
+		
+		<node id="chair_back">
+			<transforms>
+				<transform type="translate" to="0 1.4 1.2" />
+				<transform type="rotate" axis="x" angle="12.5" />
+				<transform type="scale" factor="2 2.7 0.2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>	
+		</node>
+		
+		<!-- TABLE -->
+		<node id="table">
+		
+			<transforms>
+				<transform type="translate" to="0 2 -5" />
+			</transforms>
+			
+			<appearanceref id="app_wood_table" />
+			
+			<descendants>
+				<noderef id="table_cover" />
+				<noderef id="table_legs" />
+			</descendants>
+		</node>
+		
+		<node id="table_cover">
+			<transforms>
+				<transform type="translate" to="0 2 0" />
+				<transform type="scale" factor="10 0.6 5" />		
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="table_legs">
+			<transforms>
+				<transform type="scale" factor="0.5 4 0.5" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="table_leg_1" />
+				<noderef id="table_leg_2" />
+				<noderef id="table_leg_3" />
+				<noderef id="table_leg_4" />
+			</descendants>
+		</node>
+		
+		<node id="table_leg_1">
+			<transforms>
+				<transform type="translate" to="-9 0 -4" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="table_leg_2">
+			<transforms>
+				<transform type="translate" to="9 0 -4" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="table_leg_3">
+			<transforms>
+				<transform type="translate" to="9 0 4" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="table_leg_4">
+			<transforms>
+				<transform type="translate" to="-9 0 4" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="items_on_table">
+			<transforms>
+				<transform type="translate" to="0 4 -4" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="mouse_and_pad" />
+				<noderef id="keyboard_and_feup_stolen_kbd_legs" />
+				<noderef id="monitor_and_base" />
+				<noderef id="monitor_and_base" />
+				<noderef id="plate_and_donut" />
+				<noderef id="rubik" />
+				<noderef id="lamp" />
+			</descendants>
+		</node>
+	
+		<!-- PC -->
+		<node id="pc">
+			<transforms>
+				<transform type="translate" to="-5.6 0 -5" />
+			</transforms>
+			
+			<appearanceref id="app_metal" />
+			
+			<descendants>
+				<noderef id="pc_armature" />
+				<noderef id="pc_tower" />
+			</descendants>
+		</node>
+		
+		<node id="pc_tower">
+			<transforms>
+				<transform type="translate" to="0 1.4 0" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="pc_tower_top" />
+				<noderef id="pc_tower_left" />
+				<noderef id="pc_tower_right" />
+				<noderef id="pc_tower_front" />
+				<noderef id="pc_tower_back" />
+			</descendants>
+		</node>
+		
+		<node id="pc_tower_top">
+			<transforms>
+				<transform type="translate" to="0 0.925 0.05" />
+				<transform type="scale" factor="0.7 0.05 2.3" />
+			</transforms>
+			
+			<appearanceref id="app_mouse_wheel" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="pc_tower_left">
+			<transforms>
+				<transform type="translate" to="-0.35 -1 -1.1" />
+				<transform type="rotate" axis="y" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="app_pc_tower_side" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="2.3 1.9" /> 
+			</primitives>
+		</node>
+		
+		<node id="pc_tower_right">
+			<transforms>
+				<transform type="translate" to="0.35 -1 1.2" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+			
+			<appearanceref id="app_pc_tower_side" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="2.3 1.9" /> 
+			</primitives>
+		</node>
+		
+		<node id="pc_tower_front">
+			<transforms>
+				<transform type="translate" to="-0.35 -1 1.2" />
+			</transforms>
+			
+			<appearanceref id="app_pc_tower_front" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="0.7 1.9" /> 
+			</primitives>
+		</node>
+		
+		<node id="pc_tower_back">
+			<transforms>
+				<transform type="translate" to="0.35 -1 -1.1" />
+				<transform type="rotate" axis="y" angle="180" />
+			</transforms>
+			
+			<appearanceref id="app_pc_tower_back" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="0.7 1.9" /> 
+			</primitives>
+		</node>
+		
+		<node id="pc_armature">
+			<transforms>
+				<transform type="translate" to="0 0 0" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="pc_armature_base" />
+				<noderef id="pc_armature_leg_1" />
+				<noderef id="pc_armature_leg_2" />
+				<noderef id="pc_armature_leg_3" />
+				<noderef id="pc_armature_leg_4" />
+			</descendants>	
+		</node>
+		
+		<node id="pc_armature_base">
+			<transforms>
+				<transform type="translate" to="0 0.5 0" />
+				<transform type="scale" factor="1.2 0.15 2.5" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>	
+		</node>
+		
+		<node id="pc_armature_leg_1">
+			<transforms>
+				<transform type="translate" to="-0.6 0 1.2" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				 <cylinder base="0.1" top="0.1" height="1" slices="12" stacks="2" />
+			</primitives>
+		</node>
+		
+		<node id="pc_armature_leg_2">
+			<transforms>
+				<transform type="translate" to="0.6 0 1.2" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				 <cylinder base="0.1" top="0.1" height="1" slices="12" stacks="2" />
+			</primitives>
+		</node>
+		
+		<node id="pc_armature_leg_3">
+			<transforms>
+				<transform type="translate" to="0.6 0 -1.2" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<cylinder base="0.1" top="0.1" height="1" slices="12" stacks="2" />
+			</primitives>
+		</node>
+		
+		<node id="pc_armature_leg_4">
+			<transforms>
+				<transform type="translate" to="-0.6 0 -1.2" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<cylinder base="0.1" top="0.1" height="1" slices="12" stacks="2" />
+			</primitives>
+		</node>
+		
+		<!-- PC MONITOR & SCREEN -->
+		<node id="monitor_and_base">
+			<transforms>
+				<transform type="translate" to="-2 2 -2" />
+			</transforms>
+			
+			<appearanceref id="app_metal" />
+			
+			<descendants>
+				<noderef id="monitor" />
+				<noderef id="monitor_neck" />
+				<noderef id="monitor_cyl_up" />
+				<noderef id="monitor_cyl_down" />
+				<noderef id="monitor_base" />
+			</descendants>
+		</node>
+		
+		<node id="monitor">
+			<transforms>
+				<transform type="rotate" axis="x" angle="-98" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="monitor_border_1" />
+				<noderef id="monitor_border_2" />
+				<noderef id="monitor_border_3" />
+				<noderef id="monitor_border_4" />
+				<noderef id="screen" />
+				<noderef id="screen_per_se" />
+			</descendants>
+		</node>
+		
+		<node id="monitor_border_1">
+			<transforms>
+				<transform type="translate" to="0 0 -1" />
+				<transform type="scale" factor="3 0.2 0.1" />		
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="monitor_border_2">
+			<transforms>
+				<transform type="translate" to="1.45 0 0" />
+				<transform type="scale" factor="0.1 0.2 2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="monitor_border_3">
+			<transforms>
+				<transform type="translate" to="0 0 1" />
+				<transform type="scale" factor="3 0.2 0.1" />	
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="monitor_border_4">
+			<transforms>
+				<transform type="translate" to="-1.45 0 0" />
+				<transform type="scale" factor="0.1 0.2 2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="screen">
+			<transforms>
+				<transform type="translate" to="0 0.1 0" />
+				<transform type="scale" factor="2.8 0.1 2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="screen_per_se">
+			<transforms>
+				<transform type="translate" to="0 -0.1 0" />
+				<transform type="rotate" axis="x" angle="90" />
+			</transforms>
+			
+			<appearanceref id="app_screen" />
+			
+			<primitives>
+				<rectangle xy1="-1.4 -0.95" xy2="1.4 0.95" />
+			</primitives>
+		</node>
+		
+		<node id="monitor_neck">
+			<transforms>
+				<transform type="translate" to="0 -0.8 -0.4" />
+				<transform type="rotate" axis="x" angle="-75" />
+				<transform type="scale" factor="1 0.1 1.8" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="monitor_cyl_up">
+			<transforms>
+				<transform type="translate" to="-0.6 0 -0.2" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+			
+			<appearanceref id="app_mouse_wheel" />
+			
+			<primitives>
+				 <cylinder base="0.1" top="0.1" height="1.2" slices="12" stacks="1" />
+			</primitives>
+		</node>
+		
+		<node id="monitor_cyl_down">
+			<transforms>
+				<transform type="translate" to="-0.6 -1.7 -0.6" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+			
+			<appearanceref id="app_mouse_wheel" />
+			
+			<primitives>
+				 <cylinder base="0.15" top="0.15" height="1.2" slices="12" stacks="2" />
+			</primitives>
+		</node>
+		
+		<node id="monitor_base">
+			<transforms>
+				<transform type="translate" to="0 -1.75 0" />
+				<transform type="rotate" axis="x" angle="2" />
+				<transform type="scale" factor="1 0.2 1.2" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>	
+		</node>
+	
+		<!-- MOUSE & PAD -->
+		<node id="mouse_and_pad">
+			<transforms>
+				<transform type="translate" to="0.3 0.3 0" />
+			</transforms>
+			
+			<appearanceref id="app_mouse_pad" />
+			
+			<descendants>
+				<noderef id="mouse_pad" />
+				<noderef id="mouse" />
+			</descendants>
+		</node>
+		
+		<node id="mouse_pad">
+			<transforms>
+				<transform type="scale" factor="1.5 0.05 1.5" />
+			</transforms>
+			
+			<appearanceref id="app_mouse_pad" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="mouse">
+			<transforms>
+			</transforms>
+			
+			<appearanceref id="app_mouse" />
+			
+			<primitives>
+				<!-- FRONT -->
+				<triangle xyz1="-0.1 0 -0.5" xyz2="-0.3 0 -0.1" xyz3="-0.1 0.2 -0.1" />
+				<triangle xyz1="0.1 0 -0.5" xyz2="0.1 0.2 -0.1" xyz3="0.3 0 -0.1" />
+				
+				<triangle xyz1="-0.1 0 -0.5" xyz2="-0.1 0.2 -0.1" xyz3="0.1 0.2 -0.1" />
+				<triangle xyz1="-0.1 0 -0.5" xyz2="0.1 0.2 -0.1" xyz3="0.1 0 -0.5" />
+				
+				<!-- SIDES -->
+				<triangle xyz1="-0.3 0 0.1" xyz2="-0.1 0.2 0.1" xyz3="-0.1 0.2 -0.1" />
+				<triangle xyz1="-0.3 0 0.1" xyz2="-0.1 0.2 -0.1" xyz3="-0.3 0 -0.1" />
+				
+				<triangle xyz1="0.1 0.2 0.1" xyz2="0.3 0 0.1" xyz3="0.3 0 -0.1" />
+				<triangle xyz1="0.1 0.2 0.1" xyz2="0.3 0 -0.1" xyz3="0.1 0.2 -0.1" />
+				
+				<triangle xyz1="-0.1 0.2 -0.1" xyz2="-0.1 0.2 0.1" xyz3="0.1 0.2 0.1" />
+				<triangle xyz1="-0.1 0.2 -0.1" xyz2="0.1 0.2 0.1" xyz3="0.1 0.2 -0.1" />
+				
+				<!-- BACK -->
+				<triangle xyz1="-0.3 0 0.1" xyz2="-0.1 0 0.5" xyz3="-0.1 0.2 0.1" />
+				<triangle xyz1="0.1 0.2 0.1" xyz2="0.1 0 0.5" xyz3="0.3 0 0.1" />
+				
+				<triangle xyz1="-0.1 0.2 0.1" xyz2="-0.1 0 0.5" xyz3="0.1 0 0.5" />
+				<triangle xyz1="-0.1 0.2 0.1" xyz2="0.1 0 0.5" xyz3="0.1 0.2 0.1" />
+			</primitives>
+			
+			<descendants>
+				<noderef id="mouse_wheel" />
+			</descendants>
+		</node>
+		
+		<node id="mouse_wheel">
+			<transforms>
+				<transform type="translate" to="-0.16 0.06 -0.2" />	
+			</transforms>
+			
+			<appearanceref id="app_mouse_wheel" />
+			
+			<primitives>
+				 <sphere radius="0.1" slices="16" stacks="16" />
+			</primitives>
+		</node>
+		
+		<!-- KEYBOARD & FEUP STOLEN KBD LEGS -->
+		<node id="keyboard_and_feup_stolen_kbd_legs">
+			<transforms>
+				<transform type="translate" to="-2 0.4 0" />
+				<transform type="rotate" axis="x" angle="10" />
+			</transforms>
+			
+			<appearanceref id="app_metal" />
+			
+			<descendants>
+				<noderef id="feup_stolen_kbd_leg_1" />
+				<noderef id="feup_stolen_kbd_leg_2" />
+				<noderef id="keyboard" />
+				<noderef id="keyboard_per_se" />
+			</descendants>
+		</node>
+		
+		<node id="feup_stolen_kbd_leg_1">
+			<transforms>
+				<transform type="translate" to="-1.2 -0.1 -0.45" />
+				<transform type="rotate" axis="x" angle="45" />
+				<transform type="scale" factor="0.1 0.2 0.05" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="feup_stolen_kbd_leg_2">
+			<transforms>
+				<transform type="translate" to="1.2 -0.1 -0.45" />
+				<transform type="rotate" axis="x" angle="45" />
+				<transform type="scale" factor="0.1 0.2 0.05" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="keyboard">
+			<transforms>
+				<transform type="scale" factor="2.6 0.1 1" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="keyboard_per_se">
+			<transforms>
+				<transform type="translate" to="-1.3 0.08 0.5" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="app_kbd" />
+			
+			<primitives>
+				<rectangle xy1="0 0 " xy2="2.6 1" />
+			</primitives>
+		</node>
+		
+		<!-- PLATE AND DONUT -->
+		<node id="plate_and_donut">
+			<transforms>
+				<transform type="translate" to="1.5 0.2 -1" />
+			</transforms>
+			
+			<appearanceref id="app_plate" />
+			
+			<primitives>
+			</primitives>
+			
+			<descendants>
+				<noderef id="plate" />
+				<noderef id="donut" />
+			</descendants>
+		</node>
+		
+		<node id="plate">
+			<transforms>
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				 <cylinder base="0.5" top="1" height="0.2" slices="28" stacks="2" />
+			</primitives>
+		</node>
+		
+		<node id="donut">
+			<transforms>
+				<transform type="translate" to="0 0.3 0" />
+				<transform type="scale" factor="1 0.7 1" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="app_donut" />
+			
+			<primitives>
+				 <torus inner="0.2" outer="0.6" slices="30" loops="30" />
+			</primitives>
+		</node>
+		
+		<!-- RUBIK -->
+		<node id="rubik">
+			<transforms>
+				<transform type="translate" to="-0.3 0.3 -2.4" />
+				<transform type="rotate" axis="y" angle="32" />
+				<transform type="scale" factor="0.4 0.4 0.4" />
+			</transforms>
+			
+			<appearanceref id="app_rubik" />
+			
+			<primitives>
+			</primitives>
+			
+			<descendants>
+				<noderef id="rubik_front" />
+				<noderef id="rubik_back" />
+				<noderef id="rubik_top" />
+				<noderef id="rubik_right" />
+				<noderef id="rubik_left" />
+			</descendants>
+		</node>
+		
+		<node id="rubik_front">
+			<transforms>
+				<transform type="translate" to="-0.5 0 0.5" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="1 1" />
+			</primitives>
+		</node>
+		
+		<node id="rubik_back">
+			<transforms>
+				<transform type="translate" to="0.5 0 -0.5" />
+				<transform type="rotate" axis="y" angle="180" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="1 1" />
+			</primitives>
+		</node>
+		
+		<node id="rubik_top">
+			<transforms>
+				<transform type="translate" to="-0.5 1 0.5" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="1 1" />
+			</primitives>
+		</node>
+		
+		<node id="rubik_right">
+			<transforms>
+				<transform type="translate" to="0.5 0 0.5" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="1 1" />
+			</primitives>
+		</node>
+		
+		<node id="rubik_left">
+			<transforms>
+				<transform type="translate" to="-0.5 0 -0.5" />
+				<transform type="rotate" axis="y" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="0 0" xy2="1 1" />
+			</primitives>
+		</node>
+		
+		<!-- BEAUTIFUL LAMP -->
+		<node id="lamp">
+			<transforms>
+				<transform type="translate" to="3.1 0 -2.5" />
+			</transforms>
+			
+			<appearanceref id="app_lamp" />
+			
+			<descendants>
+				<noderef id="lamp_base" />
+				<noderef id="lamp_ball_1" />
+			</descendants>
+		</node>
+		
+		<node id="lamp_base">
+			<transforms>
+				<transform type="translate" to="0 0.3 0" />
+				<transform type="rotate" axis="y" angle="45" />
+				<transform type="scale" factor="1 0.1 1" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="lamp_ball_1">
+			<transforms>
+				<transform type="translate" to="0 0.3 0" />
+			</transforms>
+			
+			<appearanceref id="app_plate" />
+			
+			<primitives>
+				<sphere radius="0.25" slices="16" stacks="16" />
+			</primitives>
+			
+			<descendants>
+				<noderef id="lamp_connection_1" />
+			</descendants>
+		</node>
+		
+		<node id="lamp_ball_2">
+			<transforms>
+				<transform type="translate" to="0 0 1.2" />
+			</transforms>
+			
+			<appearanceref id="app_plate" />
+			
+			<primitives>
+				<sphere radius="0.15" slices="16" stacks="16" />
+			</primitives>
+			
+			<descendants>
+				<noderef id="lamp_connection_2" />
+			</descendants>
+		</node>
+		
+		<node id="lamp_ball_3">
+			<transforms>
+				<transform type="translate" to="0 0 1" />
+			</transforms>
+			
+			<appearanceref id="app_plate" />
+			<primitives>
+				<sphere radius="0.15" slices="16" stacks="16" />
+			</primitives>
+			
+			<descendants>
+				<noderef id="lamp_box" />
+			</descendants>
+		</node>
+		
+		<node id="lamp_connection_1">
+			<transforms>
+				<transform type="translate" to="0 -0.1 0" />
+				<transform type="rotate" axis="z" angle="20" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="app_lamp" />
+			
+			<primitives>
+				 <cylinder base="0.15" top="0.1" height="1.2" slices="12" stacks="2" />
+			</primitives>
+			
+			<descendants>
+				<noderef id="lamp_ball_2" />
+			</descendants>
+		</node>
+		
+		<node id="lamp_connection_2">
+			<transforms>
+				<transform type="translate" to="0 0 0" />
+				<transform type="rotate" axis="y" angle="-45" />
+				<!--<transform type="rotate" axis="x" angle="15" />-->
+			</transforms>
+			
+			<appearanceref id="app_lamp" />
+			
+			<primitives>
+				 <cylinder base="0.1" top="0.08" height="1" slices="12" stacks="2" />
+			</primitives>
+			
+			<descendants>
+				<noderef id="lamp_ball_3" />
+			</descendants>
+		</node>
+		
+		<node id="lamp_box">
+			<transforms>
+				<transform type="rotate" axis="x" angle="45" />
+				<transform type="rotate" axis="y" angle="-45" />
+			</transforms>
+			
+			<appearanceref id="app_mouse_wheel" />
+			
+			<primitives>
+				 <cylinder base="0.15" top="0.6" height="0.6" slices="12" stacks="3" />
+			</primitives>
+		</node>
+		
+		<!-- BOX : USED BY MANY OTHERS TO REPRESENT ALL KIND OF OBJECTS
+					NOTE: although all of the texture rules are being applied to the rectangles,
+						  many of these become streched or misplaced do to the 
+					-->
+		<node id="box">
+		
+			<transforms>
+				<transform type="translate" to="0 0 0" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<descendants>
+				<noderef id="boxTop" />
+				<noderef id="boxBottom" />
+				<noderef id="boxFront" />
+				<noderef id="boxBack" />
+				<noderef id="boxRight" />
+				<noderef id="boxLeft" />
+			</descendants>
+		
+		</node>
+		
+		<node id="boxTop">
+		
+			<transforms>
+				<transform type="translate" to="0 0.5 0" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+		</node>
+		
+		<node id="boxBottom">	
+			<transforms>
+				<transform type="translate" to="0 -0.5 0" />
+				<transform type="rotate" axis="x" angle="90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>	
+		</node>
+		
+		<node id="boxFront">
+		
+			<transforms>
+				<transform type="translate" to="0 0 0.5" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>	
+		</node>
+		
+		<node id="boxBack">
+		
+			<transforms>
+				<transform type="translate" to="0 0 -0.5" />
+				<transform type="rotate" axis="x" angle="180" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>	
+		</node>
+		
+		<node id="boxRight">
+		
+			<transforms>
+				<transform type="translate" to="0.5 0 0" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>	
+		</node>
+		
+		<node id="boxLeft">
+		
+			<transforms>
+				<transform type="translate" to="-0.5 0 0" />
+				<transform type="rotate" axis="y" angle="-90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>	
+		</node>
+				
+	</graph>
+	
+</anf>

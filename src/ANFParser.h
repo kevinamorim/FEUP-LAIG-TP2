@@ -3,12 +3,12 @@
 
 #include "tinyxml.h"
 
-#include "ParserContainer.h"
 #include "SceneData.h"
 #include "Point.h"
 #include "Camera.h"
 #include "Appearance.h"
 #include "Primitives.h"
+#include "Transform.h"
 
 #include <fstream>
 #include <sstream>
@@ -71,9 +71,9 @@ protected:
 	TiXmlElement* appearancesElement;
 	TiXmlElement* graphElement;
 
-	ParserContainer* parserContainer;
-
 	SceneData* sceneData;
+
+	vector<pair<string, string> > descendants;
 
 private:
 	int errors, warnings;
@@ -102,21 +102,22 @@ private:
 	int loadGraph();
 
 	// Read transformations
-	int readTransforms(TiXmlElement* nodeElement, ParserNode* currentNode);
-	int readRotate(TiXmlElement* transformElement, ParserNode* currentNode);
-	int readScale(TiXmlElement* transformElement, ParserNode* currentNode);
-	int readTranslate(TiXmlElement* transformElement, ParserNode* currentNode);
+	int readTransforms(TiXmlElement* nodeElement, SceneNode* node);
+	int readRotate(TiXmlElement* transformElement, queue<Transform*> * transforms);
+	int readScale(TiXmlElement* transformElement, queue<Transform*> * transforms);
+	int readTranslate(TiXmlElement* transformElement, queue<Transform*> * transforms);
+	int addTransformsToNode(SceneNode* node, queue<Transform* > * transforms);
 
-	int readAppearance(TiXmlElement* transformElement, ParserNode* currentNode);
+	int readAppearance(TiXmlElement* transformElement, SceneNode* currentNode);
 
-	int readPrimitives(TiXmlElement* nodeElement, ParserNode* currentNode);
-	int readPrimitiveRectangle(TiXmlElement* primitiveElement, ParserNode* currentNode);
-	int readPrimitiveTriangle(TiXmlElement* primitiveElement, ParserNode* currentNode);
-	int readPrimitiveCylinder(TiXmlElement* primitiveElement, ParserNode* currentNode);
-	int readPrimitiveSphere(TiXmlElement* primitiveElement, ParserNode* currentNode);
-	int readPrimitiveTorus(TiXmlElement* primitiveElement, ParserNode* currentNode);
+	int readPrimitives(TiXmlElement* nodeElement, SceneNode* currentNode);
+	int readPrimitiveRectangle(TiXmlElement* primitiveElement, SceneNode* currentNode);
+	int readPrimitiveTriangle(TiXmlElement* primitiveElement, SceneNode* currentNode);
+	int readPrimitiveCylinder(TiXmlElement* primitiveElement, SceneNode* currentNode);
+	int readPrimitiveSphere(TiXmlElement* primitiveElement, SceneNode* currentNode);
+	int readPrimitiveTorus(TiXmlElement* primitiveElement, SceneNode* currentNode);
 
-	int readDescendants(TiXmlElement* nodeElement, ParserNode* currentNode);
+	int readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode);
 
 	// Read cameras
 	int readPerspectiveCameras(string strInitialCamera);
@@ -133,28 +134,20 @@ private:
 	// CREATE SCENE GRAPH
 	// ===========================================
 	int createSceneGraph();
-	int addTransforms(ParserNode* parserNode);
 
 	// ===========================================
 	// VERIFICATIONS
 	// ===========================================
-	int verifyGraphCoherence();
-	int addNodesToSceneGraph();
-	void buildNodesOfSceneGraph();
 	int verifyCicles();
 
 	// ===========================================
 	// NODES BUILDING
 	// ===========================================
-	void addDescendantsToNode(ParserNode* parserNode, SceneNode* sceneNode);
-	void addAppearancesToNode(ParserNode* parserNode, SceneNode* sceneNode);
-	void addPrimitivesToNode(ParserNode* parserNode, SceneNode* sceneNode);
-	void addTransformsToNode(ParserNode* parserNode, SceneNode* sceneNode);
+	int linkGraphNodes();
 
 	// ===========================================
 	// OTHERS
 	// ===========================================
-	Texture* getTexture(string id);
 	int readString(TiXmlElement** camera, string* str, string descr, const int msgTypeInFailure);
 	int readFloat(TiXmlElement** element, float* value, string descr, const int msgTypeInFailure);
 	int readAxis(TiXmlElement** element, char* axis, string descr, const int msgTypeInFailure);
