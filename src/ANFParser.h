@@ -1,6 +1,8 @@
 #ifndef _ANFPARSER_H_
 #define _ANFPARSER_H_
 
+#include "CGFApplication.h"
+
 #include "tinyxml.h"
 
 #include "SceneData.h"
@@ -10,10 +12,14 @@
 #include "Primitives.h"
 #include "Transform.h"
 
+#include <ctime>
+#include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+
+using namespace std;
 
 void printMatrix(float* m, unsigned int rows, unsigned int cols);
 
@@ -87,11 +93,9 @@ private:
 	// Check File type (opening tag: ex. <anf></anf>)
 	int checkFileType(const char * fileType);
 
-	// Checks if all elements exists
+	// Checks if all main elements exists
 	int checkAllElements();
-
-
-	int getElement(TiXmlElement** element, const char * elementName);
+	int checkElement(TiXmlElement** element, string elementName);
 
 	// Load Elements
 	int loadGlobals();
@@ -99,9 +103,13 @@ private:
 	int loadLights();
 	int loadTextures();
 	int loadAppearances();
-	int loadGraph();
 
-	// Read transformations
+	// ***********************************************************************************
+	// **********************************  GRAPH   ***************************************
+	int createGraphNodes();
+	int verifyGraph();
+	int linkGraphNodes();
+
 	int readTransforms(TiXmlElement* nodeElement, SceneNode* node);
 	int readRotate(TiXmlElement* transformElement, queue<Transform*> * transforms);
 	int readScale(TiXmlElement* transformElement, queue<Transform*> * transforms);
@@ -118,6 +126,8 @@ private:
 	int readPrimitiveTorus(TiXmlElement* primitiveElement, SceneNode* currentNode);
 
 	int readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode);
+	// ***********************************************************************************
+	// ***********************************************************************************
 
 	// Read cameras
 	int readPerspectiveCameras(string strInitialCamera);
@@ -131,21 +141,6 @@ private:
 	int readComponents(TiXmlElement** light, Point4d** ambient, Point4d** diffuse, Point4d** specular);
 
 	// ===========================================
-	// CREATE SCENE GRAPH
-	// ===========================================
-	int createSceneGraph();
-
-	// ===========================================
-	// VERIFICATIONS
-	// ===========================================
-	int verifyCicles();
-
-	// ===========================================
-	// NODES BUILDING
-	// ===========================================
-	int linkGraphNodes();
-
-	// ===========================================
 	// OTHERS
 	// ===========================================
 	int readString(TiXmlElement** camera, string* str, string descr, const int msgTypeInFailure);
@@ -155,6 +150,7 @@ private:
 	int readPoint2d(TiXmlElement** element, Point2d** point, string descr, const int msgTypeInFailure);
 	int readPoint3d(TiXmlElement** element, Point3d** point, string descr, const int msgTypeInFailure);
 	int readPoint4d(TiXmlElement** element, Point4d** point, string descr, const int msgTypeInFailure);
+
 	void printMsg(const int type);
 	void printMsg(const int type, string descr);
 };

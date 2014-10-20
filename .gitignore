@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+/bin/*.ilk
+/*.opensdf
+/*.sdf
+/bin/*.pdb
+/ipch/laig-tp2-3b42288b/*.ipch
+/bin/*.ilk

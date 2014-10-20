@@ -1,9 +1,4 @@
 #include "ANFParser.h"
-#include "CGFApplication.h"
-#include "SceneData.h"
-
-#include <ctime>
-#include <string>
 
 const int X = 0;
 const int Y = 1;
@@ -15,25 +10,18 @@ const string DRAWING_SHADING[] = {"flat", "gouraud"};
 const string CULLING_FACE[] = {"none", "back", "front", "both"};
 const string CULLING_ORDER[] = {"ccw", "cw"};
 
-unsigned int lightsID[] = {
-				GL_LIGHT0,
-				GL_LIGHT1,
-				GL_LIGHT2,
-				GL_LIGHT3,
-				GL_LIGHT4,
-				GL_LIGHT5,
-				GL_LIGHT6,
-				GL_LIGHT7 };
+unsigned int lightsID[] = { GL_LIGHT0, GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, GL_LIGHT4, GL_LIGHT5, GL_LIGHT6, GL_LIGHT7 };
 
+// ***********************************************************************************
+// ********************************  PARSER  *****************************************
 ANFParser::ANFParser(char* filename) : filename(filename)
 {
 	currentLight = 0;
 	this->descendants = vector<pair<string, string> >();
 }
 
-// ==================
-// PARSER
-// ==================
+// ***********************************************************************************
+// *****************************  PARSE METHOD  **************************************
 int ANFParser::Parse()
 {
 	out.open("debug.log");
@@ -136,25 +124,23 @@ int ANFParser::Parse()
 	}
 
 	out << "___________________________________" << endl;
-	out << "> Load : graph" << endl;
+	out << "> Create : graph" << endl;
 	if(graphElement)
 	{
-		if(loadGraph() != OK)
-		{
+		out << "    _______________________________" << endl;
+		out << "    > Create nodes..." << endl;
+		if(createGraphNodes() != OK)
 			errors++;
-		}
 
-		out << "___________________________________" << endl;
-		out << "___________________________________" << endl;
-		out << "> Create : scene graph" << endl;
-		if(!errors)
-		{
-			createSceneGraph();
-		}
-		else
-		{
-			printMsg(WARNING, "Errors were found! The scene graph will NOT be built, and the scene will NOT run until the errors are corrected!");
-		}
+		out << "    _______________________________" << endl;
+		out << "    > Link nodes..." << endl;
+		if(linkGraphNodes() != OK)
+			errors++;
+
+		out << "    _______________________________" << endl;
+		out << "    > Verifying graph..." << endl;
+		if(verifyGraph() != OK)
+			errors++;
 	}
 	else
 	{
@@ -183,9 +169,8 @@ int ANFParser::Parse()
 	return OK;
 }
 
-// ==================
-// LOAD / CHECK FILE
-// ==================
+// ***********************************************************************************
+// *********************************  FILE  ******************************************
 int ANFParser::loadFile(const char* filename)
 {
 	doc = new TiXmlDocument(filename);
@@ -228,35 +213,46 @@ int ANFParser::checkFileType(const char* fileType)
 	}
 }
 
-// ==================
-// CHECK ELEMENTS
-// ==================
+// ***********************************************************************************
+// *******************************  ELEMENTS  ****************************************
 int ANFParser::checkAllElements()
 {
-	int localErrors = errors;
+	int localErrors = 0;
 
-	getElement(&globalsElement, "globals");
-	getElement(&camerasElement, "cameras");
-	getElement(&lightsElement, "lights");
-	getElement(&texturesElement, "textures");
-	getElement(&appearancesElement, "appearances");
-	getElement(&graphElement, "graph");
+	if(checkElement(&globalsElement, "globals") != OK)
+		localErrors++;
 
-	if(localErrors == errors)
+	if(checkElement(&camerasElement, "cameras") != OK)
+		localErrors++;
+
+	if(checkElement(&lightsElement, "lights") != OK)
+		localErrors++;
+
+	if(checkElement(&texturesElement, "textures") != OK)
+		localErrors++;
+
+	if(checkElement(&appearancesElement, "appearances") != OK)
+		localErrors++;
+
+	if(checkElement(&graphElement, "graph") != OK)
+		localErrors++;
+
+	if(!localErrors)
 	{
 		return OK;
 	}
 	else
 	{
+		errors += localErrors;
 		return ERROR;
 	}
 }
 
-int ANFParser::getElement(TiXmlElement** element, const char * elementName)
+int ANFParser::checkElement(TiXmlElement** element, string elementName)
 {
 	int localErrors = 0;
 
-	*element = anfElement->FirstChildElement(elementName);
+	*element = anfElement->FirstChildElement((const char*)elementName.c_str());
 
 	out << "> Block : " << elementName << endl; 
 	if (!(*element))
@@ -277,9 +273,8 @@ int ANFParser::getElement(TiXmlElement** element, const char * elementName)
 	}
 }
 
-// ==================
-// LOAD ELEMENTS
-// ==================
+// ***********************************************************************************
+// ********************************  GLOBALS  ****************************************
 int ANFParser::loadGlobals()
 {
 	int localErrors = 0;
@@ -496,343 +491,8 @@ int ANFParser::loadCameras()
 	}
 }
 
-int ANFParser::loadLights() 
-{
-	int localErrors = 0;
-
-	out << "    _______________________________" << endl;
-	out << "    > Reading : lights..." << endl;
-
-	TiXmlElement* lightElement = lightsElement->FirstChildElement("light");
-
-	if(!lightElement) 
-	{
-		printMsg(ERROR, "No lights are defined (must be defined at least one)");
-		localErrors++;
-	}
-	else
-	{
-		while(lightElement)
-		{
-			string strType;
-
-			if(readString(&lightElement, &strType, "type", ERROR) != OK)
-			{
-				localErrors++;
-			}
-			else
-			{
-				if(strType == "omni")
-				{
-					readOmniLight(&lightElement);
-				}
-				else if(strType == "spot")
-				{
-					readSpotLight(&lightElement);
-				}
-				else
-				{
-					printMsg(ERROR, "Attribute 'type' is of illegal type (must be in {omni, spot})");
-					localErrors++;
-				}
-			}
-
-			lightElement = lightElement->NextSiblingElement("light");
-		}
-	}
-
-	if(!sceneData->hasLights())
-	{
-		out << "    _______________________________" << endl;
-		printMsg(ERROR, "No lights were created (verifiy if the light(s) is(are) well defined)");
-		localErrors++;
-	}
-
-	if(!localErrors)
-	{
-		return OK;
-	}
-	else
-	{
-		errors += localErrors;
-		return ERROR;
-	}
-}
-
-int ANFParser::loadTextures()
-{
-	int localErrors = 0;
-	int localWarnings = 0;
-
-	out << "    _______________________________" << endl;
-	out << "    > Reading : textures..." << endl;
-
-	TiXmlElement* texture = texturesElement->FirstChildElement("texture");
-
-	if(!texture)
-	{
-		printMsg(WARNING, "There are no textures (though the block <textures> is defined)");
-		localWarnings++;
-	}
-	else
-	{
-		int textureErrors = 0;
-
-		while(texture)
-		{
-			string strID, strFile;
-			float length_s, length_t;
-
-			if(readString(&texture, &strID, "id", ERROR) != OK)
-			{
-				textureErrors++;
-			}
-
-			if(readString(&texture, &strFile, "file", ERROR) != OK)
-			{
-				textureErrors++;
-			}
-
-			if(readFloat(&texture, &length_s, "texlength_s", ERROR) != OK)
-			{
-				textureErrors++;
-			}
-
-			if(readFloat(&texture, &length_t, "texlength_t", ERROR) != OK)
-			{
-				textureErrors++;
-			}
-
-			if(!textureErrors)
-			{
-				out << "        ___________________________" << endl;
-				out << "        > Tex : " << strID << " , " << strFile << " , "  << length_s << " , " << length_t << endl;
-
-				sceneData->addTexture(new Texture(strID, strFile, length_s, length_t));
-			}
-			else
-			{
-				localErrors += textureErrors;
-				textureErrors = 0;
-			}
-
-			texture = texture->NextSiblingElement("texture");
-		}
-	}
-
-	if(!localErrors && !localWarnings)
-	{
-		printMsg(OK);
-		return OK;
-	}
-	else
-	{
-		warnings += localWarnings;
-		errors += localErrors;
-		return ERROR;
-	}
-}
-
-int ANFParser::loadAppearances()
-{
-	int localErrors = 0;
-	int localWarnings = 0;
-
-	out << "    _______________________________" << endl;
-	out << "    > Reading : appearances..." << endl;
-
-	TiXmlElement* appearance = appearancesElement->FirstChildElement("appearance");
-
-	if(!appearance)
-	{
-		printMsg(WARNING, "There are no appearances (though the block <appearance> is defined)");
-		localWarnings++;
-	}
-	else
-	{
-		int appearanceErrors = 0;
-
-		while(appearance)
-		{	
-			string strID, strTexture;
-			float shininess;
-			Point4d *ambient, *diffuse, *specular;
-
-			out << "        ___________________________" << endl;
-
-			if(readString(&appearance, &strID, "id", ERROR) != OK)
-			{
-				appearanceErrors++;
-			}
-			else
-			{
-				out << "        > Reading : " << strID << endl;
-			}
-
-			if(readFloat(&appearance, &shininess, "shininess", ERROR) != OK)
-			{
-				appearanceErrors++;
-			}
-
-			if(readString(&appearance, &strTexture, "textureref", WARNING) != OK)
-			{
-				localWarnings++; // Not critical
-			}
-
-			if(readComponents(&appearance, &ambient, &diffuse, &specular) != OK)
-			{
-				appearanceErrors++;
-			}
-
-			if(!appearanceErrors)
-			{
-				if(!(strTexture.empty()))
-				{
-					Texture* tex = sceneData->getTexture(strTexture);
-
-					if(!tex)
-					{
-						string msg = "The referenced texture '";
-						msg += strTexture;
-						msg += "' does not exist";
-
-						printMsg(ERROR,msg);
-						localErrors++;
-					}
-					else
-					{
-						Appearance* app = new Appearance(strID, shininess, ambient, diffuse, specular, tex);
-
-						sceneData->addAppearance(app);
-
-						printMsg(OK);
-					}
-				}
-				else
-				{
-					Appearance* app = new Appearance(strID, shininess, ambient, diffuse, specular);
-
-					sceneData->addAppearance(app);
-
-					printMsg(OK);
-				}
-			}
-			else
-			{
-				localErrors += appearanceErrors;
-				appearanceErrors = 0;
-			}
-
-			appearance = appearance->NextSiblingElement("appearance");
-		}
-	}
-
-	if(!localErrors && !localWarnings)
-	{
-		return OK;
-	}
-	else
-	{
-		warnings += localWarnings;
-		errors += localErrors;
-		return ERROR;
-	}
-}
-
-int ANFParser::loadGraph()
-{
-	int localErrors = 0;
-
-	out << "    _______________________________" << endl;
-	out << "    > Reading : root..." << endl;
-	
-	string strRootID;
-
-	if(readString(&graphElement, &strRootID, "rootid", ERROR) != OK)
-	{
-		localErrors++;
-	}
-	else
-	{
-		out << "        > id : \"" << strRootID << "\""<< endl;
-		printMsg(OK);
-	}
-
-	// ********************************************************
-	// Read all the nodes that compose the graph tree.
-	TiXmlElement* nodeElement = graphElement->FirstChildElement("node");
-
-	while (nodeElement)
-	{
-		int nodeErrors = 0;
-
-		out << "    _______________________________" << endl;
-		out << "    > Reading : ";
-
-		string strID;
-
-		if(readString(&nodeElement, &strID, "id", ERROR) != OK)
-		{
-			localErrors++;
-		}
-		else
-		{
-			out << "\"" << strID << "\"" << endl;
-			printMsg(OK);
-
-			// Create the parserGraph node
-			SceneNode* node = new SceneNode(strID);
-			sceneData->getSceneGraph()->addNode(node);
-
-			out << "        > Reading : transforms..." << endl;
-			if(readTransforms(nodeElement, node) != OK)
-			{
-				nodeErrors++;
-			}
-
-			out << "        > Reading : appearances..." << endl;
-			if(readAppearance(nodeElement, node) != OK)
-			{
-				nodeErrors++;
-			}
-
-			out << "        > Reading : primitives..." << endl;
-			if(readPrimitives(nodeElement, node) != OK)
-			{
-				nodeErrors++;
-			}
-
-			out << "        > Reading : descendants..." << endl;
-			if(readDescendants(nodeElement, node) != OK)
-			{	
-				nodeErrors++;
-			}
-
-
-			if(nodeErrors)
-			{
-				localErrors++;
-				nodeErrors = 0;
-			}
-		}
-
-		nodeElement = nodeElement->NextSiblingElement("node");
-	}
-
-	if(!localErrors)
-	{
-		return OK;
-	}
-	else
-	{
-		errors += localErrors;
-		return ERROR;
-	}
-}
-
-// ==================
-// READ CAMERAS
-// ==================
+// ***********************************************************************************
+// ********************************  CAMERAS  ****************************************
 int ANFParser::readPerspectiveCameras(string strInitialCamera)
 {
 	int localErrors = 0;
@@ -1025,9 +685,71 @@ int ANFParser::readOrthoCameras(string strInitialCamera)
 	}
 }
 
-// ==================
-// READ LIGHTS
-// ==================
+// ***********************************************************************************
+// *********************************  LIGHTS  ****************************************
+int ANFParser::loadLights() 
+{
+	int localErrors = 0;
+
+	out << "    _______________________________" << endl;
+	out << "    > Reading : lights..." << endl;
+
+	TiXmlElement* lightElement = lightsElement->FirstChildElement("light");
+
+	if(!lightElement) 
+	{
+		printMsg(ERROR, "No lights are defined (must be defined at least one)");
+		localErrors++;
+	}
+	else
+	{
+		while(lightElement)
+		{
+			string strType;
+
+			if(readString(&lightElement, &strType, "type", ERROR) != OK)
+			{
+				localErrors++;
+			}
+			else
+			{
+				if(strType == "omni")
+				{
+					readOmniLight(&lightElement);
+				}
+				else if(strType == "spot")
+				{
+					readSpotLight(&lightElement);
+				}
+				else
+				{
+					printMsg(ERROR, "Attribute 'type' is of illegal type (must be in {omni, spot})");
+					localErrors++;
+				}
+			}
+
+			lightElement = lightElement->NextSiblingElement("light");
+		}
+	}
+
+	if(!sceneData->hasLights())
+	{
+		out << "    _______________________________" << endl;
+		printMsg(ERROR, "No lights were created (verifiy if the light(s) is(are) well defined)");
+		localErrors++;
+	}
+
+	if(!localErrors)
+	{
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
 int ANFParser::readOmniLight(TiXmlElement** lightElement)
 {
 	out << "        ___________________________" << endl;
@@ -1173,11 +895,293 @@ int ANFParser::readSpotLight(TiXmlElement** lightElement)
 	}
 }
 
-//*****************************************
-//*****************************************
-// ==================
-// READ TRANSFORMS
-// ==================
+// ***********************************************************************************
+// ********************************  TEXTURES  ***************************************
+int ANFParser::loadTextures()
+{
+	int localErrors = 0;
+	int localWarnings = 0;
+
+	out << "    _______________________________" << endl;
+	out << "    > Reading : textures..." << endl;
+
+	TiXmlElement* texture = texturesElement->FirstChildElement("texture");
+
+	if(!texture)
+	{
+		printMsg(WARNING, "There are no textures (though the block <textures> is defined)");
+		localWarnings++;
+	}
+	else
+	{
+		int textureErrors = 0;
+
+		while(texture)
+		{
+			string strID, strFile;
+			float length_s, length_t;
+
+			if(readString(&texture, &strID, "id", ERROR) != OK)
+			{
+				textureErrors++;
+			}
+
+			if(readString(&texture, &strFile, "file", ERROR) != OK)
+			{
+				textureErrors++;
+			}
+
+			if(readFloat(&texture, &length_s, "texlength_s", ERROR) != OK)
+			{
+				textureErrors++;
+			}
+
+			if(readFloat(&texture, &length_t, "texlength_t", ERROR) != OK)
+			{
+				textureErrors++;
+			}
+
+			if(!textureErrors)
+			{
+				out << "        ___________________________" << endl;
+				out << "        > Tex : " << strID << " , " << strFile << " , "  << length_s << " , " << length_t << endl;
+
+				sceneData->addTexture(new Texture(strID, strFile, length_s, length_t));
+			}
+			else
+			{
+				localErrors += textureErrors;
+				textureErrors = 0;
+			}
+
+			texture = texture->NextSiblingElement("texture");
+		}
+	}
+
+	if(!localErrors && !localWarnings)
+	{
+		printMsg(OK);
+		return OK;
+	}
+	else
+	{
+		warnings += localWarnings;
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+// ***********************************************************************************
+// *******************************  APPEARANCES  *************************************
+int ANFParser::loadAppearances()
+{
+	int localErrors = 0;
+	int localWarnings = 0;
+
+	out << "    _______________________________" << endl;
+	out << "    > Reading : appearances..." << endl;
+
+	TiXmlElement* appearance = appearancesElement->FirstChildElement("appearance");
+
+	if(!appearance)
+	{
+		printMsg(WARNING, "There are no appearances (though the block <appearance> is defined)");
+		localWarnings++;
+	}
+	else
+	{
+		int appearanceErrors = 0;
+
+		while(appearance)
+		{	
+			string strID, strTexture;
+			float shininess;
+			Point4d *ambient, *diffuse, *specular;
+
+			out << "        ___________________________" << endl;
+
+			if(readString(&appearance, &strID, "id", ERROR) != OK)
+			{
+				appearanceErrors++;
+			}
+			else
+			{
+				out << "        > Reading : " << strID << endl;
+			}
+
+			if(readFloat(&appearance, &shininess, "shininess", ERROR) != OK)
+			{
+				appearanceErrors++;
+			}
+
+			if(readString(&appearance, &strTexture, "textureref", WARNING) != OK)
+			{
+				localWarnings++; // Not critical
+			}
+
+			if(readComponents(&appearance, &ambient, &diffuse, &specular) != OK)
+			{
+				appearanceErrors++;
+			}
+
+			if(!appearanceErrors)
+			{
+				if(!(strTexture.empty()))
+				{
+					Texture* tex = sceneData->getTexture(strTexture);
+
+					if(!tex)
+					{
+						string msg = "The referenced texture '";
+						msg += strTexture;
+						msg += "' does not exist";
+
+						printMsg(ERROR,msg);
+						localErrors++;
+					}
+					else
+					{
+						Appearance* app = new Appearance(strID, shininess, ambient, diffuse, specular, tex);
+
+						sceneData->addAppearance(app);
+
+						printMsg(OK);
+					}
+				}
+				else
+				{
+					Appearance* app = new Appearance(strID, shininess, ambient, diffuse, specular);
+
+					sceneData->addAppearance(app);
+
+					printMsg(OK);
+				}
+			}
+			else
+			{
+				localErrors += appearanceErrors;
+				appearanceErrors = 0;
+			}
+
+			appearance = appearance->NextSiblingElement("appearance");
+		}
+	}
+
+	if(!localErrors && !localWarnings)
+	{
+		return OK;
+	}
+	else
+	{
+		warnings += localWarnings;
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+// ***********************************************************************************
+// **********************************  GRAPH  ****************************************
+/* Main method */
+int ANFParser::createGraphNodes()
+{
+	int localErrors = 0;
+
+	out << "        ___________________________" << endl;
+	out << "        > Reading : root..." << endl;
+	
+	string strRootID;
+
+	if(readString(&graphElement, &strRootID, "rootid", ERROR) != OK)
+	{
+		localErrors++;
+	}
+	else
+	{
+		out << "        > id : \"" << strRootID << "\""<< endl;
+		printMsg(OK);
+	}
+
+	// ********************************************************
+	// Read all the nodes that compose the graph tree.
+	TiXmlElement* nodeElement = graphElement->FirstChildElement("node");
+
+	while (nodeElement)
+	{
+		int nodeErrors = 0;
+
+		out << "        ___________________________" << endl;
+		out << "        > Creating : ";
+
+		string strID;
+
+		if(readString(&nodeElement, &strID, "id", ERROR) != OK)
+		{
+			localErrors++;
+		}
+		else
+		{
+			out << "\"" << strID << "\"" << endl;
+			printMsg(OK);
+
+			// Create the parserGraph node
+			SceneNode* node = new SceneNode(strID);
+			
+			// Add the node to the graph
+			sceneData->getSceneGraph()->addNode(node);
+
+			out << "            > Transforms..." << endl;
+			if(readTransforms(nodeElement, node) != OK)
+			{
+				nodeErrors++;
+			}
+
+			out << "            > Appearances..." << endl;
+			if(readAppearance(nodeElement, node) != OK)
+			{
+				nodeErrors++;
+			}
+
+			out << "            > Primitives..." << endl;
+			if(readPrimitives(nodeElement, node) != OK)
+			{
+				nodeErrors++;
+			}
+
+			out << "            > Descendants..." << endl;
+			if(readDescendants(nodeElement, node) != OK)
+			{	
+				nodeErrors++;
+			}
+
+			if(!nodeErrors)
+			{
+				if(node->getID() == strRootID)
+				{
+					sceneData->getSceneGraph()->setRoot(node);
+				}
+			}
+			else
+			{
+				localErrors += nodeErrors;
+				nodeErrors = 0;
+			}
+		}
+
+		nodeElement = nodeElement->NextSiblingElement("node");
+	}
+
+	if(!localErrors)
+	{
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+/* Transforms */
 int ANFParser::readTransforms(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
@@ -1345,7 +1349,6 @@ int ANFParser::readScale(TiXmlElement* transformElement, queue<Transform*> * tra
 int ANFParser::addTransformsToNode(SceneNode* node, queue<Transform* > * transforms)
 {
 	if(transforms->empty()) return OK;
-			printf("le size: %d\n", transforms->size());
 
 	glPushMatrix();
 	glLoadIdentity();
@@ -1363,9 +1366,7 @@ int ANFParser::addTransformsToNode(SceneNode* node, queue<Transform* > * transfo
 	return OK;
 }
 
-// ==================
-// READ APPEARANCES
-// ==================
+/* Appearances */
 int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* currentNode)
 {
 	int localErrors = 0;
@@ -1408,11 +1409,10 @@ int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* currentNode)
 		errors += localErrors;
 		return ERROR;
 	}
+
 }
 
-// ==================
-// READ PRIMITIVES
-// ==================
+/* Primitives */
 int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* currentNode)
 {
 	int localErrors = 0;
@@ -1691,9 +1691,7 @@ int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* currentNod
 	}
 }
 
-// ==================
-// READ DESCENDANTS
-// ==================
+/* Descendants */
 int ANFParser::readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode)
 {
 	int localErrors = 0;
@@ -1750,28 +1748,27 @@ int ANFParser::readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode
 	}
 }
 
-// ===========================================
-// SCENE GRAPH
-// ===========================================
-int ANFParser::createSceneGraph()
-{
+/* Build nodes */
+int ANFParser::linkGraphNodes() {
 
-	if(linkGraphNodes() != OK) return ERROR;
-	if(verifyCicles() != OK) return ERROR;
+	int localErrors = 0;
 
-	return OK;
-}
+	if(!descendants.empty())
+	{
+		for(unsigned int i = 0; i < this->descendants.size(); i++)
+		{
+			SceneNode* n = sceneData->getSceneGraph()->getNode(descendants.at(i).first);
+			SceneNode* d = sceneData->getSceneGraph()->getNode(descendants.at(i).second);
 
-int ANFParser::verifyCicles()
-{
-	out << "    > Veriying graph for cycles..." << endl;
-
-	int localErrors = sceneData->getSceneGraph()->Verify(out);
+			if(d)
+				n->addDescendant(d);
+			else
+				localErrors++;
+		}
+	}
 
 	if(!localErrors)
-	{
 		return OK;
-	}
 	else
 	{
 		errors += localErrors;
@@ -1779,41 +1776,15 @@ int ANFParser::verifyCicles()
 	}
 }
 
-/*
-	Build nodes
- */
-int ANFParser::linkGraphNodes() {
-
-	int localErrors = 0;
-	if(!this->descendants.empty()) {
-		for(unsigned int i = 0; i < this->descendants.size(); i++) {
-			SceneNode* n = sceneData->getSceneGraph()->getNode(this->descendants.at(i).first);
-			SceneNode* d = sceneData->getSceneGraph()->getNode(this->descendants.at(i).second);
-			if(d) n->addDescendant(d);
-			else localErrors++;
-		}
-	}
-
-	if(!localErrors) return OK;
-	else {
-		errors += localErrors;
-		return ERROR;
-	}
-}
-
-// ===========================================
-// ===========================================
-
-int ANFParser::getState()
+/* Verify graph */
+int ANFParser::verifyGraph()
 {
-	return state;
+	return sceneData->getSceneGraph()->Verify(out);
 }
 
-SceneData* ANFParser::getSceneData()
-{
-	return sceneData;
-}
-
+// ***********************************************************************************
+// ***********************************************************************************
+// ******************************* AUXILIARS *****************************************
 int ANFParser::readString(TiXmlElement** element, string* str, string descr, const int type)
 {
 	const char* cID = (*element)->Attribute(descr.c_str());
@@ -2056,6 +2027,8 @@ int ANFParser::readComponents(TiXmlElement** element, Point4d** ambient, Point4d
 	}
 }
 
+// ***********************************************************************************
+// ********************************  PRINTS  *****************************************
 void ANFParser::printMsg(const int type)
 {
 	switch(type)
@@ -2095,4 +2068,16 @@ bool stringIn(string & str, const string colection[])
 	}
 
 	return false;
+}
+
+// ***********************************************************************************
+// ******************************  GET METHODS  **************************************
+int ANFParser::getState()
+{
+	return state;
+}
+
+SceneData* ANFParser::getSceneData()
+{
+	return sceneData;
 }

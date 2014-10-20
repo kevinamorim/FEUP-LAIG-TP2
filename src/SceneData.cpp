@@ -207,7 +207,7 @@ int SceneGraph::Verify(ostream & out)
 
 	if(!(root->Verify(out)))
 	{
-		return 1;
+		return -1;
 	}
 
 	return 0;
