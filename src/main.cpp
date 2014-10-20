@@ -27,7 +27,7 @@ int main(int argc, char* argv[] )
 	}
 	else
 	{
-		filename = "LAIG_TP1_ANF_T01_G02_v4.anf"; // Default
+		filename = "LAIG_TP1_ANF_T01_G02.anf"; // Default
 	}
 
 	CGFapplication app = CGFapplication();
