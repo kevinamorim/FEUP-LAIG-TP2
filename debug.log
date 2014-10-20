@@ -1,0 +1,1381 @@
+DEBUG FOR .anf FILE - LAIG - FEUP 2014/15
+20-10-2014 14-21-27
+___________________________________
+> Loading file... 
+___________________________________
+> Checking file type...
+___________________________________
+> Block : globals
+> Block : cameras
+> Block : lights
+> Block : textures
+> Block : appearances
+> Block : graph
+___________________________________
+___________________________________
+> Load : globals
+    _______________________________
+    > Reading : drawing...
+    _______________________________
+    > Reading : culling...
+    _______________________________
+    > Reading : lighting...
+___________________________________
+> Load : cameras
+    _______________________________
+    > Reading : cameras...
+        ___________________________
+        > Perspective : big brother
+        ___________________________
+        > Perspective : working station
+        ___________________________
+        > Ortho : right
+        ___________________________
+        > Ortho : up
+        ___________________________
+        > Ortho : front
+___________________________________
+> Load : lights
+    _______________________________
+    > Reading : lights...
+        ___________________________
+        > Omni : god light
+        ___________________________
+        > Spot : lamp light
+___________________________________
+> Load : textures
+    _______________________________
+    > Reading : textures...
+        ___________________________
+        > Tex : tex_checkers , textures/checkers.png , 10 , 10
+        ___________________________
+        > Tex : tex_wood_fine , textures/wood_fine.png , 2 , 2
+        ___________________________
+        > Tex : tex_wood_floor , textures/wood_floor.png , 10 , 10
+        ___________________________
+        > Tex : tex_rubik , textures/rubik.png , 1 , 1
+        ___________________________
+        > Tex : tex_donut , textures/donut.png , 2 , 2
+        ___________________________
+        > Tex : tex_metal , textures/metal.png , 1 , 1
+        ___________________________
+        > Tex : tex_red , textures/red.png , 1 , 1
+        ___________________________
+        > Tex : tex_kbd , textures/keyboard.png , 2.6 , 1
+        ___________________________
+        > Tex : tex_bricks , textures/bricks.png , 10 , 10
+        ___________________________
+        > Tex : tex_wall2 , textures/wall2.png , 10 , 10
+        ___________________________
+        > Tex : tex_pc_tower_front , textures/pc_tower_front.png , 0.7 , 1.9
+        ___________________________
+        > Tex : tex_pc_tower_side , textures/pc_tower_side.png , 2.3 , 1.9
+        ___________________________
+        > Tex : tex_pc_tower_back , textures/pc_tower_back.png , 0.7 , 1.9
+___________________________________
+> Load : appearances
+    _______________________________
+    > Reading : appearances...
+        ___________________________
+        > Reading : app_checkers
+        ___________________________
+        > Reading : app_wood_table
+        ___________________________
+        > Reading : app_wood_floor
+        ___________________________
+        > Reading : app_mouse_pad
+                                    [WARNING] : Attribute 'textureref' is not defined
+        ___________________________
+        > Reading : app_mouse
+                                    [WARNING] : Attribute 'textureref' is not defined
+        ___________________________
+        > Reading : app_mouse_wheel
+        ___________________________
+        > Reading : app_screen
+                                    [WARNING] : Attribute 'textureref' is not defined
+        ___________________________
+        > Reading : app_metal
+                                    [WARNING] : Attribute 'textureref' is not defined
+        ___________________________
+        > Reading : app_rubik
+        ___________________________
+        > Reading : app_donut
+        ___________________________
+        > Reading : app_kbd
+        ___________________________
+        > Reading : app_pc_tower
+                                    [WARNING] : Attribute 'textureref' is not defined
+        ___________________________
+        > Reading : app_pc_tower_front
+        ___________________________
+        > Reading : app_pc_tower_side
+        ___________________________
+        > Reading : app_pc_tower_back
+        ___________________________
+        > Reading : app_plate
+                                    [WARNING] : Attribute 'textureref' is not defined
+        ___________________________
+        > Reading : app_lamp
+                                    [WARNING] : Attribute 'textureref' is not defined
+        ___________________________
+        > Reading : app_wall
+___________________________________
+> Load : graph
+    _______________________________
+    > Reading : root...
+        > id : "room"
+    _______________________________
+    > Reading : "room"
+        > Reading : transforms...
+        > Reading : appearances...
+            > Appearance : app_checkers
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : floor
+            > id : wall_left
+            > id : wall_right
+    _______________________________
+    > Reading : "floor"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : table
+            > id : items_on_table
+            > id : chair
+            > id : pc
+            > id : floor_per_se
+    _______________________________
+    > Reading : "floor_per_se"
+        > Reading : transforms...
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_wood_floor
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "wall_left"
+        > Reading : transforms...
+        > Reading : appearances...
+            > Appearance : app_wall
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "wall_right"
+        > Reading : transforms...
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_wall
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "chair"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_wood_table
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : chair_seat
+            > id : chair_leg
+            > id : chair_back
+            > id : chair_base
+    _______________________________
+    > Reading : "chair_seat"
+        > Reading : transforms...
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "chair_leg"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "chair_base"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "chair_back"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "table"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_wood_table
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : table_cover
+            > id : table_legs
+    _______________________________
+    > Reading : "table_cover"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "table_legs"
+        > Reading : transforms...
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : table_leg_1
+            > id : table_leg_2
+            > id : table_leg_3
+            > id : table_leg_4
+    _______________________________
+    > Reading : "table_leg_1"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "table_leg_2"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "table_leg_3"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "table_leg_4"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "items_on_table"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : mouse_and_pad
+            > id : keyboard_and_feup_stolen_kbd_legs
+            > id : monitor_and_base
+            > id : monitor_and_base
+            > id : plate_and_donut
+            > id : rubik
+            > id : lamp
+    _______________________________
+    > Reading : "pc"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_metal
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : pc_armature
+            > id : pc_tower
+    _______________________________
+    > Reading : "pc_tower"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : pc_tower_top
+            > id : pc_tower_left
+            > id : pc_tower_right
+            > id : pc_tower_front
+            > id : pc_tower_back
+    _______________________________
+    > Reading : "pc_tower_top"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : app_mouse_wheel
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "pc_tower_left"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_pc_tower_side
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "pc_tower_right"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_pc_tower_side
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "pc_tower_front"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_pc_tower_front
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "pc_tower_back"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_pc_tower_back
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "pc_armature"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : pc_armature_base
+            > id : pc_armature_leg_1
+            > id : pc_armature_leg_2
+            > id : pc_armature_leg_3
+            > id : pc_armature_leg_4
+    _______________________________
+    > Reading : "pc_armature_base"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "pc_armature_leg_1"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "pc_armature_leg_2"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "pc_armature_leg_3"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "pc_armature_leg_4"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "monitor_and_base"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_metal
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : monitor
+            > id : monitor_neck
+            > id : monitor_cyl_up
+            > id : monitor_cyl_down
+            > id : monitor_base
+    _______________________________
+    > Reading : "monitor"
+        > Reading : transforms...
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : monitor_border_1
+            > id : monitor_border_2
+            > id : monitor_border_3
+            > id : monitor_border_4
+            > id : screen
+            > id : screen_per_se
+    _______________________________
+    > Reading : "monitor_border_1"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "monitor_border_2"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "monitor_border_3"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "monitor_border_4"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "screen"
+        > Reading : transforms...
+            > Translate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "screen_per_se"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_screen
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "monitor_neck"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "monitor_cyl_up"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_mouse_wheel
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "monitor_cyl_down"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_mouse_wheel
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "monitor_base"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "mouse_and_pad"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_mouse_pad
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : mouse_pad
+            > id : mouse
+    _______________________________
+    > Reading : "mouse_pad"
+        > Reading : transforms...
+            > Scale
+        > Reading : appearances...
+            > Appearance : app_mouse_pad
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "mouse"
+        > Reading : transforms...
+        > Reading : appearances...
+            > Appearance : app_mouse
+        > Reading : primitives...
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+            > Triangle
+        > Reading : descendants...
+            > id : mouse_wheel
+    _______________________________
+    > Reading : "mouse_wheel"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_mouse_wheel
+        > Reading : primitives...
+            > Sphere
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "keyboard_and_feup_stolen_kbd_legs"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_metal
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : feup_stolen_kbd_leg_1
+            > id : feup_stolen_kbd_leg_2
+            > id : keyboard
+            > id : keyboard_per_se
+    _______________________________
+    > Reading : "feup_stolen_kbd_leg_1"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "feup_stolen_kbd_leg_2"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "keyboard"
+        > Reading : transforms...
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "keyboard_per_se"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_kbd
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "plate_and_donut"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_plate
+        > Reading : primitives...
+                             [INFO] : The block <primitives> exists, but it is empty (or the content is not valid)
+        > Reading : descendants...
+            > id : plate
+            > id : donut
+    _______________________________
+    > Reading : "plate"
+        > Reading : transforms...
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "donut"
+        > Reading : transforms...
+            > Translate
+            > Scale
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_donut
+        > Reading : primitives...
+            > Torus
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "rubik"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Scale
+        > Reading : appearances...
+            > Appearance : app_rubik
+        > Reading : primitives...
+                             [INFO] : The block <primitives> exists, but it is empty (or the content is not valid)
+        > Reading : descendants...
+            > id : rubik_front
+            > id : rubik_back
+            > id : rubik_top
+            > id : rubik_right
+            > id : rubik_left
+    _______________________________
+    > Reading : "rubik_front"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "rubik_back"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "rubik_top"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "rubik_right"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "rubik_left"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "lamp"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_lamp
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : lamp_base
+            > id : lamp_ball_1
+    _______________________________
+    > Reading : "lamp_base"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Scale
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : box
+    _______________________________
+    > Reading : "lamp_ball_1"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_plate
+        > Reading : primitives...
+            > Sphere
+        > Reading : descendants...
+            > id : lamp_connection_1
+    _______________________________
+    > Reading : "lamp_ball_2"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_plate
+        > Reading : primitives...
+            > Sphere
+        > Reading : descendants...
+            > id : lamp_connection_2
+    _______________________________
+    > Reading : "lamp_ball_3"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : app_plate
+        > Reading : primitives...
+            > Sphere
+        > Reading : descendants...
+            > id : lamp_box
+    _______________________________
+    > Reading : "lamp_connection_1"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_lamp
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+            > id : lamp_ball_2
+    _______________________________
+    > Reading : "lamp_connection_2"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_lamp
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+            > id : lamp_ball_3
+    _______________________________
+    > Reading : "lamp_box"
+        > Reading : transforms...
+            > Rotate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : app_mouse_wheel
+        > Reading : primitives...
+            > Cylinder
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "box"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+                             [INFO] : The block <primitives> does not exist
+        > Reading : descendants...
+            > id : boxTop
+            > id : boxBottom
+            > id : boxFront
+            > id : boxBack
+            > id : boxRight
+            > id : boxLeft
+    _______________________________
+    > Reading : "boxTop"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "boxBottom"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "boxFront"
+        > Reading : transforms...
+            > Translate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "boxBack"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "boxRight"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+    _______________________________
+    > Reading : "boxLeft"
+        > Reading : transforms...
+            > Translate
+            > Rotate
+        > Reading : appearances...
+            > Appearance : inherit
+        > Reading : primitives...
+            > Rectangle
+        > Reading : descendants...
+                             [INFO] : The block <primitives> does not exist
+___________________________________
+___________________________________
+> Create : scene graph
+    > Veriying graph coherence...
+            > Existance...
+            > Linkage...
+    > Creating scene nodes...
+    > Configuring scene nodes...
+        > id : "room"
+        > id : "floor"
+        > id : "floor_per_se"
+        > id : "wall_left"
+        > id : "wall_right"
+        > id : "chair"
+        > id : "chair_seat"
+        > id : "chair_leg"
+        > id : "chair_base"
+        > id : "chair_back"
+        > id : "table"
+        > id : "table_cover"
+        > id : "table_legs"
+        > id : "table_leg_1"
+        > id : "table_leg_2"
+        > id : "table_leg_3"
+        > id : "table_leg_4"
+        > id : "items_on_table"
+        > id : "pc"
+        > id : "pc_tower"
+        > id : "pc_tower_top"
+        > id : "pc_tower_left"
+        > id : "pc_tower_right"
+        > id : "pc_tower_front"
+        > id : "pc_tower_back"
+        > id : "pc_armature"
+        > id : "pc_armature_base"
+        > id : "pc_armature_leg_1"
+        > id : "pc_armature_leg_2"
+        > id : "pc_armature_leg_3"
+        > id : "pc_armature_leg_4"
+        > id : "monitor_and_base"
+        > id : "monitor"
+        > id : "monitor_border_1"
+        > id : "monitor_border_2"
+        > id : "monitor_border_3"
+        > id : "monitor_border_4"
+        > id : "screen"
+        > id : "screen_per_se"
+        > id : "monitor_neck"
+        > id : "monitor_cyl_up"
+        > id : "monitor_cyl_down"
+        > id : "monitor_base"
+        > id : "mouse_and_pad"
+        > id : "mouse_pad"
+        > id : "mouse"
+        > id : "mouse_wheel"
+        > id : "keyboard_and_feup_stolen_kbd_legs"
+        > id : "feup_stolen_kbd_leg_1"
+        > id : "feup_stolen_kbd_leg_2"
+        > id : "keyboard"
+        > id : "keyboard_per_se"
+        > id : "plate_and_donut"
+        > id : "plate"
+        > id : "donut"
+        > id : "rubik"
+        > id : "rubik_front"
+        > id : "rubik_back"
+        > id : "rubik_top"
+        > id : "rubik_right"
+        > id : "rubik_left"
+        > id : "lamp"
+        > id : "lamp_base"
+        > id : "lamp_ball_1"
+        > id : "lamp_ball_2"
+        > id : "lamp_ball_3"
+        > id : "lamp_connection_1"
+        > id : "lamp_connection_2"
+        > id : "lamp_box"
+        > id : "box"
+        > id : "boxTop"
+        > id : "boxBottom"
+        > id : "boxFront"
+        > id : "boxBack"
+        > id : "boxRight"
+        > id : "boxLeft"
+    > Veriying graph for cycles...
+            > checking... room
+            > checking... floor
+            > checking... table
+            > checking... table_cover
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... table_legs
+            > checking... table_leg_1
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... table_leg_2
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... table_leg_3
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... table_leg_4
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... items_on_table
+            > checking... mouse_and_pad
+            > checking... mouse_pad
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... mouse
+            > checking... mouse_wheel
+            > checking... keyboard_and_feup_stolen_kbd_legs
+            > checking... feup_stolen_kbd_leg_1
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... feup_stolen_kbd_leg_2
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... keyboard
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... keyboard_per_se
+            > checking... monitor_and_base
+            > checking... monitor
+            > checking... monitor_border_1
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_border_2
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_border_3
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_border_4
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... screen
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... screen_per_se
+            > checking... monitor_neck
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_cyl_up
+            > checking... monitor_cyl_down
+            > checking... monitor_base
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_and_base
+            > checking... monitor
+            > checking... monitor_border_1
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_border_2
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_border_3
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_border_4
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... screen
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... screen_per_se
+            > checking... monitor_neck
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... monitor_cyl_up
+            > checking... monitor_cyl_down
+            > checking... monitor_base
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... plate_and_donut
+            > checking... plate
+            > checking... donut
+            > checking... rubik
+            > checking... rubik_front
+            > checking... rubik_back
+            > checking... rubik_top
+            > checking... rubik_right
+            > checking... rubik_left
+            > checking... lamp
+            > checking... lamp_base
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... lamp_ball_1
+            > checking... lamp_connection_1
+            > checking... lamp_ball_2
+            > checking... lamp_connection_2
+            > checking... lamp_ball_3
+            > checking... lamp_box
+            > checking... chair
+            > checking... chair_seat
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... chair_leg
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... chair_back
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... chair_base
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... pc
+            > checking... pc_armature
+            > checking... pc_armature_base
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... pc_armature_leg_1
+            > checking... pc_armature_leg_2
+            > checking... pc_armature_leg_3
+            > checking... pc_armature_leg_4
+            > checking... pc_tower
+            > checking... pc_tower_top
+            > checking... box
+            > checking... boxTop
+            > checking... boxBottom
+            > checking... boxFront
+            > checking... boxBack
+            > checking... boxRight
+            > checking... boxLeft
+            > checking... pc_tower_left
+            > checking... pc_tower_right
+            > checking... pc_tower_front
+            > checking... pc_tower_back
+            > checking... floor_per_se
+            > checking... wall_left
+            > checking... wall_right
+___________________________________
+___________________________________
+> Finished parsing:
+                        [ERRORS] : 0
+                      [WARNINGS] : 7
