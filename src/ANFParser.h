@@ -116,16 +116,16 @@ private:
 	int readTranslate(TiXmlElement* transformElement, queue<Transform*> * transforms);
 	int addTransformsToNode(SceneNode* node, queue<Transform* > * transforms);
 
-	int readAppearance(TiXmlElement* transformElement, SceneNode* currentNode);
+	int readAppearance(TiXmlElement* transformElement, SceneNode* node);
 
-	int readPrimitives(TiXmlElement* nodeElement, SceneNode* currentNode);
-	int readPrimitiveRectangle(TiXmlElement* primitiveElement, SceneNode* currentNode);
-	int readPrimitiveTriangle(TiXmlElement* primitiveElement, SceneNode* currentNode);
-	int readPrimitiveCylinder(TiXmlElement* primitiveElement, SceneNode* currentNode);
-	int readPrimitiveSphere(TiXmlElement* primitiveElement, SceneNode* currentNode);
-	int readPrimitiveTorus(TiXmlElement* primitiveElement, SceneNode* currentNode);
+	int readPrimitives(TiXmlElement* nodeElement, SceneNode* node);
+	int readPrimitiveRectangle(TiXmlElement* primitiveElement, SceneNode* node);
+	int readPrimitiveTriangle(TiXmlElement* primitiveElement, SceneNode* node);
+	int readPrimitiveCylinder(TiXmlElement* primitiveElement, SceneNode* node);
+	int readPrimitiveSphere(TiXmlElement* primitiveElement, SceneNode* node);
+	int readPrimitiveTorus(TiXmlElement* primitiveElement, SceneNode* node);
 
-	int readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode);
+	int readDescendants(TiXmlElement* nodeElement, SceneNode* node);
 	// ***********************************************************************************
 	// ***********************************************************************************
 

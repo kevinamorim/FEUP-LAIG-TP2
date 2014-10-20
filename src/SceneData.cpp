@@ -170,6 +170,10 @@ Texture* SceneData::getTexture(string id) {
 SceneGraph::SceneGraph()
 {
 	this->nodes = std::vector<SceneNode* >();
+
+	this->root = NULL;
+
+	this->appearancesStack = stack<Appearance*>();
 }
 
 SceneNode* SceneGraph::getNode(string id)
@@ -213,19 +217,19 @@ int SceneGraph::Verify(ostream & out)
 	return 0;
 }
 
-int SceneGraph::addNode(SceneNode* node)
+void SceneGraph::addNode(SceneNode* node)
 {
 	for(unsigned int i = 0; i < nodes.size(); i++)
 	{
 		if(nodes.at(i)->getID() == node->getID()) // Already contains this node
 		{
-			return -1;
+			return;
 		}
 	}
 
 	this->nodes.push_back(node);
 
-	return 0;
+	node->setAppearancesStack(&appearancesStack);
 }
 
 void SceneGraph::setRoot(SceneNode* node)
@@ -238,6 +242,11 @@ void SceneGraph::Process()
 	// The precessing starts at the root node, progressing
 	//  recursively throughout the tree.
 	root->Process();
+}
+
+bool SceneGraph::hasRoot()
+{
+	return this->root != NULL;
 }
 
 // =======================
@@ -258,8 +267,7 @@ SceneNode::SceneNode(string nodeID) : id(nodeID)
 	this->appearance = NULL;
 
 	this->hasAppearance = false;
-	this->hasTexture = false;
-	this->inherits = false;
+	this->inherits = true;
 
 	glGetFloatv(GL_MODELVIEW_MATRIX, transform);
 }
@@ -282,6 +290,7 @@ void SceneNode::setParent(SceneNode* node)
 
 void SceneNode::setAppearance(Appearance* app)
 {
+	this->inherits = false;
 	this->hasAppearance = true;
 	this->appearance = app;
 }
@@ -299,25 +308,6 @@ float* SceneNode::getTransformMatrix()
 SceneNode* SceneNode::getParent()
 {
 	return this->parent;
-}
-
-Texture* SceneNode::getTexture()
-{
-	if(inherits && hasParent)
-	{
-		return parent->getTexture();
-	}
-	else
-	{
-		if(hasTexture)
-		{
-			return appearance->getTexture();
-		}
-		else 
-		{
-			return NULL;
-		}
-	}
 }
 
 string SceneNode::getID()
@@ -388,28 +378,62 @@ void SceneNode::Process()
 
 	glMultMatrixf(getTransformMatrix());
 
-	Appearance* app = getAppearance();
-	if(app != NULL)
+	if(hasAppearance)
 	{
-		app->apply();
+		addAppearanceToStack(this->appearance);
 	}
 
 	for(unsigned int i = 0; i < primitives.size(); i++) 
 	{
-		Texture* tex = getTexture();
-
-		if(tex != NULL)
+		if(!appearancesStack->empty())
 		{
-			this->primitives.at(i)->setTexture(tex);
+			if(appearancesStack->top())
+			{
+				if(appearancesStack->top()->hasTexture())
+				{
+					Texture* tex = appearancesStack->top()->getTexture();
+
+					primitives.at(i)->setTextureParams(tex->S(), tex->T());
+				}
+			}
 		}
-		this->primitives.at(i)->draw();
+
+		primitives.at(i)->draw();
 	}
 
 	for(unsigned int i = 0; i < descendants.size(); i++) 
 	{
-		descendants.at(i)->setParent(this); // is necessary because the same child can have different fathers depending on the node being processed
 		descendants.at(i)->Process();
 	}
 
+	if(hasAppearance)
+	{
+		removeAppearanceFromStack();
+	}
+
 	glPopMatrix();
+}
+
+
+void SceneNode::setAppearancesStack(stack<Appearance*> *apps)
+{
+	appearancesStack = apps;
+}
+
+void SceneNode::addAppearanceToStack(Appearance* app)
+{
+	appearancesStack->push(app);
+	appearancesStack->top()->apply();
+}
+
+void SceneNode::removeAppearanceFromStack()
+{
+	if(!appearancesStack->empty())
+	{
+		appearancesStack->pop();
+		if(!appearancesStack->empty())
+		{
+			appearancesStack->top()->apply();
+		}
+	}
 }

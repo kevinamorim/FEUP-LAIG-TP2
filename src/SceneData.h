@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <stack>
 #include <iostream>
 #include <iomanip>
 
@@ -32,10 +33,15 @@ private:
 	Appearance* appearance;
 
 	bool hasAppearance;
-	bool hasTexture;
 
 	std::vector<Primitive*> primitives;
 	std::vector<SceneNode*> descendants;
+
+protected:
+	stack<Appearance*> *appearancesStack;
+
+	void addAppearanceToStack(Appearance* app);
+	void removeAppearanceFromStack();
 
 public:
 	bool inherits;
@@ -43,6 +49,8 @@ public:
 
 	SceneNode(string nodeID);
 	~SceneNode();
+
+	void setAppearancesStack(stack<Appearance*> * apps);
 
 	void setParent(SceneNode* node);
 	void setTransformMatrix();
@@ -77,7 +85,9 @@ private:
 	// The root node belong to the vector nodes. However, for ease of access, it shall have its own pointer reference.
 	SceneNode* root;
 
-	std::vector<SceneNode*> nodes;
+	vector<SceneNode*> nodes;
+
+	stack<Appearance*> appearancesStack;
 
 public:
 	SceneGraph();
@@ -86,7 +96,9 @@ public:
 	SceneNode* getRoot();
 
 	void setRoot(SceneNode* node);
-	int addNode(SceneNode* node);
+	void addNode(SceneNode* node);
+
+	bool hasRoot();
 
 	// Accessory functions
 	SceneNode* getNode(string id);
@@ -95,6 +107,9 @@ public:
 	void Process();
 
 	int Verify(ostream & out);
+
+	int addAppearance(Appearance* app);
+	int removeAppearance();
 };
 
 

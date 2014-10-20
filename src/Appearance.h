@@ -12,10 +12,9 @@ using namespace std;
 /*
 	Texture
 */
-class Texture {
+class Texture : public CGFtexture {
 public:
 	Texture(string id, string file, float texlength_s, float texlength_t);
-	~Texture();
 
 	string getID();
 	string getFile();
@@ -48,6 +47,7 @@ protected:
 	string id;
 
 	bool hasTex;
+
 	Texture* texture;
 };
 

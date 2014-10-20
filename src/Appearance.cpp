@@ -6,8 +6,13 @@
 Appearance::Appearance(string id, float shininess, Point4d* ambient, Point4d* diffuse, Point4d* specular, Texture* texture)
 {
 	this->id = id;
-	this->texture = texture;
+
 	this->hasTex = (texture != NULL);
+	if(hasTex)
+	{
+		this->setTexture(texture);
+	}
+	this->texture = texture;
 
 	this->setShininess(shininess);
 	this->setAmbient(ambient->getFloatv());
@@ -29,13 +34,13 @@ string Appearance::getID()
 
 Texture* Appearance::getTexture()
 {
-	return texture;
+	return this->texture;
 }
 
 // =======================
 //    TEXTURE
 // =======================
-Texture::Texture(string id, string file, float length_s, float length_t)
+Texture::Texture(string id, string file, float length_s, float length_t) : CGFtexture(file)
 {
 	this->id = id;
 	this->file = file;

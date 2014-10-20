@@ -8,9 +8,9 @@ Primitive::Primitive()
 	this->tex = Point2d(1.0, 1.0);
 }
 
-void Primitive::setTexture(Texture* tex)
+void Primitive::setTextureParams(float s, float t)
 {
-	this->tex.setPoint2d(tex->S(), tex->T());
+	this->tex.setPoint2d(s, t);
 }
 
 

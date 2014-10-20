@@ -1131,27 +1131,19 @@ int ANFParser::createGraphNodes()
 
 			out << "            > Transforms..." << endl;
 			if(readTransforms(nodeElement, node) != OK)
-			{
 				nodeErrors++;
-			}
 
 			out << "            > Appearances..." << endl;
 			if(readAppearance(nodeElement, node) != OK)
-			{
 				nodeErrors++;
-			}
 
 			out << "            > Primitives..." << endl;
 			if(readPrimitives(nodeElement, node) != OK)
-			{
 				nodeErrors++;
-			}
 
 			out << "            > Descendants..." << endl;
 			if(readDescendants(nodeElement, node) != OK)
-			{	
 				nodeErrors++;
-			}
 
 			if(!nodeErrors)
 			{
@@ -1168,6 +1160,11 @@ int ANFParser::createGraphNodes()
 		}
 
 		nodeElement = nodeElement->NextSiblingElement("node");
+	}
+
+	if(!(sceneData->getSceneGraph()->hasRoot()))
+	{
+		localErrors++;
 	}
 
 	if(!localErrors)
@@ -1367,7 +1364,7 @@ int ANFParser::addTransformsToNode(SceneNode* node, queue<Transform* > * transfo
 }
 
 /* Appearances */
-int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* currentNode)
+int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1394,7 +1391,10 @@ int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* currentNode)
 		{
 			out << "            > Appearance : " << strAppearance << endl;
 
-			currentNode->setAppearance(sceneData->getAppearance(strAppearance));
+			if(strAppearance != "inherit")
+			{
+				node->setAppearance(sceneData->getAppearance(strAppearance));
+			}
 		}
 	}
 
@@ -1413,7 +1413,7 @@ int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* currentNode)
 }
 
 /* Primitives */
-int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* currentNode)
+int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1434,35 +1434,35 @@ int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* currentNode)
 
 				if (strType == "rectangle")
 				{
-					if(readPrimitiveRectangle(primitive, currentNode) != OK)
+					if(readPrimitiveRectangle(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "triangle")
 				{
-					if(readPrimitiveTriangle(primitive, currentNode) != OK)
+					if(readPrimitiveTriangle(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "cylinder")
 				{
-					if(readPrimitiveCylinder(primitive, currentNode) != OK)
+					if(readPrimitiveCylinder(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "sphere")
 				{
-					if(readPrimitiveSphere(primitive, currentNode) != OK)
+					if(readPrimitiveSphere(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "torus")
 				{
-					if(readPrimitiveTorus(primitive, currentNode) != OK)
+					if(readPrimitiveTorus(primitive, node) != OK)
 					{
 						primErrors++;
 					}
@@ -1500,7 +1500,7 @@ int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* currentNode)
 	}
 }
 
-int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, SceneNode* currentNode)
+int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Rectangle" << endl;
 
@@ -1520,7 +1520,7 @@ int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, SceneNode* curren
 
 	if(!localErrors)
 	{
-		currentNode->addPrimitive(new Rectangle(topLeft, bottomRight));	
+		node->addPrimitive(new Rectangle(topLeft, bottomRight));	
 		return OK;
 	}
 	else
@@ -1530,7 +1530,7 @@ int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, SceneNode* curren
 	}
 }
 
-int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, SceneNode* currentNode)
+int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Triangle" << endl;
 
@@ -1555,7 +1555,7 @@ int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, SceneNode* current
 
 	if(!localErrors)
 	{
-		currentNode->addPrimitive(new Triangle(point1, point2, point3));
+		node->addPrimitive(new Triangle(point1, point2, point3));
 
 		//out << " " << point1->toString() << " " << point2->toString() << " " << point3->toString() << endl;
 		printMsg(OK);
@@ -1570,7 +1570,7 @@ int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, SceneNode* current
 	}
 }
 
-int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, SceneNode* currentNode)
+int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Cylinder" << endl;
 
@@ -1605,7 +1605,7 @@ int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, SceneNode* current
 
 	if(!localErrors)
 	{
-		currentNode->addPrimitive(new Cylinder(base, top, height, slices, stacks));
+		node->addPrimitive(new Cylinder(base, top, height, slices, stacks));
 		return OK;
 	}
 	else
@@ -1615,7 +1615,7 @@ int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, SceneNode* current
 	}
 }
 
-int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, SceneNode* currentNode)
+int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Sphere" << endl;
 
@@ -1641,7 +1641,7 @@ int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, SceneNode* currentNo
 
 	if(!localErrors)
 	{
-		currentNode->addPrimitive(new Sphere(radius, slices, stacks));
+		node->addPrimitive(new Sphere(radius, slices, stacks));
 		return OK;
 	}
 	else
@@ -1651,7 +1651,7 @@ int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, SceneNode* currentNo
 	}
 }
 
-int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* currentNode)
+int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Torus" << endl;
 
@@ -1681,7 +1681,7 @@ int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* currentNod
 
 	if(!localErrors)
 	{
-		currentNode->addPrimitive(new Torus(inner, outer, slices, loops));
+		node->addPrimitive(new Torus(inner, outer, slices, loops));
 		return OK;
 	}
 	else
@@ -1692,7 +1692,7 @@ int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* currentNod
 }
 
 /* Descendants */
-int ANFParser::readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode)
+int ANFParser::readDescendants(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1721,7 +1721,7 @@ int ANFParser::readDescendants(TiXmlElement* nodeElement, SceneNode* currentNode
 				{
 					out << "            > id : " << strID << endl;
 
-					this->descendants.push_back(pair<string, string>(currentNode->getID(), strID));
+					this->descendants.push_back(pair<string, string>(node->getID(), strID));
 				}
 
 				noderefElement = noderefElement->NextSiblingElement("noderef");
