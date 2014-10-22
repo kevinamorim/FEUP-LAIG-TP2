@@ -98,23 +98,30 @@ private:
 */
 class Cylinder : public Primitive {
 public:
-	Cylinder(float base, float top, float height, int slices, int stacks);
 
+	Cylinder(float base, float top, float height, int slices, int stacks); /* Default Constructor */
+
+	// Inherited methods
 	string Type();
 	void draw();
 
 private:
+
 	float base;
 	float top;
-	float height;
-	int slices;
-	int stacks;
+	float height;	
+	int slices;		/* Number of slices, like a pizza, the cylinder has slices... */
+	int stacks;		/* Number of vertical divisions of the cylinder */
 
-	float alpha; // angle for increment along the building of the cylinder vertex
+	float alpha;	// angle for increment along the building of the cylinder vertex
 
-	vector<vector<float> > vertsX, vertsY, vertsZ;
-	vector<vector<float> > normsX, normsY, normsZ;
-	vector<vector<float> > texCoordS, texCoordT;
+	vector<vector<Point3d*> > verts;
+	vector<vector<Point3d*> > norms;
+	vector<vector<Point2d*> > texCoords;
+
+	void calculateVertex();			/* Calculates the cylinder vertex */
+	void calculateNormals();		/* Calculates the cylinder normals */
+	void calculateTextureCoords();	/* Calculates the cylinder texture coords */
 };
 
 /*
@@ -148,14 +155,17 @@ public:
 private:
 	float inner;
 	float outer;
-	float radiusTube; // middle of the torus' tube.
+	float radiusTube;	// middle of the torus' tube.
 	int slices;
 	int loops;
 
 	int numVerts;
 
-	vector<vector<float >> vertsX, vertsY, vertsZ;
-	vector<vector<float >> normsX, normsY, normsZ;
+	vector<vector<Point3d* >> verts;
+	vector<vector<Point3d* >> norms;
+
+	void calculate();		/* Calculates the verts and normals coordinates. */ 
+
 };
 
 #endif

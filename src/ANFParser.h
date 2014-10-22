@@ -97,48 +97,52 @@ private:
 	int checkAllElements();
 	int checkElement(TiXmlElement** element, string elementName);
 
-	// Load Elements
-	int loadGlobals();
-	int loadCameras();
-	int loadLights();
-	int loadTextures();
-	int loadAppearances();
+	// ======================================================
+	//		PARSER
+	// ======================================================
+	// Globals
+	int parseGlobals();
+	// Cameras
+	int parseCameras();
+	int parsePerspectiveCameras(string strInitialCamera);
+	int parseOrthoCameras(string strInitialCamera);
+	// Lights
+	int parseLights();
+	int parseOmniLight(TiXmlElement** lightElement);
+	int parseSpotLight(TiXmlElement** lightElement);
+	int parseComponents(TiXmlElement** element, Point4d** ambient, Point4d** diffuse, Point4d** specular);
+	// Textures
+	int parseTextures();
+	// Appearances
+	int parseAppearances();
 
-	// ***********************************************************************************
-	// **********************************  GRAPH   ***************************************
-	int createGraphNodes();
+	// ======================================================
+	//		GRAPH
+	// ======================================================
+	int parseGraphNodes();
 	int verifyGraph();
 	int linkGraphNodes();
 
-	int readTransforms(TiXmlElement* nodeElement, SceneNode* node);
-	int readRotate(TiXmlElement* transformElement, queue<Transform*> * transforms);
-	int readScale(TiXmlElement* transformElement, queue<Transform*> * transforms);
-	int readTranslate(TiXmlElement* transformElement, queue<Transform*> * transforms);
+	// Transforms
+	int parseNodeTransforms(TiXmlElement* nodeElement, SceneNode* node);
+	int parseRotate(TiXmlElement* transformElement, queue<Transform*> * transforms);
+	int parseScale(TiXmlElement* transformElement, queue<Transform*> * transforms);
+	int parseTranslate(TiXmlElement* transformElement, queue<Transform*> * transforms);
 	int addTransformsToNode(SceneNode* node, queue<Transform* > * transforms);
 
-	int readAppearance(TiXmlElement* transformElement, SceneNode* node);
+	// Appearance
+	int parseNodeAppearance(TiXmlElement* transformElement, SceneNode* node);
 
-	int readPrimitives(TiXmlElement* nodeElement, SceneNode* node);
-	int readPrimitiveRectangle(TiXmlElement* primitiveElement, SceneNode* node);
-	int readPrimitiveTriangle(TiXmlElement* primitiveElement, SceneNode* node);
-	int readPrimitiveCylinder(TiXmlElement* primitiveElement, SceneNode* node);
-	int readPrimitiveSphere(TiXmlElement* primitiveElement, SceneNode* node);
-	int readPrimitiveTorus(TiXmlElement* primitiveElement, SceneNode* node);
+	// Primitives
+	int parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node);
+	int parseRectangle(TiXmlElement* primitiveElement, SceneNode* node);
+	int parseTriangle(TiXmlElement* primitiveElement, SceneNode* node);
+	int parseCylinder(TiXmlElement* primitiveElement, SceneNode* node);
+	int parseSphere(TiXmlElement* primitiveElement, SceneNode* node);
+	int parseTorus(TiXmlElement* primitiveElement, SceneNode* node);
 
-	int readDescendants(TiXmlElement* nodeElement, SceneNode* node);
-	// ***********************************************************************************
-	// ***********************************************************************************
-
-	// Read cameras
-	int readPerspectiveCameras(string strInitialCamera);
-	int readOrthoCameras(string strInitialCamera);
-
-	// Read lights
-	int readOmniLight(TiXmlElement** lightElement);
-	int readSpotLight(TiXmlElement** lightElement);
-
-	// Lights and appearances
-	int readComponents(TiXmlElement** light, Point4d** ambient, Point4d** diffuse, Point4d** specular);
+	// Descendants
+	int parseNodeDescendants(TiXmlElement* nodeElement, SceneNode* node);
 
 	// ===========================================
 	// OTHERS

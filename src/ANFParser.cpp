@@ -72,7 +72,7 @@ int ANFParser::Parse()
 	out << "> Load : globals" << endl;
 	if(globalsElement)
 	{
-		loadGlobals();
+		parseGlobals();
 	}
 	else
 	{
@@ -83,7 +83,7 @@ int ANFParser::Parse()
 	out << "> Load : cameras" << endl;
 	if(camerasElement)
 	{
-		loadCameras();
+		parseCameras();
 	}
 	else
 	{
@@ -94,7 +94,7 @@ int ANFParser::Parse()
 	out << "> Load : lights" << endl;
 	if(lightsElement)
 	{
-		loadLights();
+		parseLights();
 	}
 	else
 	{
@@ -105,7 +105,7 @@ int ANFParser::Parse()
 	out << "> Load : textures" << endl;
 	if(texturesElement)
 	{
-		loadTextures();
+		parseTextures();
 	}
 	else
 	{
@@ -116,7 +116,7 @@ int ANFParser::Parse()
 	out << "> Load : appearances" << endl;
 	if(texturesElement)
 	{
-		loadAppearances();
+		parseAppearances();
 	}
 	else
 	{
@@ -129,7 +129,7 @@ int ANFParser::Parse()
 	{
 		out << "    _______________________________" << endl;
 		out << "    > Create nodes..." << endl;
-		if(createGraphNodes() != OK)
+		if(parseGraphNodes() != OK)
 			errors++;
 
 		out << "    _______________________________" << endl;
@@ -275,9 +275,10 @@ int ANFParser::checkElement(TiXmlElement** element, string elementName)
 	}
 }
 
-// ***********************************************************************************
-// ********************************  GLOBALS  ****************************************
-int ANFParser::loadGlobals()
+// ===================================================================================
+// =====================================  PARSE  =====================================
+// ===================================================================================
+int ANFParser::parseGlobals()
 {
 	int localErrors = 0;
 
@@ -448,7 +449,7 @@ int ANFParser::loadGlobals()
 	}
 }
 
-int ANFParser::loadCameras()
+int ANFParser::parseCameras()
 {
 	out << "    _______________________________" << endl;
 	out << "    > Reading : cameras..." << endl;
@@ -463,9 +464,9 @@ int ANFParser::loadCameras()
 	}
 	else
 	{
-		readPerspectiveCameras(strInitial);
+		parsePerspectiveCameras(strInitial);
 
-		readOrthoCameras(strInitial);
+		parseOrthoCameras(strInitial);
 	}
 
 	if(!sceneData->hasInitialCamera())
@@ -493,9 +494,7 @@ int ANFParser::loadCameras()
 	}
 }
 
-// ***********************************************************************************
-// ********************************  CAMERAS  ****************************************
-int ANFParser::readPerspectiveCameras(string strInitialCamera)
+int ANFParser::parsePerspectiveCameras(string strInitialCamera)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -586,7 +585,7 @@ int ANFParser::readPerspectiveCameras(string strInitialCamera)
 	}
 }
 
-int ANFParser::readOrthoCameras(string strInitialCamera) 
+int ANFParser::parseOrthoCameras(string strInitialCamera) 
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -687,9 +686,7 @@ int ANFParser::readOrthoCameras(string strInitialCamera)
 	}
 }
 
-// ***********************************************************************************
-// *********************************  LIGHTS  ****************************************
-int ANFParser::loadLights() 
+int ANFParser::parseLights() 
 {
 	int localErrors = 0;
 
@@ -717,11 +714,11 @@ int ANFParser::loadLights()
 			{
 				if(strType == "omni")
 				{
-					readOmniLight(&lightElement);
+					parseOmniLight(&lightElement);
 				}
 				else if(strType == "spot")
 				{
-					readSpotLight(&lightElement);
+					parseSpotLight(&lightElement);
 				}
 				else
 				{
@@ -752,7 +749,7 @@ int ANFParser::loadLights()
 	}
 }
 
-int ANFParser::readOmniLight(TiXmlElement** lightElement)
+int ANFParser::parseOmniLight(TiXmlElement** lightElement)
 {
 	out << "        ___________________________" << endl;
 
@@ -793,7 +790,7 @@ int ANFParser::readOmniLight(TiXmlElement** lightElement)
 	// ambient (Point4d)
 	// diffuse (Point4d)
 	// specular (Point4d)
-	if(readComponents(&light, &ambient, &diffuse, &specular) != OK)
+	if(parseComponents(&light, &ambient, &diffuse, &specular) != OK)
 	{
 		localErrors++;
 	}
@@ -815,7 +812,7 @@ int ANFParser::readOmniLight(TiXmlElement** lightElement)
 	}
 }
 
-int ANFParser::readSpotLight(TiXmlElement** lightElement)
+int ANFParser::parseSpotLight(TiXmlElement** lightElement)
 {
 	out << "        ___________________________" << endl;
 
@@ -875,7 +872,7 @@ int ANFParser::readSpotLight(TiXmlElement** lightElement)
 	// ambient (Point4d)
 	// diffuse (Point4d)
 	// specular (Point4d)
-	if(readComponents(&light, &ambient, &diffuse, &specular) != OK)
+	if(parseComponents(&light, &ambient, &diffuse, &specular) != OK)
 	{
 		localErrors++;
 	}
@@ -897,9 +894,7 @@ int ANFParser::readSpotLight(TiXmlElement** lightElement)
 	}
 }
 
-// ***********************************************************************************
-// ********************************  TEXTURES  ***************************************
-int ANFParser::loadTextures()
+int ANFParser::parseTextures()
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -973,9 +968,7 @@ int ANFParser::loadTextures()
 	}
 }
 
-// ***********************************************************************************
-// *******************************  APPEARANCES  *************************************
-int ANFParser::loadAppearances()
+int ANFParser::parseAppearances()
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1021,7 +1014,7 @@ int ANFParser::loadAppearances()
 				localWarnings++; // Not critical
 			}
 
-			if(readComponents(&appearance, &ambient, &diffuse, &specular) != OK)
+			if(parseComponents(&appearance, &ambient, &diffuse, &specular) != OK)
 			{
 				appearanceErrors++;
 			}
@@ -1081,10 +1074,96 @@ int ANFParser::loadAppearances()
 	}
 }
 
+int ANFParser::parseComponents(TiXmlElement** element, Point4d** ambient, Point4d** diffuse, Point4d** specular)
+{
+	int localErrors = 0;
+
+	TiXmlElement* component = (*element)->FirstChildElement("component");
+	if(!component)
+	{
+		printMsg(ERROR, "No <component> block is not defined");
+		localErrors++;
+	}
+	else
+	{
+		string strType;
+		bool readAmbient = false;
+		bool readDiffuse = false;
+		bool readSpecular = false;
+
+		int index = 1;
+
+		while(component)
+		{
+			if(index > 3)
+			{
+				printMsg(WARNING, " : More than 3 <component> blocks have been found (overwriting previous values)");
+				warnings++;
+			}
+
+			if(readString(&component, &strType, "type", ERROR) != OK)
+			{
+				localErrors++;
+			}
+			else
+			{		
+				if(strType == "ambient")
+				{
+					if(readPoint4d(&component, ambient, "value", ERROR) != OK)
+					{
+						localErrors++;
+					}
+					else
+					{
+						readAmbient = true;
+					}
+				}
+				else if(strType == "diffuse")
+				{
+					if(readPoint4d(&component, diffuse, "value", ERROR) != OK)
+					{
+						localErrors++;
+					}
+					else
+					{
+						readDiffuse = true;
+					}
+				}
+				else if(strType == "specular")
+				{
+					if(readPoint4d(&component, specular, "value", ERROR) != OK)
+					{
+						localErrors++;
+					}
+					else
+					{
+						readSpecular = true;
+					}
+				}
+			}
+
+			index++;
+			component = component->NextSiblingElement("component");
+		}
+	}
+
+	if(!localErrors)
+	{
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+// ===================================================================================
+// ===================================================================================
+
 // ***********************************************************************************
 // **********************************  GRAPH  ****************************************
 /* Main method */
-int ANFParser::createGraphNodes()
+int ANFParser::parseGraphNodes()
 {
 	int localErrors = 0;
 
@@ -1132,19 +1211,19 @@ int ANFParser::createGraphNodes()
 			sceneData->getSceneGraph()->addNode(node);
 
 			out << "            > Transforms..." << endl;
-			if(readTransforms(nodeElement, node) != OK)
+			if(parseNodeTransforms(nodeElement, node) != OK)
 				nodeErrors++;
 
 			out << "            > Appearances..." << endl;
-			if(readAppearance(nodeElement, node) != OK)
+			if(parseNodeAppearance(nodeElement, node) != OK)
 				nodeErrors++;
 
 			out << "            > Primitives..." << endl;
-			if(readPrimitives(nodeElement, node) != OK)
+			if(parseNodePrimitives(nodeElement, node) != OK)
 				nodeErrors++;
 
 			out << "            > Descendants..." << endl;
-			if(readDescendants(nodeElement, node) != OK)
+			if(parseNodeDescendants(nodeElement, node) != OK)
 				nodeErrors++;
 
 			if(!nodeErrors)
@@ -1181,7 +1260,7 @@ int ANFParser::createGraphNodes()
 }
 
 /* Transforms */
-int ANFParser::readTransforms(TiXmlElement* nodeElement, SceneNode* node)
+int ANFParser::parseNodeTransforms(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1206,7 +1285,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, SceneNode* node)
 			{
 				if ("scale" == strType)
 				{
-					if(readScale(transformElement, transforms) != OK)
+					if(parseScale(transformElement, transforms) != OK)
 					{
 						printMsg(ERROR, "Scale attributes are not valid");
 						localErrors++;
@@ -1214,7 +1293,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, SceneNode* node)
 				}
 				else if ("rotate" == strType)
 				{
-					if(readRotate(transformElement, transforms) != OK)
+					if(parseRotate(transformElement, transforms) != OK)
 					{
 						printMsg(ERROR, "Rotation attributes are not valid");
 						localErrors++;
@@ -1222,7 +1301,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, SceneNode* node)
 				}
 				else if ("translate" == strType)
 				{
-					if(readTranslate(transformElement, transforms) != OK)
+					if(parseTranslate(transformElement, transforms) != OK)
 					{
 						printMsg(ERROR, "Translate attributes are not valid");
 						localErrors++;
@@ -1258,7 +1337,7 @@ int ANFParser::readTransforms(TiXmlElement* nodeElement, SceneNode* node)
 	}
 }
 
-int ANFParser::readRotate(TiXmlElement* transformElement, queue<Transform*> * transforms)
+int ANFParser::parseRotate(TiXmlElement* transformElement, queue<Transform*> * transforms)
 {
 	out << "            > Rotate" << endl;
 
@@ -1291,7 +1370,7 @@ int ANFParser::readRotate(TiXmlElement* transformElement, queue<Transform*> * tr
 	}
 }
 
-int ANFParser::readTranslate(TiXmlElement* transformElement, queue<Transform*> * transforms)
+int ANFParser::parseTranslate(TiXmlElement* transformElement, queue<Transform*> * transforms)
 {
 	int localErrors = 0;
 
@@ -1318,7 +1397,7 @@ int ANFParser::readTranslate(TiXmlElement* transformElement, queue<Transform*> *
 	}
 }
 
-int ANFParser::readScale(TiXmlElement* transformElement, queue<Transform*> * transforms)
+int ANFParser::parseScale(TiXmlElement* transformElement, queue<Transform*> * transforms)
 {
 	int localErrors = 0;
 
@@ -1366,7 +1445,7 @@ int ANFParser::addTransformsToNode(SceneNode* node, queue<Transform* > * transfo
 }
 
 /* Appearances */
-int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* node)
+int ANFParser::parseNodeAppearance(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1415,7 +1494,7 @@ int ANFParser::readAppearance(TiXmlElement* nodeElement, SceneNode* node)
 }
 
 /* Primitives */
-int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* node)
+int ANFParser::parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1436,35 +1515,35 @@ int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* node)
 
 				if (strType == "rectangle")
 				{
-					if(readPrimitiveRectangle(primitive, node) != OK)
+					if(parseRectangle(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "triangle")
 				{
-					if(readPrimitiveTriangle(primitive, node) != OK)
+					if(parseTriangle(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "cylinder")
 				{
-					if(readPrimitiveCylinder(primitive, node) != OK)
+					if(parseCylinder(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "sphere")
 				{
-					if(readPrimitiveSphere(primitive, node) != OK)
+					if(parseSphere(primitive, node) != OK)
 					{
 						primErrors++;
 					}
 				}
 				else if (strType == "torus")
 				{
-					if(readPrimitiveTorus(primitive, node) != OK)
+					if(parseTorus(primitive, node) != OK)
 					{
 						primErrors++;
 					}
@@ -1502,7 +1581,7 @@ int ANFParser::readPrimitives(TiXmlElement* nodeElement, SceneNode* node)
 	}
 }
 
-int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, SceneNode* node)
+int ANFParser::parseRectangle(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Rectangle" << endl;
 
@@ -1532,7 +1611,7 @@ int ANFParser::readPrimitiveRectangle(TiXmlElement* primitive, SceneNode* node)
 	}
 }
 
-int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, SceneNode* node)
+int ANFParser::parseTriangle(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Triangle" << endl;
 
@@ -1572,7 +1651,7 @@ int ANFParser::readPrimitiveTriangle(TiXmlElement* primitive, SceneNode* node)
 	}
 }
 
-int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, SceneNode* node)
+int ANFParser::parseCylinder(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Cylinder" << endl;
 
@@ -1617,7 +1696,7 @@ int ANFParser::readPrimitiveCylinder(TiXmlElement* primitive, SceneNode* node)
 	}
 }
 
-int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, SceneNode* node)
+int ANFParser::parseSphere(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Sphere" << endl;
 
@@ -1653,7 +1732,7 @@ int ANFParser::readPrimitiveSphere(TiXmlElement* primitive, SceneNode* node)
 	}
 }
 
-int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* node)
+int ANFParser::parseTorus(TiXmlElement* primitive, SceneNode* node)
 {
 	out << "            > Torus" << endl;
 
@@ -1694,7 +1773,7 @@ int ANFParser::readPrimitiveTorus(TiXmlElement* primitive, SceneNode* node)
 }
 
 /* Descendants */
-int ANFParser::readDescendants(TiXmlElement* nodeElement, SceneNode* node)
+int ANFParser::parseNodeDescendants(TiXmlElement* nodeElement, SceneNode* node)
 {
 	int localErrors = 0;
 	int localWarnings = 0;
@@ -1942,90 +2021,6 @@ int ANFParser::readPoint4d(TiXmlElement** element, Point4d** point, string descr
 			*point = new Point4d(a, b, c, d);
 			return OK;
 		}
-	}
-}
-
-int ANFParser::readComponents(TiXmlElement** element, Point4d** ambient, Point4d** diffuse, Point4d** specular)
-{
-	int localErrors = 0;
-
-	TiXmlElement* component = (*element)->FirstChildElement("component");
-	if(!component)
-	{
-		printMsg(ERROR, "No <component> block is not defined");
-		localErrors++;
-	}
-	else
-	{
-		string strType;
-		bool readAmbient = false;
-		bool readDiffuse = false;
-		bool readSpecular = false;
-
-		int index = 1;
-
-		while(component)
-		{
-			if(index > 3)
-			{
-				printMsg(WARNING, " : More than 3 <component> blocks have been found (overwriting previous values)");
-				warnings++;
-			}
-
-			if(readString(&component, &strType, "type", ERROR) != OK)
-			{
-				localErrors++;
-			}
-			else
-			{		
-				if(strType == "ambient")
-				{
-					if(readPoint4d(&component, ambient, "value", ERROR) != OK)
-					{
-						localErrors++;
-					}
-					else
-					{
-						readAmbient = true;
-					}
-				}
-				else if(strType == "diffuse")
-				{
-					if(readPoint4d(&component, diffuse, "value", ERROR) != OK)
-					{
-						localErrors++;
-					}
-					else
-					{
-						readDiffuse = true;
-					}
-				}
-				else if(strType == "specular")
-				{
-					if(readPoint4d(&component, specular, "value", ERROR) != OK)
-					{
-						localErrors++;
-					}
-					else
-					{
-						readSpecular = true;
-					}
-				}
-			}
-
-			index++;
-			component = component->NextSiblingElement("component");
-		}
-	}
-
-	if(!localErrors)
-	{
-		return OK;
-	}
-	else
-	{
-		errors += localErrors;
-		return ERROR;
 	}
 }
 

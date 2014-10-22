@@ -172,8 +172,6 @@ void Rectangle::calculateVertex(Point2d* p1, Point2d* p2) {
 	}
 }
 
-
-
 // =======================
 //    Cylinder
 // =======================
@@ -187,101 +185,10 @@ Cylinder::Cylinder(float base, float top, float height, int slices, int stks)
 
 	this->alpha = 2 * PI / slices;
 
-	// Vertex init
-	this->vertsX = vector<vector<float> >();
-	this->vertsY = vector<vector<float> >();
-	this->vertsZ = vector<vector<float> >();
+	calculateVertex();
+	calculateNormals();
+	calculateTextureCoords();
 
-	vector<float> tempX = vector<float>();
-	vector<float> tempY = vector<float>();
-	vector<float> tempZ = vector<float>();
-
-	float zStep = height / (stacks - 1);
-	float radiusStep = (top - base) / (stacks - 1);
-	float radius = base;
-
-	for(int i = 0; i < stacks; i++)
-	{
-		float zCoord = i * zStep;
-
-		for(int j = 0; j < slices; j++)
-		{
-			tempX.push_back(radius * cos(j * alpha));
-			tempY.push_back(radius * sin(j * alpha));
-			tempZ.push_back(zCoord);
-		}
-
-		vertsX.push_back(tempX);
-		vertsY.push_back(tempY);
-		vertsZ.push_back(tempZ);
-
-		tempX.clear();
-		tempY.clear();
-		tempZ.clear();
-
-		radius += radiusStep;
-	}
-
-	// Normals init
-	this->normsX = vector<vector<float> >();
-	this->normsX = vector<vector<float> >();
-	this->normsX = vector<vector<float> >();
-
-	vector<float> tempNormsX = vector<float>();
-	vector<float> tempNormsY = vector<float>();
-	vector<float> tempNormsZ = vector<float>();
-
-	float zNorm = (base - top);
-
-	for(int i = 0; i < stacks; i++)
-	{
-		for(int j = 0; j < slices; j++)
-		{
-			tempNormsX.push_back(vertsX[i][j]);
-			tempNormsY.push_back(vertsY[i][j]);
-			tempNormsZ.push_back(zNorm);
-		}
-
-		normsX.push_back(tempNormsX);
-		normsY.push_back(tempNormsY);
-		normsZ.push_back(tempNormsZ);
-
-		tempNormsX.clear();
-		tempNormsY.clear();
-		tempNormsZ.clear();
-	}
-
-	// Texture coords init
-	this->texCoordS = vector<vector<float> >();
-	this->texCoordT = vector<vector<float> >();
-
-	vector<float> tempTexS = vector<float>();
-	vector<float> tempTexT = vector<float>();
-
-	float sInc = 2 * PI / slices; // diameter / slices
-	float tInc = 1 / (stacks - 1);
-
-	float s = 0;
-	float t = 0;
-
-	for(int i = 0; i < stacks; i++)
-	{
-		for(int j = 0; j < slices; j++)
-		{
-			tempTexS.push_back(s);
-			tempTexT.push_back(t);
-
-			s += sInc;
-		}
-
-		texCoordS.push_back(tempTexS);
-		texCoordT.push_back(tempTexT);
-
-		tempTexS.clear();
-		tempTexT.clear();
-
-		t += tInc;
-	}
 }
 
 void Cylinder::draw()
@@ -295,21 +202,21 @@ void Cylinder::draw()
 			int jj = (j+1) % slices;
 
 			glBegin(GL_POLYGON);
-			glTexCoord2f(texCoordS[i][j] / this->tex.X(), texCoordT[i][j] / this->tex.Y());
-				glNormal3f(normsX[i][j], normsY[i][j], normsZ[i][j]);
-				glVertex3f(vertsX[i][j], vertsY[i][j], vertsZ[i][j]);
+			glTexCoord2f(texCoords[i][j]->X() / this->tex.X(), texCoords[i][j]->Y() / this->tex.Y());
+				glNormal3f(norms[i][j]->X(), norms[i][j]->Y(), norms[i][j]->Z());
+				glVertex3f(verts[i][j]->X(), verts[i][j]->Y(), verts[i][j]->Z());
 
-				glTexCoord2f(texCoordS[i][jj] / this->tex.X(), texCoordT[i][jj] / this->tex.Y());
-				glNormal3f(normsX[i][jj], normsY[i][jj], normsZ[i][jj]);
-				glVertex3f(vertsX[i][jj], vertsY[i][jj], vertsZ[i][jj]);
+				glTexCoord2f(texCoords[i][jj]->X() / this->tex.X(), texCoords[i][jj]->Y() / this->tex.Y());
+				glNormal3f(norms[i][jj]->X(), norms[i][jj]->Y(), norms[i][jj]->Z());
+				glVertex3f(verts[i][jj]->X(), verts[i][jj]->Y(), verts[i][jj]->Z());
 
-				glTexCoord2f(texCoordS[ii][jj] / this->tex.X(), texCoordT[ii][jj] / this->tex.Y());
-				glNormal3f(normsX[ii][jj], normsY[ii][jj], normsZ[ii][jj]);
-				glVertex3f(vertsX[ii][jj], vertsY[ii][jj], vertsZ[ii][jj]);
+				glTexCoord2f(texCoords[ii][jj]->X() / this->tex.X(), texCoords[ii][jj]->Y() / this->tex.Y());
+				glNormal3f(norms[ii][jj]->X(), norms[ii][jj]->Y(), norms[ii][jj]->Z());
+				glVertex3f(verts[ii][jj]->X(), verts[ii][jj]->Y(), verts[ii][jj]->Z());
 
-				glTexCoord2f(texCoordS[ii][j] / this->tex.X(), texCoordT[ii][j] / this->tex.Y());
-				glNormal3f(normsX[ii][j], normsY[ii][j], normsZ[ii][j]);
-				glVertex3f(vertsX[ii][j], vertsY[ii][j], vertsZ[ii][j]);
+				glTexCoord2f(texCoords[ii][j]->X() / this->tex.X(), texCoords[ii][j]->Y() / this->tex.Y());
+				glNormal3f(norms[ii][j]->X(), norms[ii][j]->Y(), norms[ii][j]->Z());
+				glVertex3f(verts[ii][j]->X(), verts[ii][j]->Y(), verts[ii][j]->Z());
 			glEnd();
 		}
 	}
@@ -321,11 +228,11 @@ void Cylinder::draw()
 		glNormal3f(0, 0, 1);
 		for(int j = 0; j < slices ; j++)
 		{
-			float s = (vertsX[zTop][j] + top) / (top * this->tex.X());
-			float t = (vertsY[zTop][j] + top) / (top * this->tex.Y());
+			float s = (verts[zTop][j]->X() + top) / (top * this->tex.X());
+			float t = (verts[zTop][j]->Y() + top) / (top * this->tex.Y());
 
 			glTexCoord2f(s, t);
-			glVertex3f(vertsX[zTop][j], vertsY[zTop][j], vertsZ[zTop][j]);
+			glVertex3f(verts[zTop][j]->X(), verts[zTop][j]->Y(), verts[zTop][j]->Z());
 		}
 	glEnd();
 
@@ -336,11 +243,11 @@ void Cylinder::draw()
 		glNormal3f(0, 0, -1);
 		for(int j = (slices - 1); j >= 0 ; j--)
 		{
-			float s = (vertsX[zBase][j] + base) / (base * this->tex.X());
-			float t = (vertsY[zBase][j] + base) / (base * this->tex.Y());
+			float s = (verts[zBase][j]->X() + base) / (base * this->tex.X());
+			float t = (verts[zBase][j]->Y() + base) / (base * this->tex.Y());
 
 			glTexCoord2f(s, t);
-			glVertex3f(vertsX[zBase][j], vertsY[zBase][j], vertsZ[zBase][j]);
+			glVertex3f(verts[zBase][j]->X(), verts[zBase][j]->Y(), verts[zBase][j]->Z());
 		}
 	glEnd();
 
@@ -349,6 +256,90 @@ void Cylinder::draw()
 string Cylinder::Type()
 {
 	return "Cylinder";
+}
+
+void Cylinder::calculateVertex() {
+	// Vertex init
+	this->verts = vector<vector<Point3d*> >();
+
+	vector<Point3d*> temp = vector<Point3d*>();
+
+	float zStep = height / (stacks - 1);
+	float radiusStep = (top - base) / (stacks - 1);
+	float radius = base;
+
+	for(int i = 0; i < stacks; i++)
+	{
+		float zCoord = i * zStep;
+
+		for(int j = 0; j < slices; j++)
+		{
+			temp.push_back(new Point3d(
+				(radius * cos(j * alpha)),
+				(radius * sin(j * alpha)),
+				zCoord));
+		}
+
+		verts.push_back(temp);
+
+		temp.clear();
+		radius += radiusStep;
+	}
+}
+
+void Cylinder::calculateNormals() {
+
+	// Normals init
+	this->norms = vector<vector<Point3d*> >();
+	vector<Point3d*> tempNorms = vector<Point3d*>();
+
+	float zNorm = (base - top);
+
+	for(int i = 0; i < stacks; i++)
+	{
+		for(int j = 0; j < slices; j++)
+		{
+			tempNorms.push_back(new Point3d(
+				(verts[i][j]->X()),
+				(verts[i][j]->Y()),
+				zNorm
+			));
+		}
+
+		norms.push_back(tempNorms);
+
+		tempNorms.clear();
+	}
+}
+
+void Cylinder::calculateTextureCoords() {
+
+		// Texture coords init
+	this->texCoords = vector<vector<Point2d*> >();
+
+	vector<Point2d*> tempTex = vector<Point2d*>();
+
+	float sInc = 2 * PI / slices; // diameter / slices
+	float tInc = 1 / (stacks - 1);
+
+	float s = 0;
+	float t = 0;
+
+	for(int i = 0; i < stacks; i++)
+	{
+		for(int j = 0; j < slices; j++)
+		{
+			tempTex.push_back(new Point2d(s, t));
+			s += sInc;
+		}
+
+		texCoords.push_back(tempTex);
+
+		tempTex.clear();
+
+		t += tInc;
+	}
+
 }
 
 // =======================
@@ -385,15 +376,6 @@ Torus::Torus(float inner, float outer, int slices, int loops)
 	this->loops = loops;
 	this->radiusTube = 0.5 * (outer - inner);
 
-	// Vertex and Normals init
-	this->vertsX = vector<vector<float> >();
-	this->vertsY = vector<vector<float> >();
-	this->vertsZ = vector<vector<float> >();
-
-	this->normsX = vector<vector<float> >();
-	this->normsY = vector<vector<float> >();
-	this->normsZ = vector<vector<float> >();
-
 	/*
 		A torus can be seen and drawn as successive circunferences,
 		each one varying in their height and radius according to a circunference
@@ -402,64 +384,8 @@ Torus::Torus(float inner, float outer, int slices, int loops)
 			- z coordinate (or 'height' of each circunference) = sin(sliceIndex * angleOfIncrement);
 			- radius = cos(sliceIndex * angleOfIncrement);
 	*/
+	calculate();
 
-	float alpha = 2 * PI / slices;
-	float beta = 2 * PI / loops; // angle of increment for each of the circunferences;
-
-	vector<float> tempX, tempY, tempZ;
-	vector<float> tempNormX, tempNormY, tempNormZ;
-
-	tempX = vector<float>();
-	tempY = vector<float>();
-	tempZ = vector<float>();
-
-	tempNormX = vector<float>();
-	tempNormY = vector<float>();
-	tempNormZ = vector<float>();
-
-	for(int i = 0; i < slices; i++)
-	{
-		float zCoord = radiusTube * sin(i * alpha);
-		float radius = inner + radiusTube * (1 + cos(i * alpha));
-
-		for(int j = 0; j < loops; j++)
-		{
-			float x = radius * cos(j * beta);
-			float y = radius * sin(j * beta);
-			float z = zCoord;
-
-			float xCenter = (inner + radiusTube) * cos(j * beta);
-			float yCenter = (inner + radiusTube) * sin(j * beta);
-
-			tempX.push_back(x);
-			tempY.push_back(y);
-			tempZ.push_back(z);
-
-			x -= xCenter;
-			y -= yCenter;
-
-			tempNormX.push_back(x);
-			tempNormY.push_back(y);
-			tempNormZ.push_back(z);
-			
-		}
-
-		vertsX.push_back(tempX);
-		vertsY.push_back(tempY);
-		vertsZ.push_back(tempZ);
-
-		normsX.push_back(tempNormX);
-		normsY.push_back(tempNormY);
-		normsZ.push_back(tempNormZ);
-
-		tempNormX.clear();
-		tempNormY.clear();
-		tempNormZ.clear();
-
-		tempX.clear();
-		tempY.clear();
-		tempZ.clear();
-	}
 }
 
 void Torus::draw()
@@ -483,20 +409,20 @@ void Torus::draw()
 
 			glBegin(GL_POLYGON);
 				glTexCoord2f(s, t);
-				glNormal3f(normsX[i][j], normsY[i][j], normsZ[i][j]);
-				glVertex3f(vertsX[i][j], vertsY[i][j], vertsZ[i][j]);
+				glNormal3f(norms[i][j]->X(), norms[i][j]->Y(), norms[i][j]->Z());
+				glVertex3f(verts[i][j]->X(), verts[i][j]->Y(), verts[i][j]->Z());
 
 				glTexCoord2f(ss, t);
-				glNormal3f(normsX[i][jj], normsY[i][jj], normsZ[i][jj]);
-				glVertex3f(vertsX[i][jj], vertsY[i][jj], vertsZ[i][jj]);
+				glNormal3f(norms[i][jj]->X(), norms[i][jj]->Y(), norms[i][jj]->Z());
+				glVertex3f(verts[i][jj]->X(), verts[i][jj]->Y(), verts[i][jj]->Z());
 
 				glTexCoord2f(ss, tt);
-				glNormal3f(normsX[ii][jj], normsY[ii][jj], normsZ[ii][jj]);
-				glVertex3f(vertsX[ii][jj], vertsY[ii][jj], vertsZ[ii][jj]);
+				glNormal3f(norms[ii][jj]->X(), norms[ii][jj]->Y(), norms[ii][jj]->Z());
+				glVertex3f(verts[ii][jj]->X(), verts[ii][jj]->Y(), verts[ii][jj]->Z());
 
 				glTexCoord2f(s, tt);
-				glNormal3f(normsX[ii][j], normsY[ii][j], normsZ[ii][j]);
-				glVertex3f(vertsX[ii][j], vertsY[ii][j], vertsZ[ii][j]);
+				glNormal3f(norms[ii][j]->X(), norms[ii][j]->Y(), norms[ii][j]->Z());
+				glVertex3f(verts[ii][j]->X(), verts[ii][j]->Y(), verts[ii][j]->Z());
 			glEnd();
 		}
 	}
@@ -510,4 +436,51 @@ float getNorm(float x, float y, float z)
 string Torus::Type()
 {
 	return "Torus";
+}
+
+void Torus::calculate() {
+
+	this->verts = vector<vector<Point3d*> >();
+	this->norms = vector<vector<Point3d*> >();
+
+	float alpha = 2 * PI / slices;
+	float beta = 2 * PI / loops; // angle of increment for each of the circunferences;
+
+	vector<Point3d*> temp;
+	vector<Point3d*> tempNorm;
+
+	temp = vector<Point3d*>();
+	tempNorm = vector<Point3d*>();
+
+	for(int i = 0; i < slices; i++)
+	{
+		float zCoord = radiusTube * sin(i * alpha);
+		float radius = inner + radiusTube * (1 + cos(i * alpha));
+
+		for(int j = 0; j < loops; j++)
+		{
+			float x = radius * cos(j * beta);
+			float y = radius * sin(j * beta);
+			float z = zCoord;
+
+			float xCenter = (inner + radiusTube) * cos(j * beta);
+			float yCenter = (inner + radiusTube) * sin(j * beta);
+
+			temp.push_back(new Point3d(x,y,z));
+
+			x -= xCenter;
+			y -= yCenter;
+
+			tempNorm.push_back(new Point3d(x,y,z));
+			
+		}
+
+		verts.push_back(temp);
+		norms.push_back(tempNorm);
+
+		temp.clear();
+		tempNorm.clear();
+
+	}
+
 }
