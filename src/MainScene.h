@@ -25,6 +25,7 @@ public:
 	void toggleLight(int index, int value);
 	void toggleCamera(int index);
 	void toggleDrawingMode(int mode);
+	void toggleUseDL(int value);
 
 	// Get Methods
 	int getNumberOfLights();

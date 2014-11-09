@@ -244,6 +244,11 @@ void SceneGraph::Process()
 	root->Process();
 }
 
+void SceneGraph::createDisplayLists()
+{
+	this->root->createDisplayTree();
+}
+
 bool SceneGraph::hasRoot()
 {
 	return this->root != NULL;
@@ -252,23 +257,24 @@ bool SceneGraph::hasRoot()
 // =======================
 //  SCENE NODE
 // =======================
-SceneNode::SceneNode(string nodeID) : id(nodeID)
+bool SceneNode::usingDL = false;
+
+SceneNode::SceneNode(string nodeID, bool usesDL) : id(nodeID)
 {
+	this->usesDisplayList = usesDL;
+	this->displayListIndex = 0;
+
 	this->descendants = std::vector<SceneNode*>();
 	this->primitives = std::vector<Primitive*>();
-
-	glLoadIdentity();
-
-	this->transform = new float[16];
-
-	this->parent = NULL;
-	this->hasParent = false;
 
 	this->appearance = NULL;
 
 	this->hasAppearance = false;
 	this->inherits = true;
 
+	glLoadIdentity();
+
+	this->transform = new float[16];
 	glGetFloatv(GL_MODELVIEW_MATRIX, transform);
 }
 
@@ -280,12 +286,6 @@ void SceneNode::addDescendant(SceneNode* node)
 void SceneNode::addPrimitive(Primitive* primitive)
 {
 	this->primitives.push_back(primitive);
-}
-
-void SceneNode::setParent(SceneNode* node)
-{
-	this->hasParent = true;
-	this->parent = node;
 }
 
 void SceneNode::setAppearance(Appearance* app)
@@ -305,11 +305,6 @@ float* SceneNode::getTransformMatrix()
 	return this->transform;
 }
 
-SceneNode* SceneNode::getParent()
-{
-	return this->parent;
-}
-
 string SceneNode::getID()
 {
 	return this->id;
@@ -321,25 +316,6 @@ std::vector<Primitive*> SceneNode::getPrimitives() {
 
 std::vector<SceneNode*> SceneNode::getDescendants() {
 	return this->descendants;
-}
-
-Appearance* SceneNode::getAppearance()
-{
-	if(inherits && hasParent)
-	{
-		return parent->getAppearance();
-	}
-	else
-	{
-		if(hasAppearance)
-		{
-			return appearance;
-		}
-		else 
-		{
-			return NULL;
-		}
-	}
 }
 
 bool SceneNode::Verify(ostream & out)
@@ -372,49 +348,6 @@ bool SceneNode::Verify(ostream & out)
 	return true;
 }
 
-void SceneNode::Process()
-{
-	glPushMatrix();
-
-	glMultMatrixf(getTransformMatrix());
-
-	if(hasAppearance)
-	{
-		addAppearanceToStack(this->appearance);
-	}
-
-	for(unsigned int i = 0; i < primitives.size(); i++) 
-	{
-		if(!appearancesStack->empty())
-		{
-			if(appearancesStack->top())
-			{
-				if(appearancesStack->top()->hasTexture())
-				{
-					Texture* tex = appearancesStack->top()->getTexture();
-
-					primitives.at(i)->setTextureParams(tex->S(), tex->T());
-				}
-			}
-		}
-
-		primitives.at(i)->draw();
-	}
-
-	for(unsigned int i = 0; i < descendants.size(); i++) 
-	{
-		descendants.at(i)->Process();
-	}
-
-	if(hasAppearance)
-	{
-		removeAppearanceFromStack();
-	}
-
-	glPopMatrix();
-}
-
-
 void SceneNode::setAppearancesStack(stack<Appearance*> *apps)
 {
 	appearancesStack = apps;
@@ -435,5 +368,126 @@ void SceneNode::removeAppearanceFromStack()
 		{
 			appearancesStack->top()->apply();
 		}
+	}
+}
+
+void SceneNode::Process()
+{
+	if(usingDL && this->usesDisplayList && this->hasDisplayList())
+	{
+		glCallList(this->displayListIndex);
+	}
+	else
+	{
+		glPushMatrix();
+
+		glMultMatrixf(getTransformMatrix());
+
+		if(hasAppearance)
+		{
+			addAppearanceToStack(this->appearance);
+		}
+
+		drawPrimitives();
+
+		for(unsigned int i = 0; i < descendants.size(); i++) 
+		{
+			descendants.at(i)->Process();
+		}
+
+		if(hasAppearance)
+		{
+			removeAppearanceFromStack();
+		}
+
+		glPopMatrix();
+	}
+}
+
+//TP2
+bool SceneNode::hasDisplayList()
+{
+	return (displayListIndex != 0);
+}
+
+void SceneNode::createDisplayTree()
+{
+	for(unsigned int i = 0; i < this->descendants.size(); i++)
+	{
+		this->descendants.at(i)->createDisplayTree();
+	}
+
+	if(usesDisplayList)
+	{
+		cout << "> Uses display list: " << this->id << endl;
+		createDisplayList();
+	}
+}
+
+void SceneNode::createDisplayList()
+{
+	
+	bool firstTime = false;
+
+	if(usesDisplayList)
+	{
+		if(hasDisplayList())
+		{
+			glCallList(this->displayListIndex);
+		}
+		else
+		{
+			firstTime = true;
+			displayListIndex = glGenLists(1);
+			glNewList(displayListIndex, GL_COMPILE);
+		}
+	}
+
+	glPushMatrix();
+	glMultMatrixf(getTransformMatrix());
+
+	if(hasAppearance)
+	{
+		addAppearanceToStack(this->appearance);
+	}
+
+	drawPrimitives();
+
+	for(unsigned int i = 0; i < descendants.size(); i++) 
+	{
+		descendants.at(i)->createDisplayList();
+	}
+
+	if(hasAppearance)
+	{
+		removeAppearanceFromStack();
+	}
+
+	glPopMatrix();
+
+	if(usesDisplayList && firstTime)
+	{
+		glEndList();
+	}
+}
+
+void SceneNode::drawPrimitives()
+{
+	for(unsigned int i = 0; i < primitives.size(); i++) 
+	{
+		if(!appearancesStack->empty())
+		{
+			if(appearancesStack->top())
+			{
+				if(appearancesStack->top()->hasTexture())
+				{
+					Texture* tex = appearancesStack->top()->getTexture();
+
+					primitives.at(i)->setTextureParams(tex->S(), tex->T());
+				}
+			}
+		}
+
+		primitives.at(i)->draw();
 	}
 }

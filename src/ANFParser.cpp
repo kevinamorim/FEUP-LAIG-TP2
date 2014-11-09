@@ -123,6 +123,17 @@ int ANFParser::Parse()
 		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
 	}
 
+	//out << "___________________________________" << endl;
+	//out << "> Load : animations" << endl;
+	//if(animationsElement)
+	//{
+	//	parseAnimations();
+	//}
+	//else
+	//{
+	//	printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+	//}
+
 	out << "___________________________________" << endl;
 	out << "> Create : graph" << endl;
 	if(graphElement)
@@ -140,6 +151,11 @@ int ANFParser::Parse()
 		out << "    _______________________________" << endl;
 		out << "    > Verifying graph..." << endl;
 		if(verifyGraph() != OK)
+			errors++;
+
+		out << "    _______________________________" << endl;
+		out << "    > Creating graph display lists..." << endl;
+		if(createGraphDisplayLists() != OK)
 			errors++;
 	}
 	else
@@ -235,6 +251,9 @@ int ANFParser::checkAllElements()
 
 	if(checkElement(&appearancesElement, "appearances") != OK)
 		localErrors++;
+
+	//if(checkElement(&animationsElement, "animations") != OK)
+	//	localErrors++;
 
 	if(checkElement(&graphElement, "graph") != OK)
 		localErrors++;
@@ -1074,6 +1093,99 @@ int ANFParser::parseAppearances()
 	}
 }
 
+int ANFParser::parseAnimations()
+{
+	int localErrors = 0;
+	int localWarnings = 0;
+
+	out << "    _______________________________" << endl;
+	out << "    > Reading : animations..." << endl;
+
+	TiXmlElement* animation = animationsElement->FirstChildElement("animation");
+
+	if(!animation)
+	{
+		printMsg(WARNING, "There are no animations");
+		localWarnings++;
+	}
+	else
+	{
+		int animationErrors = 0;
+
+		while(animation)
+		{	
+			string strID, strType;
+			float span;
+
+			out << "        ___________________________" << endl;
+
+			if(readString(&animation, &strID, "id", ERROR) != OK)
+			{
+				animationErrors++;
+			}
+			else
+			{
+				out << "        > Reading : " << strID << endl;
+			}
+
+			if(readFloat(&animation, &span, "span", ERROR) != OK)
+			{
+				animationErrors++;
+			}
+
+			if(readString(&animation, &strType, "type", WARNING) != OK)
+			{
+				animationErrors++;
+			}
+			else
+			{
+				if(strType == "linear")
+				{
+					parseLinearAnimation(&animation);
+				}
+				else if(strType == "circular")
+				{
+					parseCircularAnimation(&animation);
+				}
+				else
+				{
+					printMsg(ERROR, "Attribute 'type' is of illegal type (must be in {linear, circular})");
+					animationErrors++;
+				}
+			}
+
+			if(animationErrors)
+			{
+				localErrors += animationErrors;
+				animationErrors = 0;
+			}
+
+			animation = animation->NextSiblingElement("animation");
+		}
+	}
+
+	if(!localErrors && !localWarnings)
+	{
+		return OK;
+	}
+	else
+	{
+		warnings += localWarnings;
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+int ANFParser::parseLinearAnimation(TiXmlElement** animation)
+{
+	return OK;
+}
+
+int ANFParser::parseCircularAnimation(TiXmlElement** animation)
+{
+	return OK;
+}
+
 int ANFParser::parseComponents(TiXmlElement** element, Point4d** ambient, Point4d** diffuse, Point4d** specular)
 {
 	int localErrors = 0;
@@ -1204,8 +1316,14 @@ int ANFParser::parseGraphNodes()
 			out << "\"" << strID << "\"" << endl;
 			printMsg(OK);
 
+			bool usesDL;
+			if(readBool(&nodeElement, &usesDL, "displaylist", ERROR) != OK)
+			{
+				usesDL = false;
+			}
+
 			// Create the parserGraph node
-			SceneNode* node = new SceneNode(strID);
+			SceneNode* node = new SceneNode(strID, usesDL);
 			
 			// Add the node to the graph
 			sceneData->getSceneGraph()->addNode(node);
@@ -1863,6 +1981,14 @@ int ANFParser::verifyGraph()
 	return sceneData->getSceneGraph()->Verify(out);
 }
 
+/* Create graph display lists*/
+int ANFParser::createGraphDisplayLists()
+{
+	this->sceneData->getSceneGraph()->createDisplayLists();
+
+	return OK;
+}
+
 // ***********************************************************************************
 // ***********************************************************************************
 // ******************************* AUXILIARS *****************************************
@@ -1878,6 +2004,20 @@ int ANFParser::readString(TiXmlElement** element, string* str, string descr, con
 	else
 	{
 		*str = cID;
+		return OK;
+	}
+}
+
+int ANFParser::readInt(TiXmlElement** element, int* value, string descr, const int type)
+{
+	if((*element)->QueryIntAttribute(descr.c_str(), value) != TIXML_SUCCESS)
+	{
+		printMsg(type);
+		out << " : Attribute '" << descr << "' is either not defined or has illegal arguments (must be an integer)" << endl;
+		return type;
+	}
+	else 
+	{
 		return OK;
 	}
 }

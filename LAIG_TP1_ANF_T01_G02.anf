@@ -172,7 +172,7 @@
 	<graph rootid="room">
 	
 		<!-- ROOM -->
-		<node id="room">
+		<node id="room" displaylist="true">
 			<transforms>
 			</transforms>
 			
@@ -1062,7 +1062,7 @@
 			</descendants>
 		</node>
 		
-		<node id="lamp_ball_1">
+		<node id="lamp_ball_1" displaylist="true">
 			<transforms>
 				<transform type="translate" to="0 0.3 0" />
 			</transforms>

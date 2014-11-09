@@ -1,5 +1,7 @@
 #include "MainScene.h"
 
+#include <windows.h>
+
 MainScene::MainScene(SceneData* sceneData)
 {
 	this->sceneData = sceneData;
@@ -63,7 +65,13 @@ void MainScene::display()
 
 	updateLights();
 
+	long double time_0 = GetTickCount();
+
 	sceneData->getSceneGraph()->Process();
+
+	long double time_1 = GetTickCount();
+
+	cout << "Time between: " << time_1 - time_0 << endl;
 
 	axis.draw();
 
@@ -86,11 +94,11 @@ void MainScene::setDefaults()
 // **************************************************************
 void MainScene::updateCameras()
 {
-	//CGFscene::activeCamera->applyView();
+	CGFscene::activeCamera->applyView();
 
-	Camera* cam = getCamera(activeCamera);
+	//Camera* cam = getCamera(activeCamera);
 
-	cam->apply();
+	//cam->apply();
 }
 
 void MainScene::updateLights()
@@ -220,6 +228,18 @@ void MainScene::toggleCamera(int index)
 		{
 			activeCamera = index;
 		}
+	}
+}
+
+void MainScene::toggleUseDL(int value)
+{
+	if(value)
+	{
+		SceneNode::setDL(true);
+	}
+	else
+	{
+		SceneNode::setDL(false);
 	}
 }
 

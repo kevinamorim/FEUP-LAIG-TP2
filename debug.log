@@ -1,5 +1,5 @@
 DEBUG FOR .anf FILE - LAIG - FEUP 2014/15
-20-10-2014 20-59-02
+09-11-2014 23-02-00
 ___________________________________
 > Loading file... 
 ___________________________________
@@ -139,6 +139,7 @@ ___________________________________
             > id : wall_right
         ___________________________
         > Creating : "floor"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -153,6 +154,7 @@ ___________________________________
             > id : floor_per_se
         ___________________________
         > Creating : "floor_per_se"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Rotate
             > Appearances...
@@ -163,6 +165,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "wall_left"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Appearances...
             > Appearance : app_wall
@@ -172,6 +175,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "wall_right"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Rotate
             > Appearances...
@@ -182,6 +186,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "chair"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -196,6 +201,7 @@ ___________________________________
             > id : chair_base
         ___________________________
         > Creating : "chair_seat"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Scale
             > Appearances...
@@ -206,6 +212,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "chair_leg"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -217,6 +224,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "chair_base"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -228,6 +236,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "chair_back"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -240,6 +249,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "table"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -251,6 +261,7 @@ ___________________________________
             > id : table_legs
         ___________________________
         > Creating : "table_cover"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -262,6 +273,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "table_legs"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Scale
             > Appearances...
@@ -275,6 +287,7 @@ ___________________________________
             > id : table_leg_4
         ___________________________
         > Creating : "table_leg_1"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -285,6 +298,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "table_leg_2"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -295,6 +309,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "table_leg_3"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -305,6 +320,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "table_leg_4"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -315,6 +331,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "items_on_table"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -331,6 +348,7 @@ ___________________________________
             > id : lamp
         ___________________________
         > Creating : "pc"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -342,6 +360,7 @@ ___________________________________
             > id : pc_tower
         ___________________________
         > Creating : "pc_tower"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -356,6 +375,7 @@ ___________________________________
             > id : pc_tower_back
         ___________________________
         > Creating : "pc_tower_top"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -367,6 +387,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "pc_tower_left"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -378,6 +399,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "pc_tower_right"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -389,6 +411,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "pc_tower_front"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -399,6 +422,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "pc_tower_back"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -410,6 +434,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "pc_armature"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -424,6 +449,7 @@ ___________________________________
             > id : pc_armature_leg_4
         ___________________________
         > Creating : "pc_armature_base"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -435,6 +461,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "pc_armature_leg_1"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -446,6 +473,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "pc_armature_leg_2"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -457,6 +485,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "pc_armature_leg_3"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -468,6 +497,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "pc_armature_leg_4"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -479,6 +509,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "monitor_and_base"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -493,6 +524,7 @@ ___________________________________
             > id : monitor_base
         ___________________________
         > Creating : "monitor"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Rotate
             > Appearances...
@@ -508,6 +540,7 @@ ___________________________________
             > id : screen_per_se
         ___________________________
         > Creating : "monitor_border_1"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -519,6 +552,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "monitor_border_2"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -530,6 +564,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "monitor_border_3"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -541,6 +576,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "monitor_border_4"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -552,6 +588,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "screen"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -563,6 +600,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "screen_per_se"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -574,6 +612,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "monitor_neck"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -586,6 +625,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "monitor_cyl_up"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -597,6 +637,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "monitor_cyl_down"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -608,6 +649,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "monitor_base"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -620,6 +662,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "mouse_and_pad"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -631,6 +674,7 @@ ___________________________________
             > id : mouse
         ___________________________
         > Creating : "mouse_pad"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Scale
             > Appearances...
@@ -641,6 +685,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "mouse"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Appearances...
             > Appearance : app_mouse
@@ -663,6 +708,7 @@ ___________________________________
             > id : mouse_wheel
         ___________________________
         > Creating : "mouse_wheel"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -673,6 +719,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "keyboard_and_feup_stolen_kbd_legs"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -687,6 +734,7 @@ ___________________________________
             > id : keyboard_per_se
         ___________________________
         > Creating : "feup_stolen_kbd_leg_1"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -699,6 +747,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "feup_stolen_kbd_leg_2"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -711,6 +760,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "keyboard"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Scale
             > Appearances...
@@ -721,6 +771,7 @@ ___________________________________
             > id : box
         ___________________________
         > Creating : "keyboard_per_se"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -732,6 +783,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "plate_and_donut"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -743,6 +795,7 @@ ___________________________________
             > id : donut
         ___________________________
         > Creating : "plate"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Rotate
             > Appearances...
@@ -753,6 +806,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "donut"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Scale
@@ -765,6 +819,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "rubik"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -781,6 +836,7 @@ ___________________________________
             > id : rubik_left
         ___________________________
         > Creating : "rubik_front"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -791,6 +847,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "rubik_back"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -802,6 +859,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "rubik_top"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -813,6 +871,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "rubik_right"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -824,6 +883,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "rubik_left"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -835,6 +895,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "lamp"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -846,6 +907,7 @@ ___________________________________
             > id : lamp_ball_1
         ___________________________
         > Creating : "lamp_base"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -868,6 +930,7 @@ ___________________________________
             > id : lamp_connection_1
         ___________________________
         > Creating : "lamp_ball_2"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -878,6 +941,7 @@ ___________________________________
             > id : lamp_connection_2
         ___________________________
         > Creating : "lamp_ball_3"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -888,6 +952,7 @@ ___________________________________
             > id : lamp_box
         ___________________________
         > Creating : "lamp_connection_1"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -900,6 +965,7 @@ ___________________________________
             > id : lamp_ball_2
         ___________________________
         > Creating : "lamp_connection_2"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -911,6 +977,7 @@ ___________________________________
             > id : lamp_ball_3
         ___________________________
         > Creating : "lamp_box"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Rotate
             > Rotate
@@ -922,6 +989,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "box"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -937,6 +1005,7 @@ ___________________________________
             > id : boxLeft
         ___________________________
         > Creating : "boxTop"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -948,6 +1017,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "boxBottom"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -959,6 +1029,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "boxFront"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Appearances...
@@ -969,6 +1040,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "boxBack"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -980,6 +1052,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "boxRight"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -991,6 +1064,7 @@ ___________________________________
                              [INFO] : The block <primitives> does not exist
         ___________________________
         > Creating : "boxLeft"
+                                      [ERROR] : Attribute 'displaylist' is not defined
             > Transforms...
             > Translate
             > Rotate
@@ -1295,6 +1369,8 @@ ___________________________________
             > checking... floor_per_se
             > checking... wall_left
             > checking... wall_right
+    _______________________________
+    > Creating graph display lists...
 ___________________________________
 ___________________________________
 > Finished parsing:

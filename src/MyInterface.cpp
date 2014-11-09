@@ -28,6 +28,10 @@ void MyInterface::initGUI()
 	panelCameras = addPanel("Points of View");
 	createCamerasMenu();
 	addColumn();
+
+	panelDL = addPanel("Display Lists");
+	createDLMenu();
+	addColumn();
 }
 
 void MyInterface::processGUI(GLUI_Control *ctrl)
@@ -36,7 +40,7 @@ void MyInterface::processGUI(GLUI_Control *ctrl)
 
 	if(id > -1)
 	{
-		if(between(id, lightOffset, (lightOffset + lightNum - 1)))
+		if(between(id, lightOffset, lightOffset + lightNum - 1))
 		{
 			int index = id - lightOffset;
 
@@ -46,9 +50,13 @@ void MyInterface::processGUI(GLUI_Control *ctrl)
 		{
 			((MainScene *) scene)->toggleDrawingMode(drawingMode);
 		}
-		else if(between(cam, 0, camNum - 1))
+		else if(id == radioCameras->get_id())
 		{
  			((MainScene *) scene)->toggleCamera(cam);
+		}
+		else if(id == checkDL->get_id())
+		{
+			((MainScene *) scene)->toggleUseDL(useDL);
 		}
 	}
 
@@ -90,8 +98,6 @@ void MyInterface::createCamerasMenu()
 	radioCameras = addRadioGroupToPanel(panelCameras, &cam, currentID);
 	currentID++;
 
-	camOffset = currentID;
-
 	radioCameras->set_int_val(0);
 
 	// add one radio button for each existent camera
@@ -101,6 +107,13 @@ void MyInterface::createCamerasMenu()
 		
 		addRadioButtonToGroup(radioCameras, (char*) sceneCamera->getID().c_str());
 	}
+}
+
+void MyInterface::createDLMenu()
+{
+	useDL = 0;
+
+	checkDL = addCheckboxToPanel(panelDL, "Use", &useDL, currentID);	currentID++;
 }
 
 void updateVars()

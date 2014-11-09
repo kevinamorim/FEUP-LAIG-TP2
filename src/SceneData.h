@@ -25,17 +25,16 @@ class SceneNode {
 private:
 	string id;
 
-	SceneNode* parent;
-	bool hasParent;
-
 	float* transform; // Tranform matrix
 
 	Appearance* appearance;
-
 	bool hasAppearance;
 
 	std::vector<Primitive*> primitives;
 	std::vector<SceneNode*> descendants;
+
+	bool usesDisplayList;
+	unsigned int displayListIndex;
 
 protected:
 	stack<Appearance*> *appearancesStack;
@@ -43,13 +42,26 @@ protected:
 	void addAppearanceToStack(Appearance* app);
 	void removeAppearanceFromStack();
 
+	static bool usingDL;	// if true, all nodes that use display lists will call upon them to fight
+
 public:
+	SceneNode(string nodeID, bool usesDL);
+	~SceneNode();
+
+	static void setDL(bool value) { usingDL = value; }
+
 	bool inherits;
 	bool visited;
 
-	SceneNode(string nodeID);
-	~SceneNode();
+	// TP2
+	void createDisplayTree();
+	void createDisplayList();
 
+	bool hasDisplayList();
+
+	// ==============================
+	//	SET / ADD
+	// ==============================
 	void setAppearancesStack(stack<Appearance*> * apps);
 
 	void setParent(SceneNode* node);
@@ -59,7 +71,9 @@ public:
 	void addDescendant(SceneNode* descendant);
 	void addPrimitive(Primitive* primitive);
 
-	// GETTERS & SETTERS
+	// ==============================
+	//	GET
+	// ==============================
 	string getID();
 
 	vector<Primitive*> getPrimitives();
@@ -67,15 +81,13 @@ public:
 
 	float* getTransformMatrix();
 
-	Appearance* getAppearance();
-	Texture* getTexture();
-	SceneNode* getParent();
-
+	// ==============================
 	void Process();
+
+	void drawPrimitives();
 
 	bool Verify(ostream & out);
 };
-
 
 /*
 	SceneGraph
@@ -106,12 +118,10 @@ public:
 
 	void Process();
 
+	void createDisplayLists();
+
 	int Verify(ostream & out);
-
-	int addAppearance(Appearance* app);
-	int removeAppearance();
 };
-
 
 /*
 	SceneData
@@ -165,6 +175,8 @@ public:
 	// Appearances
 	Appearance* getAppearance(string id);
 	void addAppearance(Appearance * app);
+
+	// Textures
 	Texture* getTexture(string id);
 	void addTexture(Texture * tex);
 

@@ -14,6 +14,7 @@ public:
 	void createLightsMenu();
 	void createDrawingMenu();
 	void createCamerasMenu();
+	void createDLMenu();
 
 private:
 
@@ -25,6 +26,9 @@ private:
 	GLUI_Panel * panelCameras;
 	GLUI_RadioGroup * radioCameras;
 
+	GLUI_Panel * panelDL;
+	GLUI_Checkbox * checkDL;
+
 	int currentID;
 
 	int drawingMode;
@@ -33,9 +37,10 @@ private:
 	int lightOffset;
 	int lightNum;
 
-	int camOffset;
 	int camNum;
 	int cam;
+
+	int useDL;
 };
 
 #endif

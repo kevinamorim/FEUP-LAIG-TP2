@@ -75,6 +75,7 @@ protected:
 	TiXmlElement* lightsElement;
 	TiXmlElement* texturesElement;
 	TiXmlElement* appearancesElement;
+	TiXmlElement* animationsElement;
 	TiXmlElement* graphElement;
 
 	SceneData* sceneData;
@@ -115,6 +116,10 @@ private:
 	int parseTextures();
 	// Appearances
 	int parseAppearances();
+	// Animations
+	int parseAnimations();
+	int parseLinearAnimation(TiXmlElement** lightElement);
+	int parseCircularAnimation(TiXmlElement** lightElement);
 
 	// ======================================================
 	//		GRAPH
@@ -122,6 +127,7 @@ private:
 	int parseGraphNodes();
 	int verifyGraph();
 	int linkGraphNodes();
+	int createGraphDisplayLists();
 
 	// Transforms
 	int parseNodeTransforms(TiXmlElement* nodeElement, SceneNode* node);
@@ -148,6 +154,7 @@ private:
 	// OTHERS
 	// ===========================================
 	int readString(TiXmlElement** camera, string* str, string descr, const int msgTypeInFailure);
+	int readInt(TiXmlElement** element, int* value, string descr, const int type);
 	int readFloat(TiXmlElement** element, float* value, string descr, const int msgTypeInFailure);
 	int readAxis(TiXmlElement** element, char* axis, string descr, const int msgTypeInFailure);
 	int readBool(TiXmlElement** element, bool* value, string descr, const int msgTypeInFailure);
