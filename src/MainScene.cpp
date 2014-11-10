@@ -67,7 +67,7 @@ void MainScene::display()
 
 	long double time_0 = GetTickCount();
 
-	sceneData->getSceneGraph()->Process();
+	sceneData->getSceneGraph()->Display();
 
 	long double time_1 = GetTickCount();
 

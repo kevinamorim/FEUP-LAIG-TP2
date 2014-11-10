@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Appearance.h"
+#include "Animation.h"
 
 #include <vector>
 #include <string>
@@ -29,6 +30,9 @@ private:
 
 	Appearance* appearance;
 	bool hasAppearance;
+
+	Animation* anim;
+	bool hasAnimation;
 
 	std::vector<Primitive*> primitives;
 	std::vector<SceneNode*> descendants;
@@ -83,8 +87,7 @@ public:
 	float* getTransformMatrix();
 
 	// ==============================
-	void Process();
-
+	void Display();
 	void drawPrimitives();
 
 	bool Verify(ostream & out);
@@ -117,8 +120,8 @@ public:
 	SceneNode* getNode(string id);
 	vector<SceneNode*> getNodes();
 
-	void Process();
-
+	void Display();
+	//TP2
 	void createDisplayLists();
 
 	int Verify(ostream & out);

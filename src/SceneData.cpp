@@ -237,11 +237,11 @@ void SceneGraph::setRoot(SceneNode* node)
 	root = node;
 }
 
-void SceneGraph::Process()
+void SceneGraph::Display()
 {
 	// The precessing starts at the root node, progressing
 	//  recursively throughout the tree.
-	root->Process();
+	root->Display();
 }
 
 void SceneGraph::createDisplayLists()
@@ -371,7 +371,7 @@ void SceneNode::removeAppearanceFromStack()
 	}
 }
 
-void SceneNode::Process()
+void SceneNode::Display()
 {
 	if(usingDL && this->usesDisplayList && this->hasDisplayList())
 	{
@@ -388,11 +388,13 @@ void SceneNode::Process()
 			addAppearanceToStack(this->appearance);
 		}
 
+		// call the animation transforms (if the node is animated)
+
 		drawPrimitives();
 
 		for(unsigned int i = 0; i < descendants.size(); i++) 
 		{
-			descendants.at(i)->Process();
+			descendants.at(i)->Display();
 		}
 
 		if(hasAppearance)
@@ -419,7 +421,6 @@ void SceneNode::createDisplayTree()
 
 	if(usesDisplayList)
 	{
-		cout << "> Uses display list: " << this->id << endl;
 		createDisplayList();
 	}
 }
