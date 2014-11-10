@@ -426,7 +426,6 @@ void SceneNode::createDisplayTree()
 
 void SceneNode::createDisplayList()
 {
-	
 	bool firstTime = false;
 
 	if(usesDisplayList)

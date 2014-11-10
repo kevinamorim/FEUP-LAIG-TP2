@@ -1666,6 +1666,14 @@ int ANFParser::parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node)
 						primErrors++;
 					}
 				}
+				//TP2
+				else if (strType == "plane")
+				{
+					if(parsePlane(primitive, node) != OK)
+					{
+						primErrors++;
+					}
+				}
 				else
 				{
 					printMsg(ERROR, "Invalid primitive - must be in {triangle, rectangle, cylinder, torus, sphere}");
@@ -1881,6 +1889,32 @@ int ANFParser::parseTorus(TiXmlElement* primitive, SceneNode* node)
 	if(!localErrors)
 	{
 		node->addPrimitive(new Torus(inner, outer, slices, loops));
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+//TP2
+int ANFParser::parsePlane(TiXmlElement* primitive, SceneNode* node)
+{
+	out << "            > Plane" << endl;
+
+	int localErrors = 0;
+
+	int parts;
+
+	if(readInt(&primitive, &parts, "parts", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(!localErrors)
+	{
+		node->addPrimitive(new Plane(parts));
 		return OK;
 	}
 	else

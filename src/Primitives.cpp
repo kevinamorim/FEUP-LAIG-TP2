@@ -484,3 +484,99 @@ void Torus::calculate() {
 	}
 
 }
+
+//TP2
+// =======================
+//    Patch
+// =======================
+Patch::Patch(int order, int partsU, int partsV, vector<Point3d *> controlPts, string drawingMode)
+{
+	this->ctrlPoints = new float[controlPts.size() * 3];
+
+	for(unsigned int i = 0; i < controlPts.size(); i++)
+	{
+		for(int j = 0; j < 3; j++)
+		{
+			int index = i * 3 + j;
+			ctrlPoints[index] = controlPts.at(i)->getFloatv()[j];
+		}
+	}
+
+	this->order = order;
+	this->partsU = partsU;
+	this->partsV = partsV;
+	this->drawingMode = drawingMode;
+}
+
+Patch::Patch(int order, int partsU, int partsV, string drawingMode)
+{
+	this->order = order;
+	this->partsU = partsU;
+	this->partsV = partsV;
+	this->drawingMode = drawingMode;
+}
+
+void Patch::setControlPoints(float * v)
+{
+	this->ctrlPoints = v;
+}
+
+void Patch::draw()
+{
+	//glColor3f(1.0,1.0,1.0);
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 2,  0.0, 1.0, 6, 2,  &ctrlPoints[0]);
+	//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
+	//glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &colorpoints[0][0]);
+	glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, 2,  0.0, 1.0, 4, 2,  &this->texCoords[0]);
+
+	glEnable(GL_MAP2_VERTEX_3);
+	//glEnable(GL_MAP2_NORMAL);
+	//glEnable(GL_MAP2_COLOR_4);
+	glEnable(GL_MAP2_TEXTURE_COORD_2);
+
+	glEnable(GL_AUTO_NORMAL);
+
+	glMapGrid2f(this->partsU, 0.0, 1.0, this->partsV, 0.0, 1.0); 
+
+	
+	// SEGUE-SE EXEMPLO DE UTILIZACAO DE "EVALUATORS"
+	glEnable(GL_LIGHTING);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_TEXTURE_2D);
+	//myTexture->apply();
+
+
+	glEvalMesh2(drawingMode == "fill" ? GL_FILL : drawingMode == "line" ? GL_LINE : GL_POINT, 0, this->partsU, 0, this->partsV);		// GL_POINT, GL_LINE, GL_FILL
+
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_COLOR_MATERIAL);
+}
+
+string Patch::Type()
+{
+	return "Patch";
+}
+
+// =======================
+//    Plane
+// =======================
+Plane::Plane(int parts) : Patch(1, parts, parts, "fill")
+{
+	float* v = new float[12];
+	v[0] = -0.5; v[1] = 0; v[2] = 0.5;
+	v[3] = -0.5; v[4] = 0; v[5] = -0.5;
+	v[6] = 0.5; v[7] = 0; v[8] = 0.5;
+	v[9] = 0.5; v[10] = 0; v[11] = -0.5;
+
+	this->setControlPoints(v);
+}
+
+void Plane::draw()
+{
+	Patch::draw();
+}
+
+string Plane::Type()
+{
+	return "Plane";
+}

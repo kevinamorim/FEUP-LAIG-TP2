@@ -71,7 +71,7 @@ void MainScene::display()
 
 	long double time_1 = GetTickCount();
 
-	cout << "Time between: " << time_1 - time_0 << endl;
+	//cout << "Time between: " << time_1 - time_0 << endl;
 
 	axis.draw();
 

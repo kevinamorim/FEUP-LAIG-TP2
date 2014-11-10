@@ -42,18 +42,19 @@ protected:
 	void addAppearanceToStack(Appearance* app);
 	void removeAppearanceFromStack();
 
+	// TP2
 	static bool usingDL;	// if true, all nodes that use display lists will call upon them to fight
 
 public:
 	SceneNode(string nodeID, bool usesDL);
 	~SceneNode();
 
-	static void setDL(bool value) { usingDL = value; }
-
 	bool inherits;
 	bool visited;
 
 	// TP2
+	static void setDL(bool value) { usingDL = value; }
+
 	void createDisplayTree();
 	void createDisplayList();
 
