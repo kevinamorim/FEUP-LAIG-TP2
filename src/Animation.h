@@ -17,10 +17,15 @@ protected:
 	string id;
 	float spanTime;
 
+	virtual void init() = 0;
 	virtual void draw() = 0;
 	virtual void update(unsigned long t) = 0;
 	virtual void reset() = 0;
 
+	bool restart;
+
+public:
+	string getID();
 };
 
 class LinearAnimation : public Animation {
@@ -28,6 +33,7 @@ public:
 	LinearAnimation(string id, float span, vector<Point3d*> controlPts);
 
 protected:
+	void init();
 	void draw();
 	void update(unsigned long t);
 	void reset();
@@ -36,6 +42,7 @@ protected:
 	int currentControl;
 
 	Point3d * currentPos;
+	Point3d * currentDir;
 	float velocity;
 };
 
@@ -44,6 +51,7 @@ public:
 	CircularAnimation(string id, float span, Point3d *center, float radius, float startAng, float rotAng);
 
 protected:
+	void init();
 	void draw();
 	void update(unsigned long t);
 	void reset();

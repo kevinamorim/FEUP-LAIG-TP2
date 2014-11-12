@@ -489,16 +489,23 @@ void Torus::calculate() {
 // =======================
 //    Patch
 // =======================
+float ctrlpoints[2][2][3] = {
+	{{ 0, 0, 0}, { 0, 1, 0}}, 
+	{{ 1, 0, 0}, { 1, 1, 0}}, 
+};
+
 Patch::Patch(int order, int partsU, int partsV, vector<Point3d *> controlPts, string drawingMode)
 {
-	this->ctrlPoints = new float[controlPts.size() * 3];
+	int vSize = controlPts.size();
 
-	for(unsigned int i = 0; i < controlPts.size(); i++)
+	this->ctrlPoints = new float[vSize * 3];
+
+	for(int i = 0; i < vSize; i++)
 	{
+		int offset = i * 3;
 		for(int j = 0; j < 3; j++)
 		{
-			int index = i * 3 + j;
-			ctrlPoints[index] = controlPts.at(i)->getFloatv()[j];
+			ctrlPoints[offset + j] = controlPts[i]->getFloatv()[j];
 		}
 	}
 
@@ -516,7 +523,7 @@ Patch::Patch(int order, int partsU, int partsV, string drawingMode)
 	this->drawingMode = drawingMode;
 }
 
-void Patch::setControlPoints(float * v)
+void Patch::setControlPoints(float* v)
 {
 	this->ctrlPoints = v;
 }
@@ -524,32 +531,33 @@ void Patch::setControlPoints(float * v)
 void Patch::draw()
 {
 	//glColor3f(1.0,1.0,1.0);
-	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 2,  0.0, 1.0, 6, 2,  &ctrlPoints[0]);
-	//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
-	//glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &colorpoints[0][0]);
-	glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, 2,  0.0, 1.0, 4, 2,  &this->texCoords[0]);
 
 	glEnable(GL_MAP2_VERTEX_3);
-	//glEnable(GL_MAP2_NORMAL);
-	//glEnable(GL_MAP2_COLOR_4);
-	glEnable(GL_MAP2_TEXTURE_COORD_2);
-
-	glEnable(GL_AUTO_NORMAL);
-
-	glMapGrid2f(this->partsU, 0.0, 1.0, this->partsV, 0.0, 1.0); 
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, (this->order+1),  0.0, 1.0, 6, (this->order+1),  ctrlPoints);
+	//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
+	//glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &colorpoints[0][0]);
+	//glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, 2,  0.0, 1.0, 4, 2,  &this->texCoords[0]);
 
 	
+	//glEnable(GL_MAP2_NORMAL);
+	//glEnable(GL_MAP2_COLOR_4);
+	//glEnable(GL_MAP2_TEXTURE_COORD_2);
+	glEnable(GL_AUTO_NORMAL);
+
+	glMapGrid2f(partsU, 0.0, 1.0, partsV, 0.0, 1.0); 
+
 	// SEGUE-SE EXEMPLO DE UTILIZACAO DE "EVALUATORS"
 	glEnable(GL_LIGHTING);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_COLOR_MATERIAL);
+	//glEnable(GL_TEXTURE_2D);
 	//myTexture->apply();
 
+	glEvalMesh2(drawingMode == "fill" ? GL_FILL : drawingMode == "line" ? GL_LINE : GL_POINT, 0, this->partsU, 0, this->partsV);
 
-	glEvalMesh2(drawingMode == "fill" ? GL_FILL : drawingMode == "line" ? GL_LINE : GL_POINT, 0, this->partsU, 0, this->partsV);		// GL_POINT, GL_LINE, GL_FILL
+	glDisable(GL_MAP2_VERTEX_3);
 
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_COLOR_MATERIAL);
+	//glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_COLOR_MATERIAL);
 }
 
 string Patch::Type()
@@ -563,6 +571,7 @@ string Patch::Type()
 Plane::Plane(int parts) : Patch(1, parts, parts, "fill")
 {
 	float* v = new float[12];
+
 	v[0] = -0.5; v[1] = 0; v[2] = 0.5;
 	v[3] = -0.5; v[4] = 0; v[5] = -0.5;
 	v[6] = 0.5; v[7] = 0; v[8] = 0.5;

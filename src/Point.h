@@ -13,6 +13,8 @@ public:
 
 	float* getFloatv();
 
+	static Point2d* subtract(Point2d *a, Point2d *b);
+
 protected:
 	float x, y;
 };
@@ -28,6 +30,8 @@ public:
 
 	float* getFloatv();
 
+	static Point3d* subtract(Point3d *a, Point3d *b);
+
 protected:
 	float z;
 };
@@ -41,6 +45,8 @@ public:
 	void setPoint4d(float x, float y, float z, float w);
 
 	float* getFloatv();
+
+	static Point4d* subtract(Point4d *a, Point4d *b);
 
 protected:
 	float w;

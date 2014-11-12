@@ -123,16 +123,16 @@ int ANFParser::Parse()
 		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
 	}
 
-	//out << "___________________________________" << endl;
-	//out << "> Load : animations" << endl;
-	//if(animationsElement)
-	//{
-	//	parseAnimations();
-	//}
-	//else
-	//{
-	//	printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
-	//}
+	out << "___________________________________" << endl;
+	out << "> Load : animations" << endl;
+	if(animationsElement)
+	{
+		parseAnimations();
+	}
+	else
+	{
+		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+	}
 
 	out << "___________________________________" << endl;
 	out << "> Create : graph" << endl;
@@ -252,8 +252,8 @@ int ANFParser::checkAllElements()
 	if(checkElement(&appearancesElement, "appearances") != OK)
 		localErrors++;
 
-	//if(checkElement(&animationsElement, "animations") != OK)
-	//	localErrors++;
+	if(checkElement(&animationsElement, "animations") != OK)
+		localErrors++;
 
 	if(checkElement(&graphElement, "graph") != OK)
 		localErrors++;
@@ -1141,11 +1141,11 @@ int ANFParser::parseAnimations()
 			{
 				if(strType == "linear")
 				{
-					parseLinearAnimation(&animation);
+					parseLinearAnimation(&animation, strID, span);
 				}
 				else if(strType == "circular")
 				{
-					parseCircularAnimation(&animation);
+					parseCircularAnimation(&animation, strID, span);
 				}
 				else
 				{
@@ -1176,14 +1176,101 @@ int ANFParser::parseAnimations()
 	}
 }
 
-int ANFParser::parseLinearAnimation(TiXmlElement** animation)
+int ANFParser::parseLinearAnimation(TiXmlElement** animationElement, string id, float span)
 {
-	return OK;
+	out << "                > Linear" << endl;
+
+	int localErrors = 0;
+
+	vector<Point3d *> controlPts = vector<Point3d *>();
+
+	TiXmlElement* anim = *animationElement;
+
+	TiXmlElement* controlPoint = anim->FirstChildElement("controlpoint");
+
+	int ctrlErrors = 0;
+
+	while(controlPoint)
+	{
+		float x, y, z;
+			
+		if(readFloat(&controlPoint, &x, "x", ERROR) != OK)
+		{
+			ctrlErrors++;
+		}
+
+		if(readFloat(&controlPoint, &y, "y", ERROR) != OK)
+		{
+			ctrlErrors++;
+		}
+
+		if(readFloat(&controlPoint, &z, "z", ERROR) != OK)
+		{
+			ctrlErrors++;
+		}
+
+		if(!ctrlErrors)
+		{
+			controlPts.push_back(new Point3d(x,y,z));
+		}
+		else
+		{
+			localErrors += ctrlErrors;
+			ctrlErrors = 0;
+		}
+
+		controlPoint = controlPoint->NextSiblingElement("controlpoint");
+	}
+
+	if(!localErrors)
+	{
+		sceneData->addAnimation(new LinearAnimation(id, span, controlPts));
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
 }
 
-int ANFParser::parseCircularAnimation(TiXmlElement** animation)
+int ANFParser::parseCircularAnimation(TiXmlElement** animation, string id, float span)
 {
-	return OK;
+	int localErrors = 0;
+
+	Point3d *center;
+	float radius, startAng, rotAng;
+
+	if(readPoint3d(animation, &center, "center", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(readFloat(animation, &radius, "radius", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(readFloat(animation, &startAng, "startang", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(readFloat(animation, &rotAng, "rotang", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(!localErrors)
+	{
+		sceneData->addAnimation(new CircularAnimation(id, span, center, radius, startAng, rotAng));
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
 }
 
 int ANFParser::parseComponents(TiXmlElement** element, Point4d** ambient, Point4d** diffuse, Point4d** specular)
@@ -1588,7 +1675,7 @@ int ANFParser::parseNodeAppearance(TiXmlElement* nodeElement, SceneNode* node)
 		}
 		else
 		{
-			out << "            > Appearance : " << strAppearance << endl;
+			out << "                > Appearance : " << strAppearance << endl;
 
 			if(strAppearance != "inherit")
 			{
@@ -1674,6 +1761,13 @@ int ANFParser::parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node)
 						primErrors++;
 					}
 				}
+				else if (strType == "patch")
+				{
+					if(parsePatch(primitive, node) != OK)
+					{
+						primErrors++;
+					}
+				}
 				else
 				{
 					printMsg(ERROR, "Invalid primitive - must be in {triangle, rectangle, cylinder, torus, sphere}");
@@ -1709,7 +1803,7 @@ int ANFParser::parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node)
 
 int ANFParser::parseRectangle(TiXmlElement* primitive, SceneNode* node)
 {
-	out << "            > Rectangle" << endl;
+	out << "                > Rectangle" << endl;
 
 	int localErrors = 0;
 
@@ -1739,7 +1833,7 @@ int ANFParser::parseRectangle(TiXmlElement* primitive, SceneNode* node)
 
 int ANFParser::parseTriangle(TiXmlElement* primitive, SceneNode* node)
 {
-	out << "            > Triangle" << endl;
+	out << "                > Triangle" << endl;
 
 	int localErrors = 0;
 
@@ -1779,7 +1873,7 @@ int ANFParser::parseTriangle(TiXmlElement* primitive, SceneNode* node)
 
 int ANFParser::parseCylinder(TiXmlElement* primitive, SceneNode* node)
 {
-	out << "            > Cylinder" << endl;
+	out << "                > Cylinder" << endl;
 
 	int localErrors = 0;
 
@@ -1824,7 +1918,7 @@ int ANFParser::parseCylinder(TiXmlElement* primitive, SceneNode* node)
 
 int ANFParser::parseSphere(TiXmlElement* primitive, SceneNode* node)
 {
-	out << "            > Sphere" << endl;
+	out << "                > Sphere" << endl;
 
 	int localErrors = 0;
 
@@ -1860,7 +1954,7 @@ int ANFParser::parseSphere(TiXmlElement* primitive, SceneNode* node)
 
 int ANFParser::parseTorus(TiXmlElement* primitive, SceneNode* node)
 {
-	out << "            > Torus" << endl;
+	out << "                > Torus" << endl;
 
 	int localErrors = 0;
 
@@ -1901,7 +1995,7 @@ int ANFParser::parseTorus(TiXmlElement* primitive, SceneNode* node)
 //TP2
 int ANFParser::parsePlane(TiXmlElement* primitive, SceneNode* node)
 {
-	out << "            > Plane" << endl;
+	out << "                > Plane" << endl;
 
 	int localErrors = 0;
 
@@ -1915,6 +2009,98 @@ int ANFParser::parsePlane(TiXmlElement* primitive, SceneNode* node)
 	if(!localErrors)
 	{
 		node->addPrimitive(new Plane(parts));
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+int ANFParser::parsePatch(TiXmlElement* primitive, SceneNode* node)
+{
+	out << "                > Patch" << endl;
+
+	int localErrors = 0;
+
+	int order, partsU, partsV;
+	string strCompute;
+	vector<Point3d *> controlPts = vector<Point3d *>();
+
+	if(readInt(&primitive, &order, "order", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(readInt(&primitive, &partsU, "partsU", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(readInt(&primitive, &partsV, "partsV", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(readString(&primitive, &strCompute, "compute", ERROR) != OK)
+	{
+		localErrors++;
+	}
+	else if(!stringIn(strCompute, DRAWING_MODE))
+	{
+		printMsg(ERROR, " : Attribute 'compute' has illegal arguments - must be in {fill, line, point}");
+		localErrors++;
+	}
+
+	if(!localErrors) // read control points
+	{
+		int ctrlErrors = 0;
+
+		TiXmlElement* controlPoint = primitive->FirstChildElement("controlpoint");
+		while(controlPoint)
+		{
+
+			float x, y, z;
+			
+			if(readFloat(&controlPoint, &x, "x", ERROR) != OK)
+			{
+				ctrlErrors++;
+			}
+
+			if(readFloat(&controlPoint, &y, "y", ERROR) != OK)
+			{
+				ctrlErrors++;
+			}
+
+			if(readFloat(&controlPoint, &z, "z", ERROR) != OK)
+			{
+				ctrlErrors++;
+			}
+
+			if(!ctrlErrors)
+			{
+				controlPts.push_back(new Point3d(x,y,z));
+			}
+			else
+			{
+				localErrors += ctrlErrors;
+				ctrlErrors = 0;
+			}
+
+			controlPoint = controlPoint->NextSiblingElement("controlpoint");
+		}
+	}
+
+	if(controlPts.size() < 2)
+	{
+		printMsg(ERROR, " : Not enough control points detected");
+		localErrors++;
+	}
+
+	if(!localErrors)
+	{
+		node->addPrimitive(new Patch(order, partsU, partsV, controlPts, strCompute));
 		return OK;
 	}
 	else
@@ -2026,14 +2212,14 @@ int ANFParser::createGraphDisplayLists()
 // ***********************************************************************************
 // ***********************************************************************************
 // ******************************* AUXILIARS *****************************************
-int ANFParser::readString(TiXmlElement** element, string* str, string descr, const int type)
+int ANFParser::readString(TiXmlElement** element, string* str, string descr, const int typeInFailure)
 {
 	const char* cID = (*element)->Attribute(descr.c_str());
 	if(!cID)
 	{
-		printMsg(type);
+		printMsg(typeInFailure);
 		out << " : Attribute '" << descr << "' is not defined" << endl;
-		return type;
+		return typeInFailure;
 	}
 	else
 	{
@@ -2042,13 +2228,13 @@ int ANFParser::readString(TiXmlElement** element, string* str, string descr, con
 	}
 }
 
-int ANFParser::readInt(TiXmlElement** element, int* value, string descr, const int type)
+int ANFParser::readInt(TiXmlElement** element, int* value, string descr, const int typeInFailure)
 {
 	if((*element)->QueryIntAttribute(descr.c_str(), value) != TIXML_SUCCESS)
 	{
-		printMsg(type);
+		printMsg(typeInFailure);
 		out << " : Attribute '" << descr << "' is either not defined or has illegal arguments (must be an integer)" << endl;
-		return type;
+		return typeInFailure;
 	}
 	else 
 	{
@@ -2056,13 +2242,13 @@ int ANFParser::readInt(TiXmlElement** element, int* value, string descr, const i
 	}
 }
 
-int ANFParser::readFloat(TiXmlElement** element, float* value, string descr, const int type)
+int ANFParser::readFloat(TiXmlElement** element, float* value, string descr, const int typeInFailure)
 {
 	if((*element)->QueryFloatAttribute(descr.c_str(), value) != TIXML_SUCCESS)
 	{
-		printMsg(type);
+		printMsg(typeInFailure);
 		out << " : Attribute '" << descr << "' is either not defined or has illegal arguments (must be a float)" << endl;
-		return type;
+		return typeInFailure;
 	}
 	else 
 	{
@@ -2070,15 +2256,15 @@ int ANFParser::readFloat(TiXmlElement** element, float* value, string descr, con
 	}
 }
 
-int ANFParser::readAxis(TiXmlElement** element, char* value, string descr, const int type)
+int ANFParser::readAxis(TiXmlElement** element, char* value, string descr, const int typeInFailure)
 {
 	char axis = ((*element)->Attribute(descr.c_str()))[0];
 
 	if(!axis)
 	{
-		printMsg(type);
+		printMsg(typeInFailure);
 		out << " : Attribute '" << descr << "' is not defined" << endl;
-		return type;
+		return typeInFailure;
 	}
 	else
 	{
@@ -2096,15 +2282,15 @@ int ANFParser::readAxis(TiXmlElement** element, char* value, string descr, const
 	}
 }
 
-int ANFParser::readBool(TiXmlElement** element, bool* value, string descr, const int type)
+int ANFParser::readBool(TiXmlElement** element, bool* value, string descr, const int typeInFailure)
 {
 	const char* cValue = (*element)->Attribute(descr.c_str());
 
 	if(!cValue)
 	{
-		printMsg(type);
+		printMsg(typeInFailure);
 		out << " : Attribute '" << descr << "' is not defined" << endl;
-		return type;
+		return typeInFailure;
 	}
 	else
 	{
@@ -2123,13 +2309,13 @@ int ANFParser::readBool(TiXmlElement** element, bool* value, string descr, const
 	}
 }
 
-int ANFParser::readPoint2d(TiXmlElement** element, Point2d** point, string descr, const int type)
+int ANFParser::readPoint2d(TiXmlElement** element, Point2d** point, string descr, const int typeInFailure)
 {
 	string str;
 
 	if(readString(element, &str, descr, ERROR) != OK)
 	{
-		return type;
+		return typeInFailure;
 	}
 	else
 	{
@@ -2148,12 +2334,12 @@ int ANFParser::readPoint2d(TiXmlElement** element, Point2d** point, string descr
 	}
 }
 
-int ANFParser::readPoint3d(TiXmlElement** element, Point3d** point, string descr, const int type)
+int ANFParser::readPoint3d(TiXmlElement** element, Point3d** point, string descr, const int typeInFailure)
 {
 	string str;
 	if(readString(element, &str, descr, ERROR) != OK)
 	{
-		return type;
+		return typeInFailure;
 	}
 	else
 	{
@@ -2172,13 +2358,13 @@ int ANFParser::readPoint3d(TiXmlElement** element, Point3d** point, string descr
 	}
 }
 
-int ANFParser::readPoint4d(TiXmlElement** element, Point4d** point, string descr, const int type)
+int ANFParser::readPoint4d(TiXmlElement** element, Point4d** point, string descr, const int typeInFailure)
 {
 	string str;
 
 	if(readString(element, &str, descr, ERROR) != OK)
 	{
-		return type;
+		return typeInFailure;
 	}
 	else
 	{

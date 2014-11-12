@@ -13,6 +13,11 @@ Animation::Animation(string id, float span)
 	this->spanTime = span;
 }
 
+string Animation::getID()
+{
+	return this->id;
+}
+
 // =======================
 //	Linear Animation
 // =======================
@@ -21,7 +26,15 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 	this->controlPoints = controlPts;
 	this->velocity = distance(controlPoints) / span;
 
-	this->reset();
+	this->init();
+}
+
+void LinearAnimation::init()
+{
+	this->currentPos = this->controlPoints[0];
+	this->currentDir = Point3d::subtract(controlPoints[1], controlPoints[0]);
+	this->currentControl = 0;
+	this->restart = false;
 }
 
 void LinearAnimation::draw()
@@ -31,8 +44,7 @@ void LinearAnimation::draw()
 
 void LinearAnimation::reset()
 {
-	this->currentPos = this->controlPoints[0];
-	this->currentControl = 0;
+	this->restart = true;
 }
 
 void LinearAnimation::update(unsigned long t)
@@ -52,7 +64,14 @@ CircularAnimation::CircularAnimation(string id, float span, Point3d * center, fl
 
 	// TODO : velocities
 
-	this->reset();
+	this->init();
+}
+
+void CircularAnimation::init()
+{
+	this->currentRotate = 0 ;// TODO
+	this->currentPos = 0; // TODO
+	this->restart = false;
 }
 
 void CircularAnimation::draw()
@@ -62,13 +81,19 @@ void CircularAnimation::draw()
 
 void CircularAnimation::reset()
 {
-	this->currentRotate = 0 ;// TODO
-	this->currentPos = 0; // TODO
+	this->restart = true;
 }
 
 void CircularAnimation::update(unsigned long t)
 {
-	// TODO
+	if(restart)
+	{
+		init();
+	}
+	else
+	{
+
+	}
 }
 
 // =======================

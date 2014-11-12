@@ -22,10 +22,13 @@ SceneData::SceneData()
 
 	// Textures
 	this->textures = vector<Texture* >();
+
+	// Animations
+	this->animations = vector<Animation *>();
 }
 
 /*
-Graph
+	Graph
 */
 SceneGraph* SceneData::getSceneGraph()
 {
@@ -33,7 +36,7 @@ SceneGraph* SceneData::getSceneGraph()
 }
 
 /*
-Globals
+	Globals
 */
 void SceneData::setDrawing(string mode, string shading, Point4d* background) {
 
@@ -59,7 +62,7 @@ void SceneData::setLighting(bool doublesided, bool local, bool enabled, Point4d*
 }
 
 /*
-Cameras
+	Cameras
 */
 void SceneData::addCamera(Camera* cam)
 {
@@ -108,7 +111,7 @@ bool SceneData::hasCameras()
 }
 
 /*
-Lights
+	Lights
 */
 void SceneData::addLight(Light* light)
 {
@@ -137,14 +140,18 @@ bool SceneData::hasLights()
 
 
 /*
-Appearances
+	Appearances
 */
 void SceneData::addAppearance(Appearance * app) {
 	this->appearances.push_back(app);
 }
 
-Appearance* SceneData::getAppearance(string id) {
-	for(unsigned int i = 0; i < this->appearances.size(); i++) {
+Appearance* SceneData::getAppearance(string id)
+{
+	int length = this->appearances.size();
+
+	for(int i = 0; i < length; i++)
+	{
 		if(this->appearances.at(i)->getID() == id) return this->appearances.at(i);
 	}
 	return NULL;
@@ -158,6 +165,25 @@ void SceneData::addTexture(Texture* tex)
 Texture* SceneData::getTexture(string id) {
 	for(unsigned int i = 0; i < this->textures.size(); i++) {
 		if(this->textures.at(i)->getID() == id) return this->textures.at(i);
+	}
+	return NULL;
+}
+
+/*
+	Animations
+*/
+void SceneData::addAnimation(Animation * anim)
+{
+	this->animations.push_back(anim);
+}
+
+Animation* SceneData::getAnimation(string id)
+{
+	int length = this->animations.size();
+
+	for(int i = 0; i < length; i++)
+	{
+		if(this->animations.at(i)->getID() == id) return this->animations.at(i);
 	}
 	return NULL;
 }

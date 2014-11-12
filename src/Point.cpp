@@ -3,10 +3,12 @@
 // =======================
 //    POINT2D
 // =======================
-Point2d::Point2d() {
-	this->x = 1.0;
-	this->y = 1.0;
+Point2d::Point2d()
+{
+	this->x = 0;
+	this->y = 0;
 }
+
 Point2d::Point2d(float x, float y)
 {
 	this->x = x;
@@ -39,10 +41,16 @@ float* Point2d::getFloatv()
 	return floatv;
 }
 
+Point2d* Point2d::subtract(Point2d *a, Point2d *b)
+{
+	return new Point2d(a->x - b->x, a->y - b->y);
+}
+
 // =======================
 //    POINT3D
 // =======================
-Point3d::Point3d() { 
+Point3d::Point3d()
+{ 
 	this->x = 0;
 	this->y = 0;
 	this->z = 0;
@@ -76,6 +84,11 @@ float* Point3d::getFloatv()
 	return floatv;
 }
 
+Point3d* Point3d::subtract(Point3d *a, Point3d *b)
+{
+	return new Point3d(a->x - b->x, a->y - b->y, a->z - b->z);
+}
+
 // =======================
 //    POINT4D
 // =======================
@@ -105,4 +118,9 @@ float* Point4d::getFloatv()
 	floatv[3] = w;
 
 	return floatv;
+}
+
+Point4d* Point4d::subtract(Point4d *a, Point4d *b)
+{
+	return new Point4d(a->x - b->x, a->y - b->y, a->z - b->z, a->w - b->w);
 }

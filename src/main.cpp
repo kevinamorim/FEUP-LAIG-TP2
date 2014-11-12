@@ -52,11 +52,13 @@ int main(int argc, char* argv[] )
 	catch(GLexception& ex)
 	{
 		cout << "Error: " << ex.what();
+		getKey();
 		return -1;
 	}
 	catch(exception& ex)
 	{
 		cout << "Unexpected error: " << ex.what();
+		getKey();
 		return -1;
 	}
 

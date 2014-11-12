@@ -184,6 +184,10 @@ public:
 	Texture* getTexture(string id);
 	void addTexture(Texture * tex);
 
+	// Animations
+	Animation* getAnimation(string id);
+	void addAnimation(Animation * anim);
+
 private:
 	SceneGraph* sceneGraph;
 
@@ -194,6 +198,8 @@ private:
 
 	vector<Appearance *> appearances;
 	vector<Texture *> textures;
+
+	vector<Animation *> animations;
 };
 
 #endif

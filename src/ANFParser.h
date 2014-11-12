@@ -118,8 +118,8 @@ private:
 	int parseAppearances();
 	// Animations
 	int parseAnimations();
-	int parseLinearAnimation(TiXmlElement** lightElement);
-	int parseCircularAnimation(TiXmlElement** lightElement);
+	int parseLinearAnimation(TiXmlElement** lightElement, string id, float span);
+	int parseCircularAnimation(TiXmlElement** lightElement, string id, float span);
 
 	// ======================================================
 	//		GRAPH
@@ -148,6 +148,7 @@ private:
 	int parseTorus(TiXmlElement* primitiveElement, SceneNode* node);
 	//TP2
 	int parsePlane(TiXmlElement* primitive, SceneNode* node);
+	int parsePatch(TiXmlElement* primitive, SceneNode* node);
 
 	// Descendants
 	int parseNodeDescendants(TiXmlElement* nodeElement, SceneNode* node);
