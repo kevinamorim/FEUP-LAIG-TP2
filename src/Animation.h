@@ -41,13 +41,18 @@ public:
 	void update(unsigned long t);
 	void reset();
 
-protected:
-	vector<Point3d*> controlPoints;
-	int currentControl;
+	//
+	void move(float distance);
 
+protected:
+	int currentControl;
+	vector<Point3d*> controlPoints;
+	vector<Point3d*> direction;			// Point3d that indicates the direction of the current movement (Eg.: direction[1] = controlPoint[1] - controlPoint[0] <normalized>)
+	vector<float> distance;
 	Point3d * currentPos;
-	Point3d * currentDir;
-	float velocity;
+
+	float speed;
+	float moved;
 };
 
 class CircularAnimation : public Animation {

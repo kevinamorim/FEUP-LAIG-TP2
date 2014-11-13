@@ -36,6 +36,23 @@ Point2d* Point2d::subtract(Point2d *a, Point2d *b)
 	return new Point2d(a->x - b->x, a->y - b->y);
 }
 
+float Point2d::distance(Point2d * a, Point2d * b)
+{
+	return sqrt(abs((b->x * b->x - a->x * a->x) + (b->y * b->y - a->y * a->y)));
+}
+
+float Point2d::size()
+{
+	return sqrt(x * x + y * y);
+}
+
+// ostream overload
+ostream& operator<<(ostream& os, const Point2d * point)
+{
+	os << "(" << point->x << ", " << point->y << ")";
+	return os;
+}
+
 // =======================
 //    POINT3D
 // =======================
@@ -58,6 +75,13 @@ void Point3d::setPoint3d(float x, float y, float z)
 	this->z = z;
 }
 
+void Point3d::setPoint3d(Point3d * p)
+{
+	this->x = p->x;
+	this->y = p->y;
+	this->z = p->z;
+}
+
 float* Point3d::getFloatv()
 {
 	float* floatv = new float[3];
@@ -72,6 +96,23 @@ float* Point3d::getFloatv()
 Point3d* Point3d::subtract(Point3d *a, Point3d *b)
 {
 	return new Point3d(a->x - b->x, a->y - b->y, a->z - b->z);
+}
+
+float Point3d::distance(Point3d * a, Point3d * b)
+{
+	return sqrt(abs((b->x * b->x - a->x * a->x) + (b->y * b->y - a->y * a->y) + (b->z * b->z - a->z * a->z)));
+}
+
+float Point3d::size()
+{
+	return sqrt(x * x + y * y + z * z);
+}
+
+// ostream overload
+ostream& operator<<(ostream& os, const Point3d * point)
+{
+	os << "(" << point->x << ", " << point->y << ", " << point->z << ")";
+	return os;
 }
 
 // =======================
@@ -111,4 +152,21 @@ float* Point4d::getFloatv()
 Point4d* Point4d::subtract(Point4d *a, Point4d *b)
 {
 	return new Point4d(a->x - b->x, a->y - b->y, a->z - b->z, a->w - b->w);
+}
+
+float Point4d::distance(Point4d * a, Point4d * b)
+{
+	return sqrt(abs((b->x * b->x - a->x * a->x) + (b->y * b->y - a->y * a->y) + (b->z * b->z - a->z * a->z) + (b->w * b->w - a->w * a->w)));
+}
+
+float Point4d::size()
+{
+	return sqrt(x * x + y * y + z * z + w * w);
+}
+
+// ostream overload
+ostream& operator<<(ostream& os, const Point4d * point)
+{
+	os << "(" << point->x << ", " << point->y << ", " << point->z << ", " << point->w << ")";
+	return os;
 }

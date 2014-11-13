@@ -28,9 +28,9 @@ void MainScene::init()
 	ctrls.push_back(new Point3d(0,0,1));
 	ctrls.push_back(new Point3d(0,0,0));
 
-	anim = new LinearAnimation("anim_1", 4, ctrls);
+	anim = new LinearAnimation("anim_1", 1, ctrls);
 
-	unsigned long updatePeriod = 1000;
+	unsigned long updatePeriod = 50;
 	setUpdatePeriod(updatePeriod);
 
 	display();
@@ -81,7 +81,8 @@ void MainScene::display()
 	long double time_0 = GetTickCount();
 
 	glPushMatrix();
-	//anim->draw();
+
+	anim->draw();
 
 	sceneData->getSceneGraph()->Display();
 

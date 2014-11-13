@@ -82,9 +82,6 @@
 					-->
 				</patch>
 				
-				
-				<plane parts="10" />
-				
 			</primitives>
 			
 			<descendants>

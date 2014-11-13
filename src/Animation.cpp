@@ -1,9 +1,5 @@
 #include "Animation.h"
 
-float distance(Point3d * a, Point3d * b);
-float distance(vector<Point3d *> pts);
-float distance(int axis, Point3d * a, Point3d * b);
-
 // =======================
 //	Animation
 // =======================
@@ -23,30 +19,70 @@ string Animation::getID()
 // =======================
 LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> controlPts) : Animation(id, span)
 {
-	this->controlPoints = controlPts;
+	this->controlPoints =  vector<Point3d *>();
+	this->direction = vector<Point3d *>();
+	this->distance = vector<float>();
 
-	float dist = distance(controlPoints);
+	int size = controlPts.size();
 
-	this->velocity = dist / spanTime;
+	for(int i = 0; i < size; i++)
+	{
+		Point3d * p = new Point3d();
+		p->setPoint3d(controlPts[i]);
+		this->controlPoints.push_back(p);
+		//cout << p << endl;
+	}
+	//cout << endl;
+		
 
-	cout << "Distance: " << dist << endl;
-	cout << "Time Span: " << this->spanTime << endl;		
-	cout << "Velocity: " << this->velocity << endl;
+	float totalDistance = 0;
 
-	this->currentControl = 0;
-	this->currentPos = this->controlPoints[0];
+	// Let's calculate the direction vector and the distance between the control points
+	//	(first will be ignored, for it is the starting point)
+	this->direction.push_back(new Point3d(0,0,0));
+	this->distance.push_back(0);
+
+	for(int i = 1; i < size; i++)
+	{
+		float dist = Point3d::distance(controlPoints[i], controlPoints[i-1]);
+		Point3d * p = Point3d::subtract(controlPoints[i], controlPoints[i-1]);
+
+		// normalize
+		p->x /= dist;
+		p->y /= dist;
+		p->z /= dist;
+
+		this->direction.push_back(p);
+		this->distance.push_back(dist);
+
+		//cout << "Direction [" << i-1 << "->" << i << "] : " << this->direction.at(i) << endl;
+		//cout << " Distance [" << i-1 << "->" << i << "] : " << this->distance.at(i) << endl;
+
+		totalDistance += distance[i];
+	}
+	
+	// constant object speed (u/s)
+	this->speed = totalDistance / spanTime;
+
+	//cout << "Time Span: " << spanTime << endl;		
+	//cout << "    Speed: " << speed << endl;
+
+	this->currentPos = new Point3d();
+	this->currentPos->setPoint3d(controlPoints.at(0));
+	this->currentControl = 1;
 
 	this->reset();
 }
 
 void LinearAnimation::init(unsigned long t)
 {
-	this->currentPos = this->controlPoints[0];
-	//this->currentDir = Point3d::subtract(controlPoints[1], controlPoints[0]);
+	this->currentPos->setPoint3d(this->controlPoints.at(0));
 	this->currentControl = 1;
-	this->restart = false;
+	this->moved = 0;
 
 	this->oldTime = t;
+
+	this->restart = false;
 }
 
 void LinearAnimation::draw()
@@ -69,55 +105,39 @@ void LinearAnimation::update(unsigned long t)
 	}
 	else
 	{
-		int length = controlPoints.size();
+		float deltaTime = (t - oldTime) / 1000.0;
+		this->oldTime = t;
 
-		if(currentControl < length)
+		float deltaMovement = this->speed * deltaTime;
+
+		move(deltaMovement);
+
+		moved += deltaMovement;
+
+		if(moved > distance[currentControl])
 		{
-			//cout << "UPDATE" << endl;
+			moved -= distance[currentControl];
 
-			float delta = distance(currentPos, controlPoints[currentControl]);
+			currentPos->setPoint3d(controlPoints[currentControl]);
+			currentControl = (currentControl + 1) % controlPoints.size();
 
-			if(delta > 0)
+			if(currentControl == 0)
 			{
-				float deltaX = distance(0, currentPos, controlPoints[currentControl]);
-				float deltaY = distance(1, currentPos, controlPoints[currentControl]);
-
-				float normX = deltaX / delta;
-				float normY = deltaY / delta;
-
-				float deltaTime = (t - oldTime) / 1000.0;
-
-				float moveX = this->velocity * deltaTime * normX;
-				float moveY = this->velocity * deltaTime * normY;
-
-				this->oldTime = t;
-
-				currentPos->x += moveX;
-				currentPos->y += moveY;
-
-				//cout << "delta: " << delta << endl;
-				//cout << "normX: " << normX << endl;
-				//cout << "normY: " << normY << endl;
-				cout << "moveX: " << moveX << endl;
-				cout << "moveY: " << moveY << endl;
-
-				if(abs(moveX) >= deltaX || abs(moveY) >= deltaY)
-				{
-					cout << "true" << endl;
-					currentPos = controlPoints[currentControl];
-					currentControl++;
-				}
-				else
-				{
-					reset();
-				}
+				reset();
+			}
+			else 
+			{
+				move(moved);
 			}
 		}
-		else
-		{
-			reset();
-		}
 	}
+}
+
+void LinearAnimation::move(float distance)
+{
+	this->currentPos->x += distance * direction[currentControl]->x;
+	this->currentPos->y += distance * direction[currentControl]->y;
+	this->currentPos->z += distance * direction[currentControl]->z;
 }
 
 // =======================
@@ -161,44 +181,5 @@ void CircularAnimation::update(unsigned long t)
 	else
 	{
 		// TODO
-	}
-}
-
-// =======================
-// =======================
-float distance(Point3d * a, Point3d * b)
-{
-	return sqrt(abs((b->x * b->x - a->x * a->x) + (b->y * b->y - a->y * a->y) + (b->z * b->z - a->z * a->z)));
-}
-
-float distance(vector<Point3d *> pts)
-{
-	float dist = 0.0;
-
-	unsigned int size = pts.size();
-
-	for(unsigned int i = 0; i < size - 1; i++)
-	{
-		dist += distance(pts[i], pts[i+1]);
-	}
-
-	return dist;
-}
-
-float distance(int axis, Point3d * a, Point3d * b)
-{
-	switch(axis)
-	{
-	case 0: // x
-		return sqrt(b->x * b->x - a->x * a->x);
-
-	case 1:
-		return sqrt(b->y * b->y - a->y * a->y);
-
-	case 2:
-		return sqrt(b->z * b->z - a->z * a->z);
-
-	default:
-		return 0;
 	}
 }
