@@ -20,6 +20,19 @@ void MainScene::init()
 	initCameras();
 	initLights();
 
+	vector<Point3d *> ctrls = vector<Point3d *>();
+
+	ctrls.push_back(new Point3d(0,0,0));
+	ctrls.push_back(new Point3d(1,0,0));
+	ctrls.push_back(new Point3d(1,0,1));
+	ctrls.push_back(new Point3d(0,0,1));
+	ctrls.push_back(new Point3d(0,0,0));
+
+	anim = new LinearAnimation("anim_1", 4, ctrls);
+
+	unsigned long updatePeriod = 1000;
+	setUpdatePeriod(updatePeriod);
+
 	display();
 }
 
@@ -30,7 +43,7 @@ void MainScene::initGlobals()
 	toggleDrawingShading(sceneData->drawing_shading);
 
 	Point4d* backColor = sceneData->drawing_background;
-	glClearColor(backColor->X(), backColor->Y(), backColor->Z(), backColor->W());
+	glClearColor(backColor->x, backColor->y, backColor->z, backColor->w);
 
 	// Culling
 	toggleCulling(sceneData->culling_face, sceneData->culling_order);
@@ -67,11 +80,16 @@ void MainScene::display()
 
 	long double time_0 = GetTickCount();
 
+	glPushMatrix();
+	anim->draw();
+
 	sceneData->getSceneGraph()->Display();
 
 	long double time_1 = GetTickCount();
 
 	//cout << "Time between: " << time_1 - time_0 << endl;
+
+	glPopMatrix();
 
 	axis.draw();
 
@@ -79,6 +97,11 @@ void MainScene::display()
 	// while the graphics card is showing the contents of another buffer - the front buffer
 	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
 	glutSwapBuffers();
+}
+
+void MainScene::update(unsigned long t)
+{
+	anim->update(t);
 }
 
 void MainScene::setDefaults()

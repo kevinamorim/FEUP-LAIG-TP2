@@ -59,10 +59,10 @@ string Texture::getFile()
 
 float Texture::S()
 {
-	return this->textLength->X();
+	return this->textLength->x;
 }
 
 float Texture::T()
 {
-	return this->textLength->Y();
+	return this->textLength->y;
 }

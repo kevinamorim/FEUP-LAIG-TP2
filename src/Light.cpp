@@ -11,9 +11,9 @@ Light::Light(unsigned int lightID, string name, bool enabled, bool marker, Point
 	this->setDiffuse(getFloat4v(diffuse->getFloatv()));
 	this->setSpecular(getFloat4v(specular->getFloatv()));
 
-	this->position[0] = pos->X();
-	this->position[1] = pos->Y();
-	this->position[2] = pos->Z();
+	this->position[0] = pos->x;
+	this->position[1] = pos->y;
+	this->position[2] = pos->z;
 	this->position[3] = 1.0;
 
 	this->setEnabled(enabled);

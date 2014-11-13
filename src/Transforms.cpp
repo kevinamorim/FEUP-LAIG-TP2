@@ -10,7 +10,7 @@ Translate::Translate(Point3d* to)
 
 void Translate::apply()
 {
-	glTranslatef(to->X(), to->Y(), to->Z());
+	glTranslatef(to->x, to->y, to->z);
 }
 
 // =======================
@@ -52,5 +52,5 @@ Scale::Scale(Point3d* factor)
 
 void Scale::apply()
 {
-	glScalef(factor->X(), factor->Y(), factor->Z());
+	glScalef(factor->x, factor->y, factor->z);
 }

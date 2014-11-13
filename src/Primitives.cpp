@@ -35,19 +35,19 @@ float Triangle::getSideLength(int side)
 	int j = (side + 1) % verts.size();
 
 	return sqrt(
-			pow(verts[j]->X() - verts[side]->X(), 2) +
-			pow(verts[j]->Y() - verts[side]->Y(), 2) +
-			pow(verts[j]->Z() - verts[side]->Z(), 2));
+			pow(verts[j]->x - verts[side]->x, 2) +
+			pow(verts[j]->y - verts[side]->y, 2) +
+			pow(verts[j]->z - verts[side]->z, 2));
 }
 
 void Triangle::draw()
 {
 	glBegin(GL_POLYGON);
-		glNormal3f(normal.X(), normal.Y(), normal.Z());
+		glNormal3f(normal.x, normal.y, normal.z);
 		for(unsigned int i = 0; i < verts.size(); i++)
 		{
-			glTexCoord2f(texCoords[i]->X() / this->tex.X(), texCoords[i]->Y() / this->tex.Y());
-			glVertex3d(verts[i]->X(), verts[i]->Y(), verts[i]->Z());
+			glTexCoord2f(texCoords[i]->x / this->tex.x, texCoords[i]->y / this->tex.y);
+			glVertex3d(verts[i]->x, verts[i]->y, verts[i]->z);
 		}
 	glEnd();
 }
@@ -68,9 +68,9 @@ void Triangle::calculateNormal() {
 		int j = (i + 1) % verts.size();
 
 		this->normal.setPoint3d(
-			this->normal.X() + (verts[i]->X() - verts[j]->Y()) * (verts[i]->Z() + verts[j]->Z()),
-			this->normal.Y() + (verts[i]->Z() - verts[j]->Z()) * (verts[i]->X() + verts[j]->X()),
-			this->normal.Z() + (verts[i]->X() - verts[j]->X()) * (verts[i]->Z() + verts[j]->Z())
+			this->normal.x + (verts[i]->x - verts[j]->y) * (verts[i]->z + verts[j]->z),
+			this->normal.y + (verts[i]->z - verts[j]->z) * (verts[i]->x + verts[j]->x),
+			this->normal.z + (verts[i]->x - verts[j]->x) * (verts[i]->z + verts[j]->z)
 		);
 
 	}
@@ -101,16 +101,16 @@ void Triangle::calculateTextureCoords() {
 // =======================
 Rectangle::Rectangle(Point2d* p1, Point2d* p2)
 {
-	this->width = abs(p2->X() - p1->X());
-	this->height = abs(p2->Y() - p1->Y());
+	this->width = abs(p2->x - p1->x);
+	this->height = abs(p2->y - p1->y);
 
 	calculateVertex(p1, p2);
 }
 
 void Rectangle::draw()
 {
-	float sMax = width / this->tex.X();
-	float tMax = height / this->tex.Y();
+	float sMax = width / this->tex.x;
+	float tMax = height / this->tex.y;
 
 	float sStep = sMax / (QUAD_RES - 1);
 	float tStep = tMax / (QUAD_RES - 1);
@@ -127,16 +127,16 @@ void Rectangle::draw()
 
 			glBegin(GL_POLYGON);
 				glTexCoord2f(j * sStep, i * tStep);
-				glVertex3d(verts[i][j]->X(), verts[i][j]->Y(), 0);
+				glVertex3d(verts[i][j]->x, verts[i][j]->y, 0);
 
 				glTexCoord2f(jj * sStep, i * tStep);
-				glVertex3d(verts[i][jj]->X(), verts[i][jj]->Y(), 0);
+				glVertex3d(verts[i][jj]->x, verts[i][jj]->y, 0);
 
 				glTexCoord2f(jj * sStep, ii * tStep);
-				glVertex3d(verts[ii][jj]->X(), verts[ii][jj]->Y(), 0);
+				glVertex3d(verts[ii][jj]->x, verts[ii][jj]->y, 0);
 
 				glTexCoord2f(j * sStep, ii * tStep);
-				glVertex3d(verts[ii][j]->X(), verts[ii][j]->Y(), 0);
+				glVertex3d(verts[ii][j]->x, verts[ii][j]->y, 0);
 			glEnd();
 		}
 	}
@@ -162,8 +162,8 @@ void Rectangle::calculateVertex(Point2d* p1, Point2d* p2) {
 		for(int j = 0; j < QUAD_RES; j++)
 		{
 			temp.push_back(new Point2d(
-				(p1->X() + (j * xStep)),
-				(p1->Y() + (i * yStep))));
+				(p1->x + (j * xStep)),
+				(p1->y + (i * yStep))));
 		}
 
 		verts.push_back(temp);
@@ -202,21 +202,21 @@ void Cylinder::draw()
 			int jj = (j+1) % slices;
 
 			glBegin(GL_POLYGON);
-			glTexCoord2f(texCoords[i][j]->X() / this->tex.X(), texCoords[i][j]->Y() / this->tex.Y());
-				glNormal3f(norms[i][j]->X(), norms[i][j]->Y(), norms[i][j]->Z());
-				glVertex3f(verts[i][j]->X(), verts[i][j]->Y(), verts[i][j]->Z());
+			glTexCoord2f(texCoords[i][j]->x / this->tex.x, texCoords[i][j]->y / this->tex.y);
+				glNormal3f(norms[i][j]->x, norms[i][j]->y, norms[i][j]->z);
+				glVertex3f(verts[i][j]->x, verts[i][j]->y, verts[i][j]->z);
 
-				glTexCoord2f(texCoords[i][jj]->X() / this->tex.X(), texCoords[i][jj]->Y() / this->tex.Y());
-				glNormal3f(norms[i][jj]->X(), norms[i][jj]->Y(), norms[i][jj]->Z());
-				glVertex3f(verts[i][jj]->X(), verts[i][jj]->Y(), verts[i][jj]->Z());
+				glTexCoord2f(texCoords[i][jj]->x / this->tex.x, texCoords[i][jj]->y / this->tex.y);
+				glNormal3f(norms[i][jj]->x, norms[i][jj]->y, norms[i][jj]->z);
+				glVertex3f(verts[i][jj]->x, verts[i][jj]->y, verts[i][jj]->z);
 
-				glTexCoord2f(texCoords[ii][jj]->X() / this->tex.X(), texCoords[ii][jj]->Y() / this->tex.Y());
-				glNormal3f(norms[ii][jj]->X(), norms[ii][jj]->Y(), norms[ii][jj]->Z());
-				glVertex3f(verts[ii][jj]->X(), verts[ii][jj]->Y(), verts[ii][jj]->Z());
+				glTexCoord2f(texCoords[ii][jj]->x / this->tex.x, texCoords[ii][jj]->y / this->tex.y);
+				glNormal3f(norms[ii][jj]->x, norms[ii][jj]->y, norms[ii][jj]->z);
+				glVertex3f(verts[ii][jj]->x, verts[ii][jj]->y, verts[ii][jj]->z);
 
-				glTexCoord2f(texCoords[ii][j]->X() / this->tex.X(), texCoords[ii][j]->Y() / this->tex.Y());
-				glNormal3f(norms[ii][j]->X(), norms[ii][j]->Y(), norms[ii][j]->Z());
-				glVertex3f(verts[ii][j]->X(), verts[ii][j]->Y(), verts[ii][j]->Z());
+				glTexCoord2f(texCoords[ii][j]->x / this->tex.x, texCoords[ii][j]->y / this->tex.y);
+				glNormal3f(norms[ii][j]->x, norms[ii][j]->y, norms[ii][j]->z);
+				glVertex3f(verts[ii][j]->x, verts[ii][j]->y, verts[ii][j]->z);
 			glEnd();
 		}
 	}
@@ -228,11 +228,11 @@ void Cylinder::draw()
 		glNormal3f(0, 0, 1);
 		for(int j = 0; j < slices ; j++)
 		{
-			float s = (verts[zTop][j]->X() + top) / (top * this->tex.X());
-			float t = (verts[zTop][j]->Y() + top) / (top * this->tex.Y());
+			float s = (verts[zTop][j]->x + top) / (top * this->tex.x);
+			float t = (verts[zTop][j]->y + top) / (top * this->tex.y);
 
 			glTexCoord2f(s, t);
-			glVertex3f(verts[zTop][j]->X(), verts[zTop][j]->Y(), verts[zTop][j]->Z());
+			glVertex3f(verts[zTop][j]->x, verts[zTop][j]->y, verts[zTop][j]->z);
 		}
 	glEnd();
 
@@ -243,11 +243,11 @@ void Cylinder::draw()
 		glNormal3f(0, 0, -1);
 		for(int j = (slices - 1); j >= 0 ; j--)
 		{
-			float s = (verts[zBase][j]->X() + base) / (base * this->tex.X());
-			float t = (verts[zBase][j]->Y() + base) / (base * this->tex.Y());
+			float s = (verts[zBase][j]->x + base) / (base * this->tex.x);
+			float t = (verts[zBase][j]->y + base) / (base * this->tex.y);
 
 			glTexCoord2f(s, t);
-			glVertex3f(verts[zBase][j]->X(), verts[zBase][j]->Y(), verts[zBase][j]->Z());
+			glVertex3f(verts[zBase][j]->x, verts[zBase][j]->y, verts[zBase][j]->z);
 		}
 	glEnd();
 
@@ -300,8 +300,8 @@ void Cylinder::calculateNormals() {
 		for(int j = 0; j < slices; j++)
 		{
 			tempNorms.push_back(new Point3d(
-				(verts[i][j]->X()),
-				(verts[i][j]->Y()),
+				(verts[i][j]->x),
+				(verts[i][j]->y),
 				zNorm
 			));
 		}
@@ -390,8 +390,8 @@ Torus::Torus(float inner, float outer, int slices, int loops)
 
 void Torus::draw()
 {
-	float sInc = (outer * 2 * PI) / (loops * this->tex.X());
-	float tInc = (radiusTube * 2 * PI) / (slices * this->tex.Y());
+	float sInc = (outer * 2 * PI) / (loops * this->tex.x);
+	float tInc = (radiusTube * 2 * PI) / (slices * this->tex.y);
 
 	for(int i = 0; i < slices; i++)
 	{
@@ -409,20 +409,20 @@ void Torus::draw()
 
 			glBegin(GL_POLYGON);
 				glTexCoord2f(s, t);
-				glNormal3f(norms[i][j]->X(), norms[i][j]->Y(), norms[i][j]->Z());
-				glVertex3f(verts[i][j]->X(), verts[i][j]->Y(), verts[i][j]->Z());
+				glNormal3f(norms[i][j]->x, norms[i][j]->y, norms[i][j]->z);
+				glVertex3f(verts[i][j]->x, verts[i][j]->y, verts[i][j]->z);
 
 				glTexCoord2f(ss, t);
-				glNormal3f(norms[i][jj]->X(), norms[i][jj]->Y(), norms[i][jj]->Z());
-				glVertex3f(verts[i][jj]->X(), verts[i][jj]->Y(), verts[i][jj]->Z());
+				glNormal3f(norms[i][jj]->x, norms[i][jj]->y, norms[i][jj]->z);
+				glVertex3f(verts[i][jj]->x, verts[i][jj]->y, verts[i][jj]->z);
 
 				glTexCoord2f(ss, tt);
-				glNormal3f(norms[ii][jj]->X(), norms[ii][jj]->Y(), norms[ii][jj]->Z());
-				glVertex3f(verts[ii][jj]->X(), verts[ii][jj]->Y(), verts[ii][jj]->Z());
+				glNormal3f(norms[ii][jj]->x, norms[ii][jj]->y, norms[ii][jj]->z);
+				glVertex3f(verts[ii][jj]->x, verts[ii][jj]->y, verts[ii][jj]->z);
 
 				glTexCoord2f(s, tt);
-				glNormal3f(norms[ii][j]->X(), norms[ii][j]->Y(), norms[ii][j]->Z());
-				glVertex3f(verts[ii][j]->X(), verts[ii][j]->Y(), verts[ii][j]->Z());
+				glNormal3f(norms[ii][j]->x, norms[ii][j]->y, norms[ii][j]->z);
+				glVertex3f(verts[ii][j]->x, verts[ii][j]->y, verts[ii][j]->z);
 			glEnd();
 		}
 	}

@@ -59,7 +59,9 @@
 			
 			<appearanceref id="app_checkers" />
 			
-			<primitives>			
+			<primitives>	
+			
+				<!--
 				<patch order="2" partsU="10" partsV="10" compute="line">
 					<controlpoint x="0" y="0" z="0" />
 					<controlpoint x="0" y="2" z="0" />
@@ -72,14 +74,17 @@
 					<controlpoint x="2" y="0" z="2" />7
 					
 					
-					<!--
+					
 					<controlpoint x="8" y="0" z="0" />
 					<controlpoint x="8" y="2" z="0" />
 					
 					<controlpoint x="10" y="0" z="0" />
 					<controlpoint x="10" y="2" z="0" />
-					-->
+					
 				</patch>
+				-->
+				
+				<plane parts="10" />
 				
 			</primitives>
 			

@@ -1,5 +1,5 @@
 DEBUG FOR .anf FILE - LAIG - FEUP 2014/15
-12-11-2014 14-45-43
+13-11-2014 12-26-35
 ___________________________________
 > Loading file... 
 ___________________________________
@@ -66,7 +66,7 @@ ___________________________________
             > Appearances...
                 > Appearance : app_checkers
             > Primitives...
-                > Patch
+                > Plane
             > Descendants...
                              [INFO] : The block <descendants> exists, but it is empty (or the content does not match <noderef> as it should)
     _______________________________

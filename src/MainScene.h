@@ -14,12 +14,13 @@ using namespace std;
 /*
 	CGFscene that will represent the scene read from the anf file
 */
-class MainScene : public CGFscene{
+class MainScene : public CGFscene {
 public:
 	MainScene(SceneData* sceneData);
 
 	void init();
 	void display();
+	void update(unsigned long t);
 
 	// Set methods used by the interface
 	void toggleLight(int index, int value);
@@ -69,6 +70,10 @@ private:
 	// The following are used only for ease of access and reading (since all of this data is in the sceneData instance)
 	int numCameras;
 	int numLights;
+
+
+	//TP2
+	LinearAnimation *anim;
 };
 
 #endif

@@ -118,5 +118,5 @@ void PerspCamera::apply()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(pos->X(), pos->Y(), pos->Z(), tar->X(), tar->Y(), tar->Z(), 0, 1, 0);
+	gluLookAt(pos->x, pos->y, pos->z, tar->x, tar->y, tar->z, 0, 1, 0);
 }
