@@ -81,7 +81,7 @@ void MainScene::display()
 	long double time_0 = GetTickCount();
 
 	glPushMatrix();
-	anim->draw();
+	//anim->draw();
 
 	sceneData->getSceneGraph()->Display();
 

@@ -69,7 +69,9 @@ void LinearAnimation::update(unsigned long t)
 	}
 	else
 	{
-		if(currentControl < controlPoints.size())
+		int length = controlPoints.size();
+
+		if(currentControl < length)
 		{
 			//cout << "UPDATE" << endl;
 

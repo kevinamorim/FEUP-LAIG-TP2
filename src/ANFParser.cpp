@@ -2092,9 +2092,9 @@ int ANFParser::parsePatch(TiXmlElement* primitive, SceneNode* node)
 		}
 	}
 
-	if(controlPts.size() < 2)
+	if(controlPts.size() != pow(order + 1.0, 2))
 	{
-		printMsg(ERROR, " : Not enough control points detected");
+		printMsg(ERROR, " : The nr. control points must be (order+1)^2");
 		localErrors++;
 	}
 

@@ -509,7 +509,7 @@ Patch::Patch(int order, int partsU, int partsV, vector<Point3d *> controlPts, st
 		}
 	}
 
-	this->order = order;
+	this->order = order + 1;
 	this->partsU = partsU;
 	this->partsV = partsV;
 	this->drawingMode = drawingMode;
@@ -517,7 +517,7 @@ Patch::Patch(int order, int partsU, int partsV, vector<Point3d *> controlPts, st
 
 Patch::Patch(int order, int partsU, int partsV, string drawingMode)
 {
-	this->order = order;
+	this->order = order + 1;
 	this->partsU = partsU;
 	this->partsV = partsV;
 	this->drawingMode = drawingMode;
@@ -533,7 +533,7 @@ void Patch::draw()
 	//glColor3f(1.0,1.0,1.0);
 
 	glEnable(GL_MAP2_VERTEX_3);
-	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, (this->order+1),  0.0, 1.0, 6, (this->order+1),  ctrlPoints);
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, order,  0.0, 1.0, 3 * order, order,  ctrlPoints);
 	//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
 	//glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &colorpoints[0][0]);
 	//glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, 2,  0.0, 1.0, 4, 2,  &this->texCoords[0]);

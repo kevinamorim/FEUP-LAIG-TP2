@@ -55,34 +55,33 @@
 			</transforms>
 			
 			<!-- referência ao bloco de animação por cada "node". nó opcional  -->
-            <animationref id="line_anim" />
+            <!--<animationref id="line_anim" />-->
 			
 			<appearanceref id="app_checkers" />
 			
 			<primitives>	
 			
-				<!--
+				
 				<patch order="2" partsU="10" partsV="10" compute="line">
 					<controlpoint x="0" y="0" z="0" />
 					<controlpoint x="0" y="2" z="0" />
-					<controlpoint x="0" y="2" z="2" />
-					<controlpoint x="0" y="0" z="2" />
+					<controlpoint x="0" y="4" z="0" />
 					
-					<controlpoint x="2" y="0" z="0" />
-					<controlpoint x="2" y="2" z="0" />			
-					<controlpoint x="2" y="2" z="2" />
-					<controlpoint x="2" y="0" z="2" />7
+					<controlpoint x="2" y="0" z="2" />
+					<controlpoint x="2" y="2" z="4" />
+					<controlpoint x="2" y="4" z="2" />	
 					
+					<controlpoint x="4" y="0" z="0" />
+					<controlpoint x="4" y="2" z="0" />
+					<controlpoint x="4" y="4" z="0" />
 					
-					
-					<controlpoint x="8" y="0" z="0" />
+					<!--
 					<controlpoint x="8" y="2" z="0" />
-					
 					<controlpoint x="10" y="0" z="0" />
 					<controlpoint x="10" y="2" z="0" />
-					
+					-->
 				</patch>
-				-->
+				
 				
 				<plane parts="10" />
 				
