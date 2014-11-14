@@ -15,7 +15,7 @@
     </cameras>
 	<!-- Luzes -->
     <lights>
-            <light id="god light" type="omni" enabled="true" marker="false" pos="10 15 5" >
+            <light id="god light" type="omni" enabled="true" marker="true" pos="0 3 2" >
 			
                <component type="ambient" value="0.2 0.2 0.2 0.8" />
                <component type="diffuse" value="0.4 0.4 0.4 0.8" />
@@ -63,18 +63,18 @@
 			<primitives>	
 			
 				
-				<patch order="2" partsU="10" partsV="10" compute="line">
-					<controlpoint x="-1" y="0" z="2" />
-					<controlpoint x="-1" y="0" z="0" />
-					<controlpoint x="-1" y="0" z="-1" />
-					
+				<patch order="2" partsU="40" partsV="40" compute="fill">
+					<controlpoint x="-2" y="0" z="2" />
 					<controlpoint x="0" y="0" z="2" />
-					<controlpoint x="0" y="4" z="0" />
-					<controlpoint x="0" y="0" z="-2" />	
+					<controlpoint x="2" y="0" z="2" />
 					
-					<controlpoint x="1" y="0" z="2" />
-					<controlpoint x="1" y="0" z="0" />
-					<controlpoint x="1" y="0" z="-1" />
+					<controlpoint x="-2" y="0" z="0" />
+					<controlpoint x="0" y="20" z="0" />
+					<controlpoint x="2" y="0" z="0" />	
+					
+					<controlpoint x="-2" y="0" z="-2" />
+					<controlpoint x="0" y="0" z="-2" />
+					<controlpoint x="2" y="0" z="-2" />
 					
 					<!--
 					<controlpoint x="8" y="2" z="0" />

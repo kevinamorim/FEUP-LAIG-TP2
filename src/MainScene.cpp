@@ -19,7 +19,6 @@ void MainScene::init()
 	initGlobals();
 	initCameras();
 	initLights();
-
 	
 	anim = new ComposedAnimation("mixed");
 
@@ -99,6 +98,8 @@ void MainScene::display()
 	//cout << "Time between: " << time_1 - time_0 << endl;
 
 	axis.draw();
+
+	glNormal3f(0, 1, 0);
 
 	// We have been drawing in a memory area that is not visible - the back buffer, 
 	// while the graphics card is showing the contents of another buffer - the front buffer

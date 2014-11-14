@@ -27,13 +27,16 @@ public:
 
 	virtual string Type() = 0;		/* Returns a string with the type of the primitive. */
 	virtual void draw() = 0;		/* Draws the primitive to the screen. */
-	void setTextureParams(float s, float t);	/* Sets the mapping coordinates for the texture. */
+
+	void setTexture(Texture * tex);	/* Sets the mapping coordinates for the texture. */
 
 protected:
 
 	Primitive();					/* Empty constructor */
 
-	Point2d tex;					/* Texture mapping coordinates, where X = S and Y = T */
+	bool hasTexture;
+	Texture *texture;					
+	Point2d texParams;				/* Texture mapping coordinates, where X = S and Y = T */
 };
 
 /*
@@ -186,8 +189,6 @@ public:
 	void draw();
 
 private:
-	CGFtexture *texture;
-
 	int order, partsU, partsV;
 
 	string drawingMode;

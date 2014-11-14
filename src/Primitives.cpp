@@ -5,15 +5,16 @@
 // =======================
 Primitive::Primitive()
 {
-	this->tex = Point2d(1.0, 1.0);
+	this->texParams = Point2d(1.0, 1.0);
+	hasTexture = false;
 }
 
-void Primitive::setTextureParams(float s, float t)
+void Primitive::setTexture(Texture *t)
 {
-	this->tex.setPoint2d(s, t);
+	this->texture = t;
+	this->texParams.setPoint2d(t->S(), t->T());
+	hasTexture = true;
 }
-
-
 
 // =======================
 //    Triangle
@@ -46,7 +47,7 @@ void Triangle::draw()
 		glNormal3f(normal.x, normal.y, normal.z);
 		for(unsigned int i = 0; i < verts.size(); i++)
 		{
-			glTexCoord2f(texCoords[i]->x / this->tex.x, texCoords[i]->y / this->tex.y);
+			glTexCoord2f(texCoords[i]->x / this->texParams.x, texCoords[i]->y / this->texParams.y);
 			glVertex3d(verts[i]->x, verts[i]->y, verts[i]->z);
 		}
 	glEnd();
@@ -94,8 +95,6 @@ void Triangle::calculateTextureCoords() {
 
 }
 
-
-
 // =======================
 //    Rectangle
 // =======================
@@ -109,8 +108,8 @@ Rectangle::Rectangle(Point2d* p1, Point2d* p2)
 
 void Rectangle::draw()
 {
-	float sMax = width / this->tex.x;
-	float tMax = height / this->tex.y;
+	float sMax = width / this->texParams.x;
+	float tMax = height / this->texParams.y;
 
 	float sStep = sMax / (QUAD_RES - 1);
 	float tStep = tMax / (QUAD_RES - 1);
@@ -202,19 +201,19 @@ void Cylinder::draw()
 			int jj = (j+1) % slices;
 
 			glBegin(GL_POLYGON);
-			glTexCoord2f(texCoords[i][j]->x / this->tex.x, texCoords[i][j]->y / this->tex.y);
+			glTexCoord2f(texCoords[i][j]->x / this->texParams.x, texCoords[i][j]->y / this->texParams.y);
 				glNormal3f(norms[i][j]->x, norms[i][j]->y, norms[i][j]->z);
 				glVertex3f(verts[i][j]->x, verts[i][j]->y, verts[i][j]->z);
 
-				glTexCoord2f(texCoords[i][jj]->x / this->tex.x, texCoords[i][jj]->y / this->tex.y);
+				glTexCoord2f(texCoords[i][jj]->x / this->texParams.x, texCoords[i][jj]->y / this->texParams.y);
 				glNormal3f(norms[i][jj]->x, norms[i][jj]->y, norms[i][jj]->z);
 				glVertex3f(verts[i][jj]->x, verts[i][jj]->y, verts[i][jj]->z);
 
-				glTexCoord2f(texCoords[ii][jj]->x / this->tex.x, texCoords[ii][jj]->y / this->tex.y);
+				glTexCoord2f(texCoords[ii][jj]->x / this->texParams.x, texCoords[ii][jj]->y / this->texParams.y);
 				glNormal3f(norms[ii][jj]->x, norms[ii][jj]->y, norms[ii][jj]->z);
 				glVertex3f(verts[ii][jj]->x, verts[ii][jj]->y, verts[ii][jj]->z);
 
-				glTexCoord2f(texCoords[ii][j]->x / this->tex.x, texCoords[ii][j]->y / this->tex.y);
+				glTexCoord2f(texCoords[ii][j]->x / this->texParams.x, texCoords[ii][j]->y / this->texParams.y);
 				glNormal3f(norms[ii][j]->x, norms[ii][j]->y, norms[ii][j]->z);
 				glVertex3f(verts[ii][j]->x, verts[ii][j]->y, verts[ii][j]->z);
 			glEnd();
@@ -228,8 +227,8 @@ void Cylinder::draw()
 		glNormal3f(0, 0, 1);
 		for(int j = 0; j < slices ; j++)
 		{
-			float s = (verts[zTop][j]->x + top) / (top * this->tex.x);
-			float t = (verts[zTop][j]->y + top) / (top * this->tex.y);
+			float s = (verts[zTop][j]->x + top) / (top * this->texParams.x);
+			float t = (verts[zTop][j]->y + top) / (top * this->texParams.y);
 
 			glTexCoord2f(s, t);
 			glVertex3f(verts[zTop][j]->x, verts[zTop][j]->y, verts[zTop][j]->z);
@@ -243,8 +242,8 @@ void Cylinder::draw()
 		glNormal3f(0, 0, -1);
 		for(int j = (slices - 1); j >= 0 ; j--)
 		{
-			float s = (verts[zBase][j]->x + base) / (base * this->tex.x);
-			float t = (verts[zBase][j]->y + base) / (base * this->tex.y);
+			float s = (verts[zBase][j]->x + base) / (base * this->texParams.x);
+			float t = (verts[zBase][j]->y + base) / (base * this->texParams.y);
 
 			glTexCoord2f(s, t);
 			glVertex3f(verts[zBase][j]->x, verts[zBase][j]->y, verts[zBase][j]->z);
@@ -390,8 +389,8 @@ Torus::Torus(float inner, float outer, int slices, int loops)
 
 void Torus::draw()
 {
-	float sInc = (outer * 2 * PI) / (loops * this->tex.x);
-	float tInc = (radiusTube * 2 * PI) / (slices * this->tex.y);
+	float sInc = (outer * 2 * PI) / (loops * this->texParams.x);
+	float tInc = (radiusTube * 2 * PI) / (slices * this->texParams.y);
 
 	for(int i = 0; i < slices; i++)
 	{
@@ -489,15 +488,29 @@ void Torus::calculate() {
 // =======================
 //    Patch
 // =======================
-float ctrlpoints[2][2][3] = {
-	{{ 0, 0, 0}, { 0, 1, 0}}, 
-	{{ 1, 0, 0}, { 1, 1, 0}}, 
-};
-
-Patch::Patch(int order, int partsU, int partsV, vector<Point3d *> controlPts, string drawingMode)
+Patch::Patch(int ord, int partsU, int partsV, vector<Point3d *> controlPts, string drawingMode)
 {
 	int vSize = controlPts.size();
 
+	// Texture Coordinates
+	this->texCoords = new float[vSize * 2];
+
+	float step = 1.0 / ord;
+
+	for(int i = 0; i < vSize; i++)
+	{
+		int offset = i * 2;
+		int sOffset = i % (ord + 1);
+		int tOffset = i / (ord + 1);
+
+		float s = sOffset * step;
+		float t = tOffset * step;
+
+		texCoords[offset] = s;
+		texCoords[offset+1] = t;
+	}
+
+	// Control points
 	this->ctrlPoints = new float[vSize * 3];
 
 	for(int i = 0; i < vSize; i++)
@@ -509,7 +522,7 @@ Patch::Patch(int order, int partsU, int partsV, vector<Point3d *> controlPts, st
 		}
 	}
 
-	this->order = order + 1;
+	this->order = ord + 1;
 	this->partsU = partsU;
 	this->partsV = partsV;
 	this->drawingMode = drawingMode;
@@ -531,32 +544,38 @@ void Patch::setControlPoints(float* v)
 void Patch::draw()
 {
 	//glColor3f(1.0,1.0,1.0);
-
-	glEnable(GL_MAP2_VERTEX_3);
 	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, order,  0.0, 1.0, 3 * order, order,  ctrlPoints);
 	//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
 	//glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &colorpoints[0][0]);
-	//glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, 2,  0.0, 1.0, 4, 2,  &this->texCoords[0]);
+	glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, order,  0.0, 1.0, 2 * order, order, texCoords);
 
+	glFrontFace(GL_CW);
 	
+	glEnable(GL_MAP2_VERTEX_3);
+	glEnable(GL_AUTO_NORMAL);
 	//glEnable(GL_MAP2_NORMAL);
 	//glEnable(GL_MAP2_COLOR_4);
-	//glEnable(GL_MAP2_TEXTURE_COORD_2);
-	glEnable(GL_AUTO_NORMAL);
+	glEnable(GL_MAP2_TEXTURE_COORD_2);
 
 	glMapGrid2f(partsU, 0.0, 1.0, partsV, 0.0, 1.0); 
 
 	// SEGUE-SE EXEMPLO DE UTILIZACAO DE "EVALUATORS"
 	glEnable(GL_LIGHTING);
 	//glEnable(GL_COLOR_MATERIAL);
-	//glEnable(GL_TEXTURE_2D);
-	//myTexture->apply();
+	if(hasTexture)
+	{
+		glEnable(GL_TEXTURE_2D);
+		//texture->apply();
+	}
 
 	glEvalMesh2(drawingMode == "fill" ? GL_FILL : drawingMode == "line" ? GL_LINE : GL_POINT, 0, this->partsU, 0, this->partsV);
 
 	glDisable(GL_MAP2_VERTEX_3);
+	if(hasTexture) glDisable(GL_TEXTURE_2D);
+	glEnable(GL_AUTO_NORMAL);
 
-	//glDisable(GL_TEXTURE_2D);
+	glFrontFace(GL_CCW);
+	//glDisable(GL_MAP2_NORMAL);
 	//glDisable(GL_COLOR_MATERIAL);
 }
 

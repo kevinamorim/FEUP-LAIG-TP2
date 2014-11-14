@@ -432,7 +432,6 @@ void SceneNode::Display()
 			addAppearanceToStack(this->appearance);
 		}
 
-
 		// TP2
 		if(hasAnimation)
 		{
@@ -548,7 +547,7 @@ void SceneNode::drawPrimitives()
 				{
 					Texture* tex = appearancesStack->top()->getTexture();
 
-					primitives.at(i)->setTextureParams(tex->S(), tex->T());
+					primitives.at(i)->setTexture(tex);
 				}
 			}
 		}
