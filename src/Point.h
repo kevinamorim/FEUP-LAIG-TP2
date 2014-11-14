@@ -17,7 +17,7 @@ public:
 
 	static Point2d* subtract(Point2d *a, Point2d *b);
 	static float distance(Point2d *a, Point2d *b);
-	
+	static float dotProduct(Point2d * a, Point2d * b);
 
 	float size();
 

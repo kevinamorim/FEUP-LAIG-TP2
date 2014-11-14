@@ -92,6 +92,7 @@
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\MainScene.h" />
     <ClInclude Include="src\MyInterface.h" />
+    <ClInclude Include="src\MyMath.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\SceneData.h" />

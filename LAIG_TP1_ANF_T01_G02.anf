@@ -63,17 +63,17 @@
 			
 				
 				<patch order="2" partsU="10" partsV="10" compute="line">
-					<controlpoint x="0" y="0" z="0" />
-					<controlpoint x="0" y="2" z="0" />
+					<controlpoint x="-1" y="0" z="2" />
+					<controlpoint x="-1" y="0" z="0" />
+					<controlpoint x="-1" y="0" z="-1" />
+					
+					<controlpoint x="0" y="0" z="2" />
 					<controlpoint x="0" y="4" z="0" />
+					<controlpoint x="0" y="0" z="-2" />	
 					
-					<controlpoint x="2" y="0" z="2" />
-					<controlpoint x="2" y="2" z="4" />
-					<controlpoint x="2" y="4" z="2" />	
-					
-					<controlpoint x="4" y="0" z="0" />
-					<controlpoint x="4" y="2" z="0" />
-					<controlpoint x="4" y="4" z="0" />
+					<controlpoint x="1" y="0" z="2" />
+					<controlpoint x="1" y="0" z="0" />
+					<controlpoint x="1" y="0" z="-1" />
 					
 					<!--
 					<controlpoint x="8" y="2" z="0" />

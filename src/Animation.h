@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include <iomanip>
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 #include <GL\glut.h>
 
 #include "Point.h"
+#include "MyMath.h"
 
 using namespace std;
 
@@ -43,6 +44,7 @@ public:
 
 	//
 	void move(float distance);
+	Point3d * getAngle();
 
 protected:
 	int currentControl;
@@ -50,8 +52,10 @@ protected:
 	vector<Point3d*> direction;			// Point3d that indicates the direction of the current movement (Eg.: direction[1] = controlPoint[1] - controlPoint[0] <normalized>)
 	vector<float> distance;
 	Point3d * currentPos;
+	Point3d * currentAngle;
 
 	float speed;
+
 	float moved;
 };
 

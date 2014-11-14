@@ -3,17 +3,16 @@
 
 #include <iostream>
 #include <iomanip>
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 #include "CGFobject.h"
 #include "Appearance.h"
 #include "Point.h"
+#include "MyMath.h"
 
 #include <GL\glut.h>
 
-const float PI = 3.14159265358979;
-const float INV_PI = 0.3183098861838;
 const int QUAD_RES = 10;
 
 using namespace std;

@@ -55,8 +55,8 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 		this->direction.push_back(p);
 		this->distance.push_back(dist);
 
-		//cout << "Direction [" << i-1 << "->" << i << "] : " << this->direction.at(i) << endl;
-		//cout << " Distance [" << i-1 << "->" << i << "] : " << this->distance.at(i) << endl;
+		cout << "Direction [" << i-1 << "->" << i << "] : " << this->direction.at(i) << endl;
+		cout << " Distance [" << i-1 << "->" << i << "] : " << this->distance.at(i) << endl;
 
 		totalDistance += distance[i];
 	}
@@ -70,6 +70,7 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 	this->currentPos = new Point3d();
 	this->currentPos->setPoint3d(controlPoints.at(0));
 	this->currentControl = 1;
+	this->currentAngle = getAngle();
 
 	this->reset();
 }
@@ -80,6 +81,9 @@ void LinearAnimation::init(unsigned long t)
 	this->currentControl = 1;
 	this->moved = 0;
 
+	//cout << "Direction: " << direction[currentControl] << "  |  " << currentControl;
+	this->currentAngle = getAngle();
+
 	this->oldTime = t;
 
 	this->restart = false;
@@ -88,8 +92,8 @@ void LinearAnimation::init(unsigned long t)
 void LinearAnimation::draw()
 {
 	// TODO : rotate
-	//cout << "currentPos: " << currentPos->x << " " << currentPos->y << " " << currentPos->z << endl;
 	glTranslatef(currentPos->x, currentPos->y, currentPos->z);
+	glRotatef(currentAngle->x, 0, 1, 0);
 }
 
 void LinearAnimation::reset()
@@ -114,7 +118,7 @@ void LinearAnimation::update(unsigned long t)
 
 		moved += deltaMovement;
 
-		if(moved > distance[currentControl])
+		if(moved >= distance[currentControl])
 		{
 			moved -= distance[currentControl];
 
@@ -123,14 +127,36 @@ void LinearAnimation::update(unsigned long t)
 
 			if(currentControl == 0)
 			{
-				reset();
+				init(t);
 			}
 			else 
 			{
+				//cout << "Direction: " << direction[currentControl] << "  |  " << currentControl;
+				currentAngle = getAngle();
+
 				move(moved);
 			}
 		}
 	}
+}
+
+Point3d * LinearAnimation::getAngle()
+{
+	float angleX, angleY, angleZ;
+
+	Point2d vecX = Point2d(0, 1);
+	Point2d vecD = Point2d(direction[currentControl]->x, direction[currentControl]->z);
+
+	float cosA = Point2d::dotProduct(&vecX, &vecD) / (vecX.size() * vecD.size());
+
+	angleX = 360 * acos(cosA) / (2 * PI);
+	angleX *= (direction[currentControl]->z >= 0 && direction[currentControl]->x >= 0) ? 1 : -1;
+	cout << "angle X: " << angleX << endl;
+
+	angleY = 0.0;
+	angleZ = 0.0;
+
+	return new Point3d(angleX, angleY, angleZ);
 }
 
 void LinearAnimation::move(float distance)

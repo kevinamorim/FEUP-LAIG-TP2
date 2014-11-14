@@ -41,6 +41,11 @@ float Point2d::distance(Point2d * a, Point2d * b)
 	return sqrt(abs((b->x * b->x - a->x * a->x) + (b->y * b->y - a->y * a->y)));
 }
 
+float Point2d::dotProduct(Point2d * a, Point2d * b)
+{
+	return (a->x * b->x + a->y * b->y);
+}
+
 float Point2d::size()
 {
 	return sqrt(x * x + y * y);

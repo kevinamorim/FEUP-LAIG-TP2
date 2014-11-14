@@ -23,12 +23,12 @@ void MainScene::init()
 	vector<Point3d *> ctrls = vector<Point3d *>();
 
 	ctrls.push_back(new Point3d(0,0,0));
-	ctrls.push_back(new Point3d(1,0,0));
-	ctrls.push_back(new Point3d(1,0,1));
-	ctrls.push_back(new Point3d(0,0,1));
+	ctrls.push_back(new Point3d(2,0,0));
+	ctrls.push_back(new Point3d(2,2,2));
+	ctrls.push_back(new Point3d(0,0,2));
 	ctrls.push_back(new Point3d(0,0,0));
 
-	anim = new LinearAnimation("anim_1", 1, ctrls);
+	anim = new LinearAnimation("anim_1", 4, ctrls);
 
 	unsigned long updatePeriod = 50;
 	setUpdatePeriod(updatePeriod);
