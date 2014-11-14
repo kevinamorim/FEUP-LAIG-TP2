@@ -23,9 +23,8 @@ void MainScene::init()
 	vector<Point3d *> ctrls = vector<Point3d *>();
 
 	ctrls.push_back(new Point3d(0,0,0));
-	ctrls.push_back(new Point3d(2,0,0));
-	ctrls.push_back(new Point3d(2,2,2));
-	ctrls.push_back(new Point3d(0,0,2));
+	ctrls.push_back(new Point3d(2,2,1));
+	ctrls.push_back(new Point3d(1,4,2));
 	ctrls.push_back(new Point3d(0,0,0));
 
 	anim = new LinearAnimation("anim_1", 4, ctrls);
@@ -57,9 +56,11 @@ void MainScene::initGlobals()
 
 void MainScene::initCameras() 
 {
-	numCameras = sceneData->getCameras().size();
+	numCameras = 0;
 
-	activeCamera = 0;
+	//numCameras = sceneData->getCameras().size();
+
+	//activeCamera = 0;
 }
 
 void MainScene::initLights()
@@ -275,7 +276,7 @@ int MainScene::getNumberOfLights()
 
 int MainScene::getNumberOfCameras()
 {
-	return sceneData->getCameras().size();
+	return numCameras;
 }
 
 vector<Light* > MainScene::getLights()

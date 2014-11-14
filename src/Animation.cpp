@@ -94,6 +94,7 @@ void LinearAnimation::draw()
 	// TODO : rotate
 	glTranslatef(currentPos->x, currentPos->y, currentPos->z);
 	glRotatef(currentAngle->x, 0, 1, 0);
+	glRotatef(currentAngle->y, 1, 0, 0);
 }
 
 void LinearAnimation::reset()
@@ -144,16 +145,21 @@ Point3d * LinearAnimation::getAngle()
 {
 	float angleX, angleY, angleZ;
 
-	Point2d vecX = Point2d(0, 1);
+	Point2d vecZ = Point2d(0, 1);
+	Point2d vecY = Point2d(direction[currentControl]->y, 1);
 	Point2d vecD = Point2d(direction[currentControl]->x, direction[currentControl]->z);
 
-	float cosA = Point2d::dotProduct(&vecX, &vecD) / (vecX.size() * vecD.size());
+	float cosX = Point2d::dotProduct(&vecZ, &vecD) / (vecZ.size() * vecD.size());
+	float cosY = Point2d::dotProduct(&vecY, &vecZ) / (vecY.size() * vecZ.size());
 
-	angleX = 360 * acos(cosA) / (2 * PI);
+	angleX = 360 * acos(cosX) / (2 * PI);
 	angleX *= (direction[currentControl]->z >= 0 && direction[currentControl]->x >= 0) ? 1 : -1;
-	cout << "angle X: " << angleX << endl;
+	//cout << "angle X: " << angleX << endl;
 
-	angleY = 0.0;
+	angleY = 360 * acos(cosY) / (2 * PI);
+	angleY *= (direction[currentControl]->y >= 0) ? -1 : 1;		// the rotation in x will be anti-clockwise, therefore the angle must me inverted
+	//cout << "angle Y: " << angleY << endl;
+
 	angleZ = 0.0;
 
 	return new Point3d(angleX, angleY, angleZ);
