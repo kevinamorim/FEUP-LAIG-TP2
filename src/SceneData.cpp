@@ -138,7 +138,6 @@ bool SceneData::hasLights()
 	return !(lights.empty());
 }
 
-
 /*
 	Appearances
 */
@@ -309,7 +308,7 @@ SceneNode::SceneNode(string nodeID, bool usesDL) : id(nodeID)
 	this->inherits = true;
 
 	this->hasAnimation = false;
-	this->anim = NULL;
+	this->animation = NULL;
 
 	glLoadIdentity();
 
@@ -337,6 +336,12 @@ void SceneNode::setAppearance(Appearance* app)
 void SceneNode::setTransformMatrix()
 {
 	glGetFloatv(GL_MODELVIEW_MATRIX, transform);
+}
+
+void SceneNode::setAnimation(Animation* anim) 
+{
+	this->animation = anim;
+	this->hasAnimation = true;
 }
 
 float* SceneNode::getTransformMatrix()
@@ -427,7 +432,12 @@ void SceneNode::Display()
 			addAppearanceToStack(this->appearance);
 		}
 
-		// call the animation transforms (if the node is animated)
+
+		// TP2
+		if(hasAnimation)
+		{
+			animation->draw();
+		}
 
 		drawPrimitives();
 
@@ -445,11 +455,12 @@ void SceneNode::Display()
 	}
 }
 
+//TP2
 void SceneNode::Update(unsigned long t)
 {
 	if(this->hasAnimation)
 	{
-		this->anim->update(t);
+		this->animation->update(t);
 	}
 
 	for(unsigned int i = 0; i < this->descendants.size(); i++)
@@ -464,6 +475,7 @@ bool SceneNode::hasDisplayList()
 	return (displayListIndex != 0);
 }
 
+//TP2
 void SceneNode::createDisplayTree()
 {
 	for(unsigned int i = 0; i < this->descendants.size(); i++)
@@ -477,6 +489,7 @@ void SceneNode::createDisplayTree()
 	}
 }
 
+//TP2
 void SceneNode::createDisplayList()
 {
 	bool firstTime = false;

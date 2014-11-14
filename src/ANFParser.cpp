@@ -141,22 +141,34 @@ int ANFParser::Parse()
 		out << "    _______________________________" << endl;
 		out << "    > Create nodes..." << endl;
 		if(parseGraphNodes() != OK)
+		{
 			errors++;
-
-		out << "    _______________________________" << endl;
-		out << "    > Link nodes..." << endl;
-		if(linkGraphNodes() != OK)
-			errors++;
-
-		out << "    _______________________________" << endl;
-		out << "    > Verifying graph..." << endl;
-		if(verifyGraph() != OK)
-			errors++;
-
-		out << "    _______________________________" << endl;
-		out << "    > Creating graph display lists..." << endl;
-		if(createGraphDisplayLists() != OK)
-			errors++;
+		}
+		else
+		{
+			out << "    _______________________________" << endl;
+			out << "    > Link nodes..." << endl;
+			if(linkGraphNodes() != OK)
+			{
+				errors++;
+			}
+			else
+			{
+				out << "    _______________________________" << endl;
+				out << "    > Verifying graph..." << endl;
+				if(verifyGraph() != OK)
+				{
+					errors++;
+				}
+				else
+				{
+					out << "    _______________________________" << endl;
+					out << "    > Creating graph display lists..." << endl;
+					if(createGraphDisplayLists() != OK)
+						errors++;			
+				}
+			}
+		}
 	}
 	else
 	{
@@ -323,7 +335,7 @@ int ANFParser::parseGlobals()
 		{
 			localErrors++;
 		}
-		else if(!stringIn(strMode, DRAWING_MODE))
+		else if(strMode != "fill" && strMode != "line" && strMode != "point")
 		{
 			printMsg(ERROR, "Attribute 'mode' has illegal arguments - must be in {fill, line, point}");
 			localErrors++;
@@ -333,7 +345,7 @@ int ANFParser::parseGlobals()
 		{
 			localErrors++;
 		}
-		else if(!stringIn(strShading, DRAWING_SHADING))
+		else if(strShading != "flat" && strShading != "gouraud")
 		{
 			printMsg(ERROR, "Attribute 'shading' has illegal arguments - must be in {flat, gouraud}");
 			localErrors++;
@@ -381,7 +393,7 @@ int ANFParser::parseGlobals()
 		{
 			localErrors++;
 		}
-		else if(!stringIn(strFace, CULLING_FACE))
+		else if(strFace != "front" && strFace != "back" && strFace != "none" && strFace != "both")
 		{
 			printMsg(ERROR, " : Attribute 'face' has illegal arguments - must be in {front, back, none, both}");
 			localErrors++;
@@ -391,7 +403,7 @@ int ANFParser::parseGlobals()
 		{
 			localErrors++;
 		}
-		else if(!stringIn(strOrder, CULLING_ORDER))
+		else if(strOrder != "cw" && strOrder != "ccw")
 		{
 			printMsg(ERROR, " : Attribute 'order' has illegal arguments must be in {ccw, cw}");
 			localErrors++;
@@ -1424,8 +1436,12 @@ int ANFParser::parseGraphNodes()
 			if(parseNodeTransforms(nodeElement, node) != OK)
 				nodeErrors++;
 
-			out << "            > Appearances..." << endl;
+			out << "            > Appearance..." << endl;
 			if(parseNodeAppearance(nodeElement, node) != OK)
+				nodeErrors++;
+
+			out << "            > Animation..." << endl;
+			if(parserNodeAnimation(nodeElement, node) != OK)
 				nodeErrors++;
 
 			out << "            > Primitives..." << endl;
@@ -1684,7 +1700,16 @@ int ANFParser::parseNodeAppearance(TiXmlElement* nodeElement, SceneNode* node)
 
 			if(strAppearance != "inherit")
 			{
-				node->setAppearance(sceneData->getAppearance(strAppearance));
+				Appearance * app = sceneData->getAppearance(strAppearance);
+				if(app)
+				{
+					node->setAppearance(app);
+				}
+				else
+				{
+					printMsg(ERROR, "Could not find the appearance referenced by this node"); 
+					localErrors++;
+				}
 			}
 		}
 	}
@@ -1700,7 +1725,6 @@ int ANFParser::parseNodeAppearance(TiXmlElement* nodeElement, SceneNode* node)
 		errors += localErrors;
 		return ERROR;
 	}
-
 }
 
 /* Primitives */
@@ -1882,7 +1906,8 @@ int ANFParser::parseCylinder(TiXmlElement* primitive, SceneNode* node)
 
 	int localErrors = 0;
 
-	float base, top, height, slices, stacks;
+	float base, top, height;
+	int slices, stacks;
 
 	if(readFloat(&primitive, &base, "base", ERROR) != OK)
 	{
@@ -1899,12 +1924,12 @@ int ANFParser::parseCylinder(TiXmlElement* primitive, SceneNode* node)
 		localErrors++;
 	}
 
-	if(readFloat(&primitive, &slices, "slices", ERROR) != OK)
+	if(readInt(&primitive, &slices, "slices", ERROR) != OK)
 	{
 		localErrors++;
 	}
 
-	if(readFloat(&primitive, &stacks, "stacks", ERROR) != OK)
+	if(readInt(&primitive, &stacks, "stacks", ERROR) != OK)
 	{
 		localErrors++;
 	}
@@ -1927,19 +1952,20 @@ int ANFParser::parseSphere(TiXmlElement* primitive, SceneNode* node)
 
 	int localErrors = 0;
 
-	float radius, slices, stacks;
+	float radius;
+	int slices, stacks;
 
 	if(readFloat(&primitive, &radius, "radius", ERROR) != OK)
 	{
 		localErrors++;
 	}
 
-	if(readFloat(&primitive, &slices, "slices", ERROR) != OK)
+	if(readInt(&primitive, &slices, "slices", ERROR) != OK)
 	{
 		localErrors++;
 	}
 
-	if(readFloat(&primitive, &stacks, "stacks", ERROR) != OK)
+	if(readInt(&primitive, &stacks, "stacks", ERROR) != OK)
 	{
 		localErrors++;
 	}
@@ -1963,7 +1989,8 @@ int ANFParser::parseTorus(TiXmlElement* primitive, SceneNode* node)
 
 	int localErrors = 0;
 
-	float inner, outer, slices, loops;
+	float inner, outer;
+	int slices, loops;
 
 	if(readFloat(&primitive, &inner, "inner", ERROR) != OK)
 	{
@@ -1975,12 +2002,12 @@ int ANFParser::parseTorus(TiXmlElement* primitive, SceneNode* node)
 		localErrors++;
 	}
 
-	if(readFloat(&primitive, &slices, "slices", ERROR) != OK)
+	if(readInt(&primitive, &slices, "slices", ERROR) != OK)
 	{
 		localErrors++;
 	}
 
-	if(readFloat(&primitive, &loops, "loops", ERROR) != OK)
+	if(readInt(&primitive, &loops, "loops", ERROR) != OK)
 	{
 		localErrors++;
 	}
@@ -2052,7 +2079,7 @@ int ANFParser::parsePatch(TiXmlElement* primitive, SceneNode* node)
 	{
 		localErrors++;
 	}
-	else if(!stringIn(strCompute, DRAWING_MODE))
+	else if(strCompute != "fill" && strCompute != "line" && strCompute != "point")
 	{
 		printMsg(ERROR, " : Attribute 'compute' has illegal arguments - must be in {fill, line, point}");
 		localErrors++;
@@ -2110,6 +2137,62 @@ int ANFParser::parsePatch(TiXmlElement* primitive, SceneNode* node)
 	}
 	else
 	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+/* Animation */
+int ANFParser::parserNodeAnimation(TiXmlElement* nodeElement, SceneNode* node)
+{
+	int localErrors = 0;
+	int localWarnings = 0;
+
+	TiXmlElement* animation;
+
+	animation = nodeElement->FirstChildElement("animationref");
+
+	// Verifies if attribute exists and has been read
+	if(!animation)
+	{	
+		printMsg(ERROR, "The block <animationref> does not exist");
+		localWarnings++;
+	}
+	else
+	{
+		string strID;
+
+		if(readString(&animation, &strID, "id", ERROR) != OK)
+		{
+			localErrors++;
+		}
+		else
+		{
+			out << "                > Animation : " << strID << endl;
+
+			Animation *anim = sceneData->getAnimation(strID);
+
+			if(anim)
+			{
+				node->setAnimation(anim);
+			}
+			else
+			{
+				printMsg(ERROR, "Could not find the animation referenced by this node"); 
+				localErrors++;
+			}
+		}
+	}
+
+	if(!localErrors)
+	{
+		warnings += localWarnings;
+		printMsg(OK);
+		return OK;
+	}
+	else
+	{
+		warnings += localWarnings;
 		errors += localErrors;
 		return ERROR;
 	}
@@ -2417,19 +2500,6 @@ void ANFParser::printMsg(const int type, string descr)
 	printMsg(type);
 
 	out << " : " << descr << endl;
-}
-
-bool stringIn(string & str, const string colection[])
-{
-	for(unsigned int i = 0; i < colection->size(); i++)
-	{
-		if (str == colection[i])
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 // ***********************************************************************************

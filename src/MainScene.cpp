@@ -20,12 +20,19 @@ void MainScene::init()
 	initCameras();
 	initLights();
 
-	vector<Point3d *> ctrls = vector<Point3d *>();
+	
+	anim = new ComposedAnimation("mixed");
 
-	ctrls.push_back(new Point3d(0,0,0));
-	ctrls.push_back(new Point3d(2,2,1));
-	ctrls.push_back(new Point3d(1,4,2));
-	ctrls.push_back(new Point3d(0,0,0));
+	vector<Point3d *> controls = vector<Point3d *>();
+	controls.push_back(new Point3d(0, 0, 0));
+	controls.push_back(new Point3d(2, 0, 0));
+	controls.push_back(new Point3d(2, 0, 2));
+
+	Animation * linear = new LinearAnimation("linear", 4, controls);
+	Animation * circular = new CircularAnimation("circular", 4, new Point3d(0,0,2), 2, 0, -270);
+
+	anim->addAnimation(linear);
+	anim->addAnimation(circular);
 
 	unsigned long updatePeriod = 50;
 	setUpdatePeriod(updatePeriod);
@@ -77,11 +84,17 @@ void MainScene::display()
 
 	updateLights();
 
+	glPushMatrix();
+
+	anim->draw();
+
 	long double time_0 = GetTickCount();
 
 	sceneData->getSceneGraph()->Display();
 
 	long double time_1 = GetTickCount();
+
+	glPopMatrix();
 
 	//cout << "Time between: " << time_1 - time_0 << endl;
 
@@ -95,7 +108,8 @@ void MainScene::display()
 
 void MainScene::update(unsigned long t)
 {
-	this->sceneData->getSceneGraph()->Update(t);
+	//this->sceneData->getSceneGraph()->Update(t);
+	anim->update(t);
 }
 
 void MainScene::setDefaults()

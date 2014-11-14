@@ -146,9 +146,13 @@ private:
 	int parseCylinder(TiXmlElement* primitiveElement, SceneNode* node);
 	int parseSphere(TiXmlElement* primitiveElement, SceneNode* node);
 	int parseTorus(TiXmlElement* primitiveElement, SceneNode* node);
+
 	//TP2
 	int parsePlane(TiXmlElement* primitive, SceneNode* node);
 	int parsePatch(TiXmlElement* primitive, SceneNode* node);
+
+	//Animations
+	int parserNodeAnimation(TiXmlElement* nodeElement, SceneNode* node);
 
 	// Descendants
 	int parseNodeDescendants(TiXmlElement* nodeElement, SceneNode* node);

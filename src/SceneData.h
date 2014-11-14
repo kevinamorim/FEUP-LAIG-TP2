@@ -31,7 +31,8 @@ private:
 	Appearance* appearance;
 	bool hasAppearance;
 
-	Animation* anim;
+	// TP2
+	Animation* animation;
 	bool hasAnimation;
 
 	std::vector<Primitive*> primitives;
@@ -62,8 +63,8 @@ public:
 
 	void createDisplayTree();
 	void createDisplayList();
-
 	bool hasDisplayList();
+	//
 
 	// ==============================
 	//	SET / ADD
@@ -76,6 +77,9 @@ public:
 
 	void addDescendant(SceneNode* descendant);
 	void addPrimitive(Primitive* primitive);
+
+	// TP2
+	void setAnimation(Animation* anim);
 
 	// ==============================
 	//	GET
@@ -130,9 +134,7 @@ public:
 
 	//TP2
 	void createDisplayLists();
-
-	// for animations update
-	void Update(unsigned long t);
+	void Update(unsigned long t);	// for animations update
 };
 
 /*
@@ -192,7 +194,7 @@ public:
 	Texture* getTexture(string id);
 	void addTexture(Texture * tex);
 
-	// Animations
+	// Animations (TP2)
 	Animation* getAnimation(string id);
 	void addAnimation(Animation * anim);
 
@@ -207,6 +209,7 @@ private:
 	vector<Appearance *> appearances;
 	vector<Texture *> textures;
 
+	// TP2
 	vector<Animation *> animations;
 };
 

@@ -7,11 +7,23 @@ Animation::Animation(string id, float span)
 {
 	this->id = id;
 	this->spanTime = span;
+
+	this->currentPos = new Point3d(0,0,0);
 }
 
 string Animation::getID()
 {
 	return this->id;
+}
+
+bool Animation::Done()
+{
+	return done;
+}
+
+Point3d * Animation::getCurrentPos()
+{
+	return currentPos;
 }
 
 // =======================
@@ -23,9 +35,9 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 	this->direction = vector<Point3d *>();
 	this->distance = vector<float>();
 
-	int size = controlPts.size();
+	this->numControlPoints = controlPts.size();
 
-	for(int i = 0; i < size; i++)
+	for(int i = 0; i < numControlPoints; i++)
 	{
 		// This is done so that new points are used
 		//	(instead of the passed points, so that we don't access memory areas we're not supposed to be accessing)
@@ -43,7 +55,7 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 	this->direction.push_back(new Point3d(0,0,0));
 	this->distance.push_back(0);
 
-	for(int i = 1; i < size; i++)
+	for(int i = 1; i < numControlPoints; i++)
 	{
 		float dist = Point3d::distance(controlPoints[i], controlPoints[i-1]);
 		Point3d * p = Point3d::subtract(controlPoints[i], controlPoints[i-1]);
@@ -68,7 +80,9 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 	this->currentPos = new Point3d();
 	this->currentPos->setPoint3d(controlPoints.at(0));
 	this->currentControl = 1;
-	this->currentAngle = getAngle();
+	this->currentRotation = getRotation();
+
+	this->inLoop = true;
 
 	this->reset();
 }
@@ -79,19 +93,23 @@ void LinearAnimation::init(unsigned long t)
 	this->currentControl = 1;
 	this->moved = 0;
 
-	this->currentAngle = getAngle();
+	this->currentRotation = getRotation();
 
 	this->oldTime = t;
 
 	this->restart = false;
+	this->done = false;
 }
 
 void LinearAnimation::draw()
 {
-	glTranslatef(currentPos->x, currentPos->y, currentPos->z);
+	if(!done)
+	{
+		glTranslatef(currentPos->x, currentPos->y, currentPos->z);
 
-	glRotatef(currentAngle->x, 0, 1, 0);
-	glRotatef(currentAngle->y, 1, 0, 0);
+		glRotatef(currentRotation->x, 0, 1, 0);
+		glRotatef(currentRotation->y, 1, 0, 0);
+	}
 }
 
 void LinearAnimation::reset()
@@ -107,36 +125,46 @@ void LinearAnimation::update(unsigned long t)
 	}
 	else
 	{
-		float deltaTime = (t - oldTime) / 1000.0;
-		this->oldTime = t;
-
-		float deltaMovement = this->speed * deltaTime;
-
-		move(deltaMovement);
-
-		moved += deltaMovement;
-
-		if(moved >= distance[currentControl])
+		if(!done)
 		{
-			moved -= distance[currentControl];
+			float deltaTime = (t - oldTime) / 1000.0;
+			this->oldTime = t;
 
-			currentPos->setPoint3d(controlPoints[currentControl]);
-			currentControl = (currentControl + 1) % controlPoints.size();
+			float deltaMovement = this->speed * deltaTime;
 
-			if(currentControl == 0)
+			move(deltaMovement);
+
+			moved += deltaMovement;
+
+			if(moved >= distance[currentControl])
 			{
-				init(t);
-			}
-			else 
-			{
-				currentAngle = getAngle();
-				move(moved);
+				moved -= distance[currentControl];
+
+				currentPos->setPoint3d(controlPoints[currentControl]);
+				currentControl = (currentControl + 1) % numControlPoints;
+
+				if(currentControl == 0)
+				{
+					if(inLoop)
+					{
+						init(t);
+					}	
+					else
+					{
+						done = true;
+					}	
+				}
+				else 
+				{
+					currentRotation = getRotation();
+					move(moved);
+				}
 			}
 		}
 	}
 }
 
-Point3d * LinearAnimation::getAngle()
+Point3d * LinearAnimation::getRotation()
 {
 	float angleX, angleY, angleZ;
 
@@ -172,33 +200,39 @@ void LinearAnimation::move(float distance)
 // =======================
 CircularAnimation::CircularAnimation(string id, float span, Point3d * center, float radius, float startAng, float rotAng) : Animation(id, span)
 {
-	this->center = center;
+	this->center = new Point3d();
+	this->center->setPoint3d(center);
+
 	this->radius = radius;
 	this->startAngle = startAng;
 	this->rotateAngle = rotAng;
 
 	this->angularSpeed = (rotateAngle / spanTime); // angle/s
 
-	//float dist = 2 * PI * rotateAngle / 360.0;
-	//this->linearSpeed = dist / spanTime;
+	this->inLoop = true;
 
 	this->reset();
 }
 
 void CircularAnimation::init(unsigned long t)
 {
-	this->currentRotate = startAngle ;
-	this->currentOffset = radius;
+	this->currentRotate = startAngle;
+	this->currentPos->setPoint3d(getCurrentPos());
 
 	this->restart = false;
+	this->done = false;
 
 	this->oldTime = t;
 }
 
 void CircularAnimation::draw()
 {
-	glRotatef(currentRotate, 0, 1, 0);
-	glTranslatef(radius, 0, 0);
+	if(!done)
+	{
+		glTranslatef(center->x, center->y, center->z);
+		glRotatef(currentRotate, 0, 1, 0);
+		glTranslatef(radius, 0, 0);
+	}
 }
 
 void CircularAnimation::reset()
@@ -214,14 +248,125 @@ void CircularAnimation::update(unsigned long t)
 	}
 	else
 	{
-		float deltaTime = (t - oldTime) / 1000.0;
-		this->oldTime = t;
-
-		currentRotate += angularSpeed * deltaTime;
-
-		if(currentRotate >= (startAngle + rotateAngle))
+		if(!done) // should not be called if done
 		{
-			init(t);
+			float deltaTime = (t - oldTime) / 1000.0;
+			this->oldTime = t;
+
+			currentRotate += angularSpeed * deltaTime;
+
+			if(abs(currentRotate) >= abs(startAngle + rotateAngle))
+			{
+				if(inLoop)
+				{
+					init(t);
+				}
+				else
+				{
+					this->done = true;
+				}
+			}
+		}
+	}
+}
+
+Point3d * CircularAnimation::getCurrentPos()
+{
+	float angleDeg = startAngle + currentRotate;
+	float angleRad = angleDeg * 2 * PI / 360.0;
+
+	float x = center->x + radius * cos(angleRad);
+	float y = center->y;
+	float z = center->z + radius * sin(angleRad);
+
+	currentPos->setPoint3d(x, y, z);
+
+	return currentPos;
+}
+
+// =======================
+//	Composed Animation
+// =======================
+ComposedAnimation::ComposedAnimation(string id) : Animation(id, 0)
+{
+	this->currentAnimation = 0;
+	this->numAnimations = 0;
+
+	this->animations = vector<Animation *>();
+
+	this->inLoop = true;
+}
+
+void ComposedAnimation::addAnimation(Animation* anim)
+{
+	anim->inLoop = false; // required, else the sequence will not work and only one animation will be played
+
+	this->animations.push_back(anim);
+
+	numAnimations++;
+
+	//this->offsetPos = new Point3d(0,0,0);
+
+	this->reset();
+}
+
+void ComposedAnimation::init(unsigned long t)
+{
+	this->currentAnimation = 0;
+	//offsetPos->setPoint3d(0,0,0);
+
+	this->animations[currentAnimation]->init(t);
+	this->done = false;
+
+	this->restart = false;
+}
+
+void ComposedAnimation::draw()
+{
+	//glTranslatef(offsetPos->x, offsetPos->y, offsetPos->z);
+
+	animations[currentAnimation]->draw();
+}
+
+void ComposedAnimation::reset()
+{
+	this->restart = true;
+}
+
+void ComposedAnimation::update(unsigned long t)
+{
+	if(restart)
+	{
+		//cout << "restarting... " << endl;
+		init(t);
+	}
+	else
+	{
+		//cout << "updating animation... " << endl;
+		animations[currentAnimation]->update(t);
+
+		if(animations[currentAnimation]->Done())
+		{
+			//Point3d * p = animations[currentAnimation]->getCurrentPos();
+			//offsetPos->setPoint3d(p);
+
+			currentAnimation = (currentAnimation + 1) % numAnimations;
+
+			if(currentAnimation == 0)
+			{
+				if(inLoop)
+				{
+					init(t);
+				}
+				else
+				{
+					this->done = true;
+				}
+			}
+			else
+			{
+				this->animations[currentAnimation]->init(t);
+			}
 		}
 	}
 }

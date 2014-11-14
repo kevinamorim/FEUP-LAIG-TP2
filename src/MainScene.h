@@ -70,6 +70,8 @@ private:
 	// The following are used only for ease of access and reading (since all of this data is in the sceneData instance)
 	int numCameras;
 	int numLights;
+
+	ComposedAnimation* anim;
 };
 
 #endif

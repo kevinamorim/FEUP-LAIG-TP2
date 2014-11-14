@@ -41,8 +41,9 @@
 	<animations>
 		 <animation id="line_anim" span="5" type="linear">
             <controlpoint x="0" y="0" z="0" />
-			<controlpoint x="0" y="5" z="0" />
-			<controlpoint x="5" y="5" z="5" />
+			<controlpoint x="2" y="2" z="2" />
+			<controlpoint x="0" y="2" z="4" />
+			<controlpoint x="0" y="0" z="0" />
       </animation>
 	</animations>
 	
@@ -55,7 +56,7 @@
 			</transforms>
 			
 			<!-- referência ao bloco de animação por cada "node". nó opcional  -->
-            <animationref id="line_anim" />
+            <!--<animationref id="line_anim" />-->
 			
 			<appearanceref id="app_checkers" />
 			
