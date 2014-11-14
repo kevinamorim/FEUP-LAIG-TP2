@@ -270,6 +270,13 @@ void SceneGraph::Display()
 	root->Display();
 }
 
+void SceneGraph::Update(unsigned long t)
+{
+	// The precessing starts at the root node, progressing
+	//  recursively throughout the tree.
+	root->Update(t);
+}
+
 void SceneGraph::createDisplayLists()
 {
 	this->root->createDisplayTree();
@@ -280,6 +287,9 @@ bool SceneGraph::hasRoot()
 	return this->root != NULL;
 }
 
+
+// ***********************************************************
+// ***********************************************************
 // =======================
 //  SCENE NODE
 // =======================
@@ -297,6 +307,9 @@ SceneNode::SceneNode(string nodeID, bool usesDL) : id(nodeID)
 
 	this->hasAppearance = false;
 	this->inherits = true;
+
+	this->hasAnimation = false;
+	this->anim = NULL;
 
 	glLoadIdentity();
 
@@ -429,6 +442,19 @@ void SceneNode::Display()
 		}
 
 		glPopMatrix();
+	}
+}
+
+void SceneNode::Update(unsigned long t)
+{
+	if(this->hasAnimation)
+	{
+		this->anim->update(t);
+	}
+
+	for(unsigned int i = 0; i < this->descendants.size(); i++)
+	{
+		this->descendants.at(i)->Update(t);
 	}
 }
 

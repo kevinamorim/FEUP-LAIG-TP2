@@ -1222,6 +1222,11 @@ int ANFParser::parseLinearAnimation(TiXmlElement** animationElement, string id, 
 		controlPoint = controlPoint->NextSiblingElement("controlpoint");
 	}
 
+	if(controlPts.size() < 2)
+	{
+		localErrors++;
+	}
+
 	if(!localErrors)
 	{
 		sceneData->addAnimation(new LinearAnimation(id, span, controlPts));

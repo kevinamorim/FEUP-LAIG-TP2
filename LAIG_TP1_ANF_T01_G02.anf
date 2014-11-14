@@ -55,7 +55,7 @@
 			</transforms>
 			
 			<!-- referência ao bloco de animação por cada "node". nó opcional  -->
-            <!--<animationref id="line_anim" />-->
+            <animationref id="line_anim" />
 			
 			<appearanceref id="app_checkers" />
 			

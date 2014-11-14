@@ -37,6 +37,7 @@ private:
 	std::vector<Primitive*> primitives;
 	std::vector<SceneNode*> descendants;
 
+	// TP2
 	bool usesDisplayList;
 	unsigned int displayListIndex;
 
@@ -91,6 +92,9 @@ public:
 	void drawPrimitives();
 
 	bool Verify(ostream & out);
+
+	// TP2 - for animations update
+	void Update(unsigned long t);
 };
 
 /*
@@ -121,10 +125,14 @@ public:
 	vector<SceneNode*> getNodes();
 
 	void Display();
+
+	int Verify(ostream & out);
+
 	//TP2
 	void createDisplayLists();
 
-	int Verify(ostream & out);
+	// for animations update
+	void Update(unsigned long t);
 };
 
 /*

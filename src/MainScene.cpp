@@ -27,9 +27,6 @@ void MainScene::init()
 	ctrls.push_back(new Point3d(1,4,2));
 	ctrls.push_back(new Point3d(0,0,0));
 
-	anim_1 = new LinearAnimation("anim_1", 4, ctrls);
-	anim_2 = new CircularAnimation("anim_2", 1, new Point3d(0, 0, 0), 0, 0, 360);
-
 	unsigned long updatePeriod = 50;
 	setUpdatePeriod(updatePeriod);
 
@@ -82,18 +79,11 @@ void MainScene::display()
 
 	long double time_0 = GetTickCount();
 
-	glPushMatrix();
-
-	anim_1->draw();
-	anim_2->draw();
-
 	sceneData->getSceneGraph()->Display();
 
 	long double time_1 = GetTickCount();
 
 	//cout << "Time between: " << time_1 - time_0 << endl;
-
-	glPopMatrix();
 
 	axis.draw();
 
@@ -105,8 +95,7 @@ void MainScene::display()
 
 void MainScene::update(unsigned long t)
 {
-	anim_1->update(t);
-	anim_2->update(t);
+	this->sceneData->getSceneGraph()->Update(t);
 }
 
 void MainScene::setDefaults()
