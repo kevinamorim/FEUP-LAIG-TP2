@@ -27,12 +27,13 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 
 	for(int i = 0; i < size; i++)
 	{
+		// This is done so that new points are used
+		//	(instead of the passed points, so that we don't access memory areas we're not supposed to be accessing)
 		Point3d * p = new Point3d();
 		p->setPoint3d(controlPts[i]);
-		this->controlPoints.push_back(p);
-		//cout << p << endl;
+		
+		controlPoints.push_back(p);
 	}
-	//cout << endl;
 		
 
 	float totalDistance = 0;
@@ -55,17 +56,14 @@ LinearAnimation::LinearAnimation(string id, float span, vector<Point3d *> contro
 		this->direction.push_back(p);
 		this->distance.push_back(dist);
 
-		cout << "Direction [" << i-1 << "->" << i << "] : " << this->direction.at(i) << endl;
-		cout << " Distance [" << i-1 << "->" << i << "] : " << this->distance.at(i) << endl;
+		//cout << "Direction [" << i-1 << "->" << i << "] : " << this->direction.at(i) << endl;
+		//cout << " Distance [" << i-1 << "->" << i << "] : " << this->distance.at(i) << endl;
 
 		totalDistance += distance[i];
 	}
 	
 	// constant object speed (u/s)
 	this->speed = totalDistance / spanTime;
-
-	//cout << "Time Span: " << spanTime << endl;		
-	//cout << "    Speed: " << speed << endl;
 
 	this->currentPos = new Point3d();
 	this->currentPos->setPoint3d(controlPoints.at(0));
@@ -81,7 +79,6 @@ void LinearAnimation::init(unsigned long t)
 	this->currentControl = 1;
 	this->moved = 0;
 
-	//cout << "Direction: " << direction[currentControl] << "  |  " << currentControl;
 	this->currentAngle = getAngle();
 
 	this->oldTime = t;
@@ -91,8 +88,8 @@ void LinearAnimation::init(unsigned long t)
 
 void LinearAnimation::draw()
 {
-	// TODO : rotate
 	glTranslatef(currentPos->x, currentPos->y, currentPos->z);
+
 	glRotatef(currentAngle->x, 0, 1, 0);
 	glRotatef(currentAngle->y, 1, 0, 0);
 }
@@ -132,9 +129,7 @@ void LinearAnimation::update(unsigned long t)
 			}
 			else 
 			{
-				//cout << "Direction: " << direction[currentControl] << "  |  " << currentControl;
 				currentAngle = getAngle();
-
 				move(moved);
 			}
 		}
@@ -154,13 +149,13 @@ Point3d * LinearAnimation::getAngle()
 
 	angleX = 360 * acos(cosX) / (2 * PI);
 	angleX *= (direction[currentControl]->z >= 0 && direction[currentControl]->x >= 0) ? 1 : -1;
-	//cout << "angle X: " << angleX << endl;
+	//angleX = 0;
 
-	angleY = 360 * acos(cosY) / (2 * PI);
-	angleY *= (direction[currentControl]->y >= 0) ? -1 : 1;		// the rotation in x will be anti-clockwise, therefore the angle must me inverted
-	//cout << "angle Y: " << angleY << endl;
+	//angleY = 360 * acos(cosY) / (2 * PI);
+	//angleY *= (direction[currentControl]->y >= 0) ? -1 : 1;	// the rotation in x will be anti-clockwise, therefore the angle must me inverted
+	angleY = 0;
 
-	angleZ = 0.0;
+	angleZ = 0;
 
 	return new Point3d(angleX, angleY, angleZ);
 }
@@ -182,21 +177,28 @@ CircularAnimation::CircularAnimation(string id, float span, Point3d * center, fl
 	this->startAngle = startAng;
 	this->rotateAngle = rotAng;
 
-	// TODO : velocities
+	this->angularSpeed = (rotateAngle / spanTime); // angle/s
+
+	//float dist = 2 * PI * rotateAngle / 360.0;
+	//this->linearSpeed = dist / spanTime;
 
 	this->reset();
 }
 
 void CircularAnimation::init(unsigned long t)
 {
-	this->currentRotate = 0 ;// TODO
-	this->currentPos = 0; // TODO
+	this->currentRotate = startAngle ;
+	this->currentOffset = radius;
+
 	this->restart = false;
+
+	this->oldTime = t;
 }
 
 void CircularAnimation::draw()
 {
-	// TODO
+	glRotatef(currentRotate, 0, 1, 0);
+	glTranslatef(radius, 0, 0);
 }
 
 void CircularAnimation::reset()
@@ -212,6 +214,14 @@ void CircularAnimation::update(unsigned long t)
 	}
 	else
 	{
-		// TODO
+		float deltaTime = (t - oldTime) / 1000.0;
+		this->oldTime = t;
+
+		currentRotate += angularSpeed * deltaTime;
+
+		if(currentRotate >= (startAngle + rotateAngle))
+		{
+			init(t);
+		}
 	}
 }

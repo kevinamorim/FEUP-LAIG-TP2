@@ -73,7 +73,8 @@ private:
 
 
 	//TP2
-	LinearAnimation *anim;
+	Animation * anim_1;
+	Animation * anim_2;
 };
 
 #endif

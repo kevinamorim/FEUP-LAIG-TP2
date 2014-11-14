@@ -27,7 +27,8 @@ void MainScene::init()
 	ctrls.push_back(new Point3d(1,4,2));
 	ctrls.push_back(new Point3d(0,0,0));
 
-	anim = new LinearAnimation("anim_1", 4, ctrls);
+	anim_1 = new LinearAnimation("anim_1", 4, ctrls);
+	anim_2 = new CircularAnimation("anim_2", 1, new Point3d(0, 0, 0), 0, 0, 360);
 
 	unsigned long updatePeriod = 50;
 	setUpdatePeriod(updatePeriod);
@@ -83,7 +84,8 @@ void MainScene::display()
 
 	glPushMatrix();
 
-	anim->draw();
+	anim_1->draw();
+	anim_2->draw();
 
 	sceneData->getSceneGraph()->Display();
 
@@ -103,7 +105,8 @@ void MainScene::display()
 
 void MainScene::update(unsigned long t)
 {
-	anim->update(t);
+	anim_1->update(t);
+	anim_2->update(t);
 }
 
 void MainScene::setDefaults()

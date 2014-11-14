@@ -72,8 +72,10 @@ protected:
 	Point3d *center;
 	float radius, startAngle, rotateAngle;
 
-	float currentRotate, currentPos;
-	float linearVelocity, angularVelocity;
+	float currentRotate;
+	float currentOffset;
+
+	float linearSpeed, angularSpeed;
 };
 
 #endif
