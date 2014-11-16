@@ -7,11 +7,10 @@
 #include <vector>
 
 #include "CGFobject.h"
-#include "Appearance.h"
+#include "Texture.h"
+
 #include "Point.h"
 #include "MyMath.h"
-
-#include <GL\glut.h>
 
 const int QUAD_RES = 10;
 
@@ -35,7 +34,7 @@ protected:
 	Primitive();					/* Empty constructor */
 
 	bool hasTexture;
-	Texture *texture;					
+	Texture *texture;
 	Point2d texParams;				/* Texture mapping coordinates, where X = S and Y = T */
 };
 
@@ -64,7 +63,7 @@ public:
 	string Type();																								
 	void draw();
 
-private:
+protected:
 
 	// Members
 	vector<Point3d *> verts;
@@ -88,7 +87,7 @@ public:
 	string Type();
 	void draw();
 
-private:
+protected:
 
 	vector<vector<Point2d*> > verts;		/* Vertex of the rectangle */
 	float width, height;					/* Size of the rectangle. */
@@ -102,15 +101,13 @@ private:
 */
 class Cylinder : public Primitive {
 public:
-
 	Cylinder(float base, float top, float height, int slices, int stacks); /* Default Constructor */
 
 	// Inherited methods
 	string Type();
 	void draw();
 
-private:
-
+protected:
 	float base;
 	float top;
 	float height;	
@@ -138,7 +135,7 @@ public:
 	string Type();
 	void draw();
 
-private:
+protected:
 	float radius;
 	int slices;
 	int stacks;
@@ -156,7 +153,7 @@ public:
 	string Type();
 	void draw();
 
-private:
+protected:
 	float inner;
 	float outer;
 	float radiusTube;	// middle of the torus' tube.
@@ -170,45 +167,6 @@ private:
 
 	void calculate();		/* Calculates the verts and normals coordinates. */ 
 
-};
-
-/*
-	Patch
-*/
-class Patch : public Primitive {
-public:
-	Patch(int order, int partsU, int partsV, vector<Point3d *> controlPts, string drawingMode);
-	Patch(int order, int partsU, int partsV, string drawingMode);
-
-	void setControlPoints(float* ctrlPoints);
-	void setNormals(float* n);
-	void setColors(float* c);
-	void setTexCoords(float* v);
-	
-	string Type();
-	void draw();
-
-private:
-	int order, partsU, partsV;
-
-	string drawingMode;
-
-	float* ctrlPoints;
-	float* normals;
-	float* colors;
-	float* texCoords;
-};
-
-/*
-	Plane
-*/
-class Plane : public Patch {
-public:
-	Plane(int parts);
-
-	string Type();
-	void draw();
-private:
 };
 
 #endif

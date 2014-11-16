@@ -6,7 +6,7 @@
 #include <cmath>
 #include <vector>
 
-#include <GL\glut.h>
+#include "CGFapplication.h"
 
 #include "Point.h"
 #include "MyMath.h"

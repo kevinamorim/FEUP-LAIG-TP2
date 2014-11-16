@@ -6,10 +6,9 @@
 #include "tinyxml.h"
 
 #include "SceneData.h"
-#include "Point.h"
 #include "Camera.h"
-#include "Appearance.h"
 #include "Primitives.h"
+#include "Patch.h"
 #include "Transforms.h"
 
 #include <ctime>

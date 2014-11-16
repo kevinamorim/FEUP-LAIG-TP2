@@ -36,6 +36,10 @@ void MainScene::init()
 	unsigned long updatePeriod = 50;
 	setUpdatePeriod(updatePeriod);
 
+	Texture* tex = new Texture("flag","textures/bricks.png", 1.0, 1.0);
+
+	flag = new Flag(tex);
+
 	display();
 }
 
@@ -82,6 +86,8 @@ void MainScene::display()
 	updateCameras();
 
 	updateLights();
+
+	flag->draw();
 
 	glPushMatrix();
 

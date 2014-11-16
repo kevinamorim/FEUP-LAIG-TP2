@@ -2,32 +2,11 @@
 #define _APPEARANCE_H_
 
 #include "CGFappearance.h"
-#include "Point.h"
+#include "Texture.h"
 
-#include <iostream>
 #include <string>
 
 using namespace std;
-
-/*
-	Texture
-*/
-class Texture : public CGFtexture {
-public:
-	Texture(string id, string file, float texlength_s, float texlength_t);
-
-	string getID();
-	string getFile();
-
-	float S();
-	float T();
-
-protected:
-	string id;
-	string file;
-
-	Point2d* textLength;
-};
 
 /*
 	Appearance

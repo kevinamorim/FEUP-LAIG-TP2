@@ -75,13 +75,16 @@
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Appearance.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Flag.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainScene.cpp" />
     <ClCompile Include="src\MyInterface.cpp" />
+    <ClCompile Include="src\Patch.cpp" />
     <ClCompile Include="src\Point.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
     <ClCompile Include="src\SceneData.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Transforms.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -89,13 +92,16 @@
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Appearance.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Flag.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\MainScene.h" />
     <ClInclude Include="src\MyInterface.h" />
     <ClInclude Include="src\MyMath.h" />
+    <ClInclude Include="src\Patch.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\SceneData.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Transforms.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

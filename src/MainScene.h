@@ -3,9 +3,9 @@
 
 #include "CGFapplication.h"
 #include "CGFscene.h"
-#include "CGFshader.h"
-
 #include "SceneData.h"
+
+#include "Flag.h"
 
 #include <vector>
 
@@ -72,6 +72,8 @@ private:
 	int numLights;
 
 	ComposedAnimation* anim;
+
+	Flag* flag;
 };
 
 #endif
