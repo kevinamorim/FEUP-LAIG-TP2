@@ -127,7 +127,7 @@ void LinearAnimation::update(unsigned long t)
 	{
 		if(!done)
 		{
-			float deltaTime = (t - oldTime) / 1000.0;
+			float deltaTime = (t - oldTime) * 0.001;
 			this->oldTime = t;
 
 			float deltaMovement = this->speed * deltaTime;
@@ -175,7 +175,7 @@ Point3d * LinearAnimation::getRotation()
 	float cosX = Point2d::dotProduct(&vecZ, &vecD) / (vecZ.size() * vecD.size());
 	float cosY = Point2d::dotProduct(&vecY, &vecZ) / (vecY.size() * vecZ.size());
 
-	angleX = 360 * acos(cosX) / (2 * PI);
+	angleX = 360 * acos(cosX) * (2 * INV_PI);
 	angleX *= (direction[currentControl]->z >= 0 && direction[currentControl]->x >= 0) ? 1 : -1;
 	//angleX = 0;
 
@@ -250,7 +250,7 @@ void CircularAnimation::update(unsigned long t)
 	{
 		if(!done) // should not be called if done
 		{
-			float deltaTime = (t - oldTime) / 1000.0;
+			float deltaTime = (t - oldTime) * 0.001;
 			this->oldTime = t;
 
 			currentRotate += angularSpeed * deltaTime;
@@ -273,7 +273,7 @@ void CircularAnimation::update(unsigned long t)
 Point3d * CircularAnimation::getCurrentPos()
 {
 	float angleDeg = startAngle + currentRotate;
-	float angleRad = angleDeg * 2 * PI / 360.0;
+	float angleRad = angleDeg * 2 * PI / 360;
 
 	float x = center->x + radius * cos(angleRad);
 	float y = center->y;

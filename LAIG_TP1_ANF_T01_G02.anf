@@ -50,30 +50,43 @@
 	<!-- Graph -->
 	<graph rootid="scene">
 	
-		<!-- ROOM -->
+		<!-- SCENE -->
 		<node id="scene" displaylist="false">
 			<transforms>
 			</transforms>
 			
-			<!-- referência ao bloco de animação por cada "node". nó opcional  -->
-            <!--<animationref id="line_anim" />-->
-			
 			<appearanceref id="app_checkers" />
 			
-			<primitives>	
+			<primitives>
+			</primitives>
 			
-				
+			<descendants>
+				<noderef id="animated_platform" />
+				<noderef id="flag" />
+			</descendants>
+		</node>
+		
+		<node id="animated_platform">
+			<transforms>
+			</transforms>
+			
+			<!-- referência ao bloco de animação por cada "node". nó opcional  -->
+            <animationref id="line_anim" />
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
 				<patch order="2" partsU="40" partsV="40" compute="fill">
 					<controlpoint x="-2" y="0" z="2" />
-					<controlpoint x="0" y="0" z="2" />
+					<controlpoint x="0" y="1" z="2" />
 					<controlpoint x="2" y="0" z="2" />
 					
-					<controlpoint x="-2" y="0" z="0" />
-					<controlpoint x="0" y="20" z="0" />
-					<controlpoint x="2" y="0" z="0" />	
+					<controlpoint x="-2" y="1" z="0" />
+					<controlpoint x="0" y="-2" z="0" />
+					<controlpoint x="2" y="1" z="0" />	
 					
 					<controlpoint x="-2" y="0" z="-2" />
-					<controlpoint x="0" y="0" z="-2" />
+					<controlpoint x="0" y="1" z="-2" />
 					<controlpoint x="2" y="0" z="-2" />
 					
 					<!--
@@ -82,7 +95,36 @@
 					<controlpoint x="10" y="2" z="0" />
 					-->
 				</patch>
-				
+			</primitives>
+			
+			<descendants>
+			</descendants>
+		</node>
+		
+		<!-- FLAG -->
+		<node id="flag" displaylist="false">
+			<transforms>
+				<transform type="translate" to="4 4 4" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>			
+				<flag texture="textures/flag.png"/>	
+			</primitives>
+			
+			<descendants>
+			</descendants>
+		</node>
+		
+		<!-- BOAT -->
+		<node id="boat">
+			<transforms>
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>		
 			</primitives>
 			
 			<descendants>

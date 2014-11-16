@@ -7,7 +7,6 @@ MainScene::MainScene(SceneData* sceneData)
 	this->sceneData = sceneData;
 
 	this->numLights = 0;
-	this->numCameras = 0;
 }
 
 // **************************************************************
@@ -62,15 +61,6 @@ void MainScene::initGlobals()
 	glNormal3f(0,1,0);
 }
 
-void MainScene::initCameras() 
-{
-	numCameras = 0;
-
-	//numCameras = sceneData->getCameras().size();
-
-	//activeCamera = 0;
-}
-
 void MainScene::initLights()
 {
 	this->numLights = sceneData->getLights().size();
@@ -83,15 +73,16 @@ void MainScene::display()
 
 	updateDrawing();
 
-	updateCameras();
+	// update scene camera
+	CGFscene::activeCamera->applyView();
 
 	updateLights();
 
-	flag->draw();
+	//flag->draw();
 
-	glPushMatrix();
+	//glPushMatrix();
 
-	anim->draw();
+	//anim->draw();
 
 	long double time_0 = GetTickCount();
 
@@ -99,7 +90,7 @@ void MainScene::display()
 
 	long double time_1 = GetTickCount();
 
-	glPopMatrix();
+	//glPopMatrix();
 
 	//cout << "Time between: " << time_1 - time_0 << endl;
 
@@ -115,8 +106,11 @@ void MainScene::display()
 
 void MainScene::update(unsigned long t)
 {
-	//this->sceneData->getSceneGraph()->Update(t);
-	anim->update(t);
+	this->sceneData->getSceneGraph()->Update(t);
+
+	//anim->update(t);
+
+	//flag->update(t);
 }
 
 void MainScene::setDefaults()
@@ -130,15 +124,6 @@ void MainScene::setDefaults()
 }
 
 // **************************************************************
-void MainScene::updateCameras()
-{
-	CGFscene::activeCamera->applyView();
-
-	//Camera* cam = getCamera(activeCamera);
-
-	//cam->apply();
-}
-
 void MainScene::updateLights()
 {
 	for(int i = 0; i < numLights; i++)
@@ -258,17 +243,6 @@ void MainScene::toggleLight(int index, int value)
 	}
 }
 
-void MainScene::toggleCamera(int index)
-{
-	if(sceneData->hasCameras())
-	{
-		if(index < numCameras)
-		{
-			activeCamera = index;
-		}
-	}
-}
-
 void MainScene::toggleUseDL(int value)
 {
 	if(value)
@@ -281,15 +255,15 @@ void MainScene::toggleUseDL(int value)
 	}
 }
 
+void MainScene::toggleWind(int wind)
+{
+	this->sceneData->getSceneGraph()->setFlagWind(wind);
+}
+
 // **************************************************************
 int MainScene::getNumberOfLights()
 {
 	return numLights;
-}
-
-int MainScene::getNumberOfCameras()
-{
-	return numCameras;
 }
 
 vector<Light* > MainScene::getLights()
@@ -297,17 +271,7 @@ vector<Light* > MainScene::getLights()
 	return sceneData->getLights();
 }
 
-vector<Camera* > MainScene::getCameras()
-{
-	return sceneData->getCameras();
-}
-
 Light* MainScene::getLight(int index)
 {
 	return sceneData->getLights().at(index);
-}
-
-Camera* MainScene::getCamera(int index)
-{
-	return sceneData->getCameras().at(index);
 }

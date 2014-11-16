@@ -286,6 +286,14 @@ bool SceneGraph::hasRoot()
 	return this->root != NULL;
 }
 
+void SceneGraph::setFlagWind(float wind)
+{
+	int size = nodes.size();
+	for(int i = 0; i < size; i++)
+	{
+		nodes.at(i)->setFlagWind(wind);
+	}
+}
 
 // ***********************************************************
 // ***********************************************************
@@ -462,7 +470,15 @@ void SceneNode::Update(unsigned long t)
 		this->animation->update(t);
 	}
 
-	for(unsigned int i = 0; i < this->descendants.size(); i++)
+	int size = this->primitives.size();
+	for(int x = 0; x < size; x++)
+	{
+		primitives[x]->update(t);
+	}
+
+	size = this->descendants.size();
+
+	for(int i = 0; i < size; i++)
 	{
 		this->descendants.at(i)->Update(t);
 	}
@@ -532,6 +548,20 @@ void SceneNode::createDisplayList()
 	if(usesDisplayList && firstTime)
 	{
 		glEndList();
+	}
+}
+
+//TP2
+void SceneNode::setFlagWind(float wind)
+{
+	int size = this->primitives.size();
+
+	for(int i = 0; i < size; i++)
+	{
+		if(primitives.at(i)->Type() == "Flag")
+		{
+			((Flag *)primitives.at(i))->setWind(wind);
+		}
 	}
 }
 

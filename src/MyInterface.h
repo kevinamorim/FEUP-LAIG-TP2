@@ -14,7 +14,7 @@ public:
 
 	void createLightsMenu();
 	void createDrawingMenu();
-	void createCamerasMenu();
+	void createFlagsMenu();
 	void createDLMenu();
 
 private:
@@ -24,8 +24,8 @@ private:
 
 	GLUI_Panel * panelLights;
 
-	GLUI_Panel * panelCameras;
-	GLUI_RadioGroup * radioCameras;
+	GLUI_Panel * panelFlags;
+	GLUI_Spinner * windSpinner1;
 
 	GLUI_Panel * panelDL;
 	GLUI_Checkbox * checkDL;
@@ -40,6 +40,8 @@ private:
 
 	int camNum;
 	int cam;
+
+	int wind;
 
 	int useDL;
 };

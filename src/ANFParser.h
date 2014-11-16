@@ -10,6 +10,8 @@
 #include "Primitives.h"
 #include "Patch.h"
 #include "Transforms.h"
+#include "Flag.h"
+#include "Vehicle.h"
 
 #include <ctime>
 #include <string>
@@ -145,10 +147,11 @@ private:
 	int parseCylinder(TiXmlElement* primitiveElement, SceneNode* node);
 	int parseSphere(TiXmlElement* primitiveElement, SceneNode* node);
 	int parseTorus(TiXmlElement* primitiveElement, SceneNode* node);
-
 	//TP2
-	int parsePlane(TiXmlElement* primitive, SceneNode* node);
-	int parsePatch(TiXmlElement* primitive, SceneNode* node);
+	int parsePlane(TiXmlElement* primitiveElement, SceneNode* node);
+	int parsePatch(TiXmlElement* primitiveElement, SceneNode* node);
+	int parseFlag(TiXmlElement* primitiveElement, SceneNode* node);
+	int parseVehicle(TiXmlElement* primitiveElement, SceneNode* node);
 
 	//Animations
 	int parserNodeAnimation(TiXmlElement* nodeElement, SceneNode* node);

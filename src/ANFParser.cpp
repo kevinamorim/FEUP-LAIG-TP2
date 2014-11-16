@@ -1797,9 +1797,23 @@ int ANFParser::parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node)
 						primErrors++;
 					}
 				}
+				else if (strType == "flag")
+				{
+					if(parseFlag(primitive, node) != OK)
+					{
+						primErrors++;
+					}
+				}
+				else if (strType == "vehicle")
+				{
+					if(parseVehicle(primitive, node) != OK)
+					{
+						primErrors++;
+					}
+				}
 				else
 				{
-					printMsg(ERROR, "Invalid primitive - must be in {triangle, rectangle, cylinder, torus, sphere}");
+					printMsg(ERROR, "Invalid primitive - must be in {triangle, rectangle, cylinder, torus, sphere, patch, plane, vehicle, flag}");
 					localErrors++;
 				}
 
@@ -2023,7 +2037,6 @@ int ANFParser::parseTorus(TiXmlElement* primitive, SceneNode* node)
 		return ERROR;
 	}
 }
-
 //TP2
 int ANFParser::parsePlane(TiXmlElement* primitive, SceneNode* node)
 {
@@ -2142,6 +2155,40 @@ int ANFParser::parsePatch(TiXmlElement* primitive, SceneNode* node)
 	}
 }
 
+int ANFParser::parseFlag(TiXmlElement* primitive, SceneNode* node)
+{
+	out << "                > Flag" << endl;
+
+	int localErrors = 0;
+
+	string strTexture;
+
+	if(readString(&primitive, &strTexture, "texture", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(!localErrors)
+	{
+		Texture *tex = new Texture("Flag_tex", strTexture, 1, 1);
+
+		node->addPrimitive(new Flag(tex));
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+int ANFParser::parseVehicle(TiXmlElement* primitiveElement, SceneNode* node)
+{
+	node->addPrimitive(new Vehicle());
+
+	return OK;
+}
+
 /* Animation */
 int ANFParser::parserNodeAnimation(TiXmlElement* nodeElement, SceneNode* node)
 {
@@ -2155,7 +2202,7 @@ int ANFParser::parserNodeAnimation(TiXmlElement* nodeElement, SceneNode* node)
 	// Verifies if attribute exists and has been read
 	if(!animation)
 	{	
-		printMsg(ERROR, "The block <animationref> does not exist");
+		printMsg(WARNING, "The block <animationref> does not exist");
 		localWarnings++;
 	}
 	else

@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "Appearance.h"
 #include "Animation.h"
+#include "Flag.h"
 
 #include <vector>
 #include <string>
@@ -81,6 +82,8 @@ public:
 	// TP2
 	void setAnimation(Animation* anim);
 
+	void setFlagWind(float wind);
+
 	// ==============================
 	//	GET
 	// ==============================
@@ -135,6 +138,8 @@ public:
 	//TP2
 	void createDisplayLists();
 	void Update(unsigned long t);	// for animations update
+
+	void setFlagWind(float wind);
 };
 
 /*

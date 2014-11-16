@@ -14,7 +14,6 @@ void MyInterface::initGUI()
 	currentID = 0;
 
 	lightNum = ((MainScene *) scene)->getNumberOfLights();
-	camNum = ((MainScene *) scene)->getNumberOfCameras();
 
 	// create GUI
 	panelDrawing = addPanel("Drawing");
@@ -25,8 +24,8 @@ void MyInterface::initGUI()
 	createLightsMenu();
 	addColumn();
 
-	panelCameras = addPanel("Points of View");
-	createCamerasMenu();
+	panelFlags = addPanel("Flags");
+	createFlagsMenu();
 	addColumn();
 
 	panelDL = addPanel("Display Lists");
@@ -50,13 +49,13 @@ void MyInterface::processGUI(GLUI_Control *ctrl)
 		{
 			((MainScene *) scene)->toggleDrawingMode(drawingMode);
 		}
-		else if(id == radioCameras->get_id())
-		{
- 			((MainScene *) scene)->toggleCamera(cam);
-		}
 		else if(id == checkDL->get_id())
 		{
 			((MainScene *) scene)->toggleUseDL(useDL);
+		}
+		else if(id == windSpinner1->get_id())
+		{
+			((MainScene *) scene)->toggleWind(wind);
 		}
 	}
 
@@ -93,30 +92,19 @@ void MyInterface::createDrawingMenu() {
 	addRadioButtonToGroup(radioDrawing, "Point");
 }
 
-void MyInterface::createCamerasMenu()
-{
-	radioCameras = addRadioGroupToPanel(panelCameras, &cam, currentID);
+void MyInterface::createFlagsMenu() {
+
+	windSpinner1 = addSpinnerToPanel(panelFlags, "Wind", GLUI_SPINNER_INT, &wind, currentID);
 	currentID++;
 
-	radioCameras->set_int_val(0);
-
-	// add one radio button for each existent camera
-	for(int i = 0; i < camNum; i++)
-	{
-		Camera * sceneCamera = ((MainScene*) scene)->getCamera(i);
-		
-		addRadioButtonToGroup(radioCameras, (char*) sceneCamera->getID().c_str());
-	}
+	windSpinner1->set_int_limits(0, 10, GLUI_LIMIT_WRAP);
+	//windSpinner1->set_speed(1.0);
 }
 
 void MyInterface::createDLMenu()
 {
 	useDL = 0;
 
-	checkDL = addCheckboxToPanel(panelDL, "Use", &useDL, currentID);	currentID++;
-}
-
-void updateVars()
-{
-
+	checkDL = addCheckboxToPanel(panelDL, "Use", &useDL, currentID);
+	currentID++;
 }

@@ -16,6 +16,11 @@ void Primitive::setTexture(Texture *t)
 	hasTexture = true;
 }
 
+void Primitive::update(unsigned long t)
+{
+	//
+}
+
 // =======================
 //    Triangle
 // =======================
