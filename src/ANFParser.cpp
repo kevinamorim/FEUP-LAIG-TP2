@@ -1421,7 +1421,7 @@ int ANFParser::parseGraphNodes()
 			printMsg(OK);
 
 			bool usesDL;
-			if(readBool(&nodeElement, &usesDL, "displaylist", ERROR) != OK)
+			if(readBool(&nodeElement, &usesDL, "displaylist", INFO) != OK)
 			{
 				usesDL = false;
 			}

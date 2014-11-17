@@ -15,17 +15,23 @@
     </cameras>
 	<!-- Luzes -->
     <lights>
-            <light id="god light" type="omni" enabled="true" marker="true" pos="0 3 2" >
-			
-               <component type="ambient" value="0.2 0.2 0.2 0.8" />
-               <component type="diffuse" value="0.4 0.4 0.4 0.8" />
-               <component type="specular" value="0.4 0.4 0.4 0.8" />
-            </light>
+		<light id="light_1" type="omni" enabled="true" marker="true" pos="6 3 2" >
+		   <component type="ambient" value="0.2 0.2 0.2 1" />
+		   <component type="diffuse" value="0.8 0.3 0.4 1" />
+		   <component type="specular" value="0.2 0.2 0.2 1" />
+		</light>
+		
+		<light id="light_2" type="omni" enabled="true" marker="true" pos="0 -3 -4" >
+		   <component type="ambient" value="0.2 0.2 0.2 0.8" />
+		   <component type="diffuse" value="0.4 0.4 0.4 0.8" />
+		   <component type="specular" value="0.4 0.4 0.4 0.8" />
+		</light>
     </lights>
 	
 	<!-- Textures -->
 	<textures>
 		<texture id="tex_checkers" file="textures/checkers.png" texlength_s="10" texlength_t="10"/>
+		<texture id="tex_sub_metal" file="textures/rubik.png" texlength_s="2" texlength_t="1"/>
 	</textures>
 	
 	<!-- Appearances -->
@@ -35,18 +41,28 @@
 			<component type="diffuse" value="1.0 1.0 1.0 1.0"/>
 			<component type="specular" value="1.0 1.0 1.0 1.0"/>
 		</appearance>
+		
+		<appearance id="app_sub" shininess="0.8" textureref="tex_sub_metal">
+			<component type="ambient" value="0.8 0.8 0.8 1.0"/>
+			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
 	</appearances>
 	
 	<!-- Animations -->
 	<animations>
-		 <animation id="line_anim" span="5" type="linear">
+		<animation id="line_anim" span="5" type="linear">
             <controlpoint x="0" y="0" z="0" />
 			<controlpoint x="2" y="2" z="2" />
 			<controlpoint x="0" y="2" z="4" />
 			<controlpoint x="0" y="0" z="0" />
-      </animation>
+		</animation>
+		
+		<animation id="circular_anim" span="5" type="circular" center="5 4 0" radius="2" startang="0" rotang="360"/>
 	</animations>
 	
+	
+	<!----------->
 	<!-- Graph -->
 	<graph rootid="scene">
 	
@@ -61,8 +77,9 @@
 			</primitives>
 			
 			<descendants>
-				<noderef id="animated_platform" />
+				<!--<noderef id="animated_platform" />-->
 				<noderef id="flag" />
+				<noderef id="submarine" />
 			</descendants>
 		</node>
 		
@@ -88,12 +105,6 @@
 					<controlpoint x="-2" y="0" z="-2" />
 					<controlpoint x="0" y="1" z="-2" />
 					<controlpoint x="2" y="0" z="-2" />
-					
-					<!--
-					<controlpoint x="8" y="2" z="0" />
-					<controlpoint x="10" y="0" z="0" />
-					<controlpoint x="10" y="2" z="0" />
-					-->
 				</patch>
 			</primitives>
 			
@@ -107,6 +118,8 @@
 				<transform type="translate" to="4 4 4" />
 			</transforms>
 			
+			<animationref id="circular_anim" />
+			
 			<appearanceref id="inherit" />
 			
 			<primitives>			
@@ -118,13 +131,16 @@
 		</node>
 		
 		<!-- BOAT -->
-		<node id="boat">
+		<node id="submarine">
 			<transforms>
+				<!--<transform type="translate" to="6 0 3" />-->
+				<transform type="scale" factor="0.4 0.4 0.4" />
 			</transforms>
 			
-			<appearanceref id="inherit" />
+			<appearanceref id="app_sub" />
 			
-			<primitives>		
+			<primitives>
+				<vehicle /> <!-- it's a submarine... Yeah... -->
 			</primitives>
 			
 			<descendants>

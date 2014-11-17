@@ -108,7 +108,7 @@ void LinearAnimation::draw()
 		glTranslatef(currentPos->x, currentPos->y, currentPos->z);
 
 		glRotatef(currentRotation->x, 0, 1, 0);
-		glRotatef(currentRotation->y, 1, 0, 0);
+		//glRotatef(currentRotation->y, 1, 0, 0);
 	}
 }
 
@@ -173,9 +173,9 @@ Point3d * LinearAnimation::getRotation()
 	Point2d vecD = Point2d(direction[currentControl]->x, direction[currentControl]->z);
 
 	float cosX = Point2d::dotProduct(&vecZ, &vecD) / (vecZ.size() * vecD.size());
-	float cosY = Point2d::dotProduct(&vecY, &vecZ) / (vecY.size() * vecZ.size());
+	//float cosY = Point2d::dotProduct(&vecY, &vecZ) / (vecY.size() * vecZ.size());
 
-	angleX = 360 * acos(cosX) * (2 * INV_PI);
+	angleX = 360 * acos(cosX) * 0.5 * INV_PI;
 	angleX *= (direction[currentControl]->z >= 0 && direction[currentControl]->x >= 0) ? 1 : -1;
 	//angleX = 0;
 

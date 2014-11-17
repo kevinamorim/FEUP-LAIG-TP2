@@ -3,6 +3,7 @@
 Patch::Patch(int ord, int partsU, int partsV, vector<Point3d *> controlPts, string drawingMode)
 {
 	int vSize = controlPts.size();
+
 	// Texture Coordinates
 	this->texCoords = new float[vSize * 2];
 	float step = 1.0 / ord;
@@ -55,7 +56,7 @@ void Patch::setTexCoords(float* v)
 void Patch::draw()
 {
 	//glColor3f(1.0,1.0,1.0);
-	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, order,  0.0, 1.0, 3 * order, order,  ctrlPoints);
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, order,  0.0, 1.0, 3 * order, order, ctrlPoints);
 	//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
 	//glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, 2,  0.0, 1.0, 8, 2,  &colorpoints[0][0]);
 	glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, order,  0.0, 1.0, 2 * order, order, texCoords);
@@ -79,7 +80,7 @@ void Patch::draw()
 		//texture->apply();
 	}
 
-	glEvalMesh2(drawingMode == "fill" ? GL_FILL : drawingMode == "line" ? GL_LINE : GL_POINT, 0, this->partsU, 0, this->partsV);
+	glEvalMesh2(drawingMode == "fill" ? GL_FILL : drawingMode == "line" ? GL_LINE : GL_POINT, 0, partsU, 0, partsV);
 
 	glDisable(GL_MAP2_VERTEX_3);
 	if(hasTexture) glDisable(GL_TEXTURE_2D);
