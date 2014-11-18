@@ -76,7 +76,7 @@ int ANFParser::Parse()
 	}
 	else
 	{
-		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+		printMsg(WARNING, "The block is NULL");
 	}
 
 	out << "___________________________________" << endl;
@@ -87,7 +87,7 @@ int ANFParser::Parse()
 	}
 	else
 	{
-		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+		printMsg(WARNING, "The block is NULL");
 	}
 
 	out << "___________________________________" << endl;
@@ -98,7 +98,7 @@ int ANFParser::Parse()
 	}
 	else
 	{
-		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+		printMsg(WARNING, "The block is NULL");
 	}
 
 	out << "___________________________________" << endl;
@@ -109,7 +109,7 @@ int ANFParser::Parse()
 	}
 	else
 	{
-		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+		printMsg(WARNING, "The block is NULL");
 	}
 
 	out << "___________________________________" << endl;
@@ -120,7 +120,7 @@ int ANFParser::Parse()
 	}
 	else
 	{
-		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+		printMsg(WARNING, "The block is NULL");
 	}
 
 	out << "___________________________________" << endl;
@@ -131,7 +131,7 @@ int ANFParser::Parse()
 	}
 	else
 	{
-		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+		printMsg(WARNING, "The block is NULL");
 	}
 
 	out << "___________________________________" << endl;
@@ -140,19 +140,11 @@ int ANFParser::Parse()
 	{
 		out << "    _______________________________" << endl;
 		out << "    > Create nodes..." << endl;
-		if(parseGraphNodes() != OK)
-		{
-			errors++;
-		}
-		else
+		if(parseGraphNodes() == OK)
 		{
 			out << "    _______________________________" << endl;
 			out << "    > Link nodes..." << endl;
-			if(linkGraphNodes() != OK)
-			{
-				errors++;
-			}
-			else
+			if(linkGraphNodes() == OK)
 			{
 				out << "    _______________________________" << endl;
 				out << "    > Verifying graph..." << endl;
@@ -165,14 +157,16 @@ int ANFParser::Parse()
 					out << "    _______________________________" << endl;
 					out << "    > Creating graph display lists..." << endl;
 					if(createGraphDisplayLists() != OK)
-						errors++;			
+					{
+						errors++;
+					}		
 				}
 			}
 		}
 	}
 	else
 	{
-		printMsg(WARNING, "The block is NULL (an error should exist concerning this block)");
+		printMsg(WARNING, "The block is NULL");
 	}
 
 	out << "___________________________________" << endl;
@@ -533,7 +527,7 @@ int ANFParser::parsePerspectiveCameras(string strInitialCamera)
 	TiXmlElement* camera = camerasElement->FirstChildElement("perspective");
 	if(!camera)
 	{
-		printMsg(WARNING, "A perspective camera is not defined (not mandatory ONLY when an orthographic camera is defined)");
+		printMsg(WARNING, "No perspective camera");
 		warnings++;
 	}
 	else
@@ -624,7 +618,7 @@ int ANFParser::parseOrthoCameras(string strInitialCamera)
 	TiXmlElement* camera = camerasElement->FirstChildElement("ortho");
 	if(!camera)
 	{
-		printMsg(WARNING, "An orthographic camera is not defined (not mandatory ONLY when a perspective camera is defined)");
+		printMsg(WARNING, "No orthographic camera");
 		warnings++;
 	}
 	else
@@ -937,7 +931,7 @@ int ANFParser::parseTextures()
 
 	if(!texture)
 	{
-		printMsg(WARNING, "There are no textures (though the block <textures> is defined)");
+		printMsg(WARNING, "There are no textures");
 		localWarnings++;
 	}
 	else
@@ -1011,7 +1005,7 @@ int ANFParser::parseAppearances()
 
 	if(!appearance)
 	{
-		printMsg(WARNING, "There are no appearances (though the block <appearance> is defined)");
+		printMsg(WARNING, "There are no appearances");
 		localWarnings++;
 	}
 	else
@@ -1313,7 +1307,7 @@ int ANFParser::parseComponents(TiXmlElement** element, Point4d** ambient, Point4
 		{
 			if(index > 3)
 			{
-				printMsg(WARNING, " : More than 3 <component> blocks have been found (overwriting previous values)");
+				printMsg(WARNING, " : More than 3 <component> blocks found");
 				warnings++;
 			}
 
@@ -1421,7 +1415,7 @@ int ANFParser::parseGraphNodes()
 			printMsg(OK);
 
 			bool usesDL;
-			if(readBool(&nodeElement, &usesDL, "displaylist", INFO) != OK)
+			if(readBool(&nodeElement, &usesDL, "displaylist", NONE) != OK)
 			{
 				usesDL = false;
 			}
@@ -1461,7 +1455,6 @@ int ANFParser::parseGraphNodes()
 			}
 			else
 			{
-				localErrors += nodeErrors;
 				nodeErrors = 0;
 			}
 		}
@@ -1545,7 +1538,7 @@ int ANFParser::parseNodeTransforms(TiXmlElement* nodeElement, SceneNode* node)
 	}
 	else
 	{
-		printMsg(WARNING, " : No transforms, though the block <transforms> exists");
+		printMsg(WARNING, " : No transforms");
 		localWarnings++;
 	}
 
@@ -1837,12 +1830,12 @@ int ANFParser::parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node)
 		}
 		else
 		{
-			printMsg(INFO, "The block <primitives> exists, but it is empty (or the content is not valid)");
+			printMsg(NONE, "The block <primitives> exists, but it is empty (or the content is not valid)");
 		}
 	}
 	else
 	{
-		printMsg(INFO, "The block <primitives> does not exist");
+		printMsg(NONE, "The block <primitives> does not exist");
 	}
 
 	warnings +=  localWarnings;
@@ -2271,7 +2264,7 @@ int ANFParser::parserNodeAnimation(TiXmlElement* nodeElement, SceneNode* node)
 	// Verifies if attribute exists and has been read
 	if(!animation)
 	{	
-		printMsg(WARNING, "The block <animationref> does not exist");
+		printMsg(NONE, "The block <animationref> does not exist");
 		localWarnings++;
 	}
 	else
@@ -2324,7 +2317,7 @@ int ANFParser::parseNodeDescendants(TiXmlElement* nodeElement, SceneNode* node)
 
 	if(!descendantsElement)
 	{
-		printMsg(INFO, "The block <primitives> does not exist");
+		printMsg(NONE, "The block <primitives> does not exist");
 	}
 	else
 	{
@@ -2342,7 +2335,7 @@ int ANFParser::parseNodeDescendants(TiXmlElement* nodeElement, SceneNode* node)
 				}
 				else
 				{
-					out << "            > id : " << strID << endl;
+					out << "                > id : " << strID << endl;
 
 					this->descendants.push_back(pair<string, string>(node->getID(), strID));
 				}
@@ -2352,7 +2345,7 @@ int ANFParser::parseNodeDescendants(TiXmlElement* nodeElement, SceneNode* node)
 		}
 		else
 		{
-			printMsg(INFO, "The block <descendants> exists, but it is empty (or the content does not match <noderef> as it should)");
+			printMsg(NONE, "The block <descendants> is empty");
 			localWarnings++;
 		}
 	}
@@ -2383,10 +2376,24 @@ int ANFParser::linkGraphNodes() {
 			SceneNode* n = sceneData->getSceneGraph()->getNode(descendants.at(i).first);
 			SceneNode* d = sceneData->getSceneGraph()->getNode(descendants.at(i).second);
 
-			if(d)
-				n->addDescendant(d);
-			else
+			if(n == NULL)
+			{
+				string msg = "The node ";
+				msg += descendants.at(i).first + " does not exist (it is reference as parent)";
+				printMsg(ERROR, msg);
 				localErrors++;
+			}
+			else if (d == NULL)
+			{
+				string msg = "The node ";
+				msg += descendants.at(i).second + " does not exist (it is reference as child of '" + n->getID() + "')";
+				printMsg(ERROR, msg);
+				localErrors++;
+			}	
+			else
+			{
+				n->addDescendant(d);
+			}	
 		}
 	}
 
@@ -2598,7 +2605,7 @@ void ANFParser::printMsg(const int type)
 		//out << std::internal << setw(OK_WIDTH) << "[OK]" << endl;
 		break;
 	case WARNING:
-		out << std::internal << setw(WARNING_WIDTH) << "[WARNING]";
+		out << std::internal << setw(WARNING_WIDTH) << "[!]";
 		break;
 	case ERROR:
 		out << std::internal << setw(ERROR_WIDTH) << "[ERROR]";
@@ -2613,9 +2620,11 @@ void ANFParser::printMsg(const int type)
 
 void ANFParser::printMsg(const int type, string descr)
 {
-	printMsg(type);
-
-	out << " : " << descr << endl;
+	if(type != NONE)
+	{
+		printMsg(type);
+		out << " : " << descr << endl;
+	}
 }
 
 // ***********************************************************************************

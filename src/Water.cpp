@@ -7,7 +7,7 @@
 // =======================
 //    Flag
 // =======================
-Water::Water(Texture* tex) : Plane(60)
+Water::Water(Texture* tex) : Plane(50)
 {
 	this->setTexture(tex);
 

@@ -55,6 +55,7 @@ protected:
 	const static int ERROR = -1;
 	const static int WARNING = -2;
 	const static int INFO = 1;
+	const static int NONE = 2;
 
 	const static int OK_WIDTH = 35;
 	const static int ERROR_WIDTH = 45;

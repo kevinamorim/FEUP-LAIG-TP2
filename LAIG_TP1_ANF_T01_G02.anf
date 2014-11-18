@@ -15,9 +15,9 @@
     </cameras>
 	<!-- Luzes -->
     <lights>
-		<light id="light_1" type="omni" enabled="true" marker="true" pos="6 3 2" >
+		<light id="light_1" type="omni" enabled="true" marker="true" pos="6 20 2" >
 		   <component type="ambient" value="0.2 0.2 0.2 1" />
-		   <component type="diffuse" value="0.8 0.3 0.4 1" />
+		   <component type="diffuse" value="0.9 0.9 0.4 1" />
 		   <component type="specular" value="0.2 0.2 0.2 1" />
 		</light>
     </lights>
@@ -25,9 +25,12 @@
 	<!-- Textures -->
 	<textures>
 		<texture id="tex_checkers" file="textures/checkers.png" texlength_s="10" texlength_t="10"/>
-		<texture id="tex_sub_metal" file="textures/rubik.png" texlength_s="2" texlength_t="1"/>
+		<texture id="tex_metal" file="textures/metal.png" texlength_s="1" texlength_t="1"/>
+		<texture id="tex_metal_black" file="textures/black_metal.png" texlength_s="1" texlength_t="1"/>
+		<texture id="tex_metal_white" file="textures/white_metal.png" texlength_s="1" texlength_t="1"/>
 		<texture id="tex_water" file="textures/water.png" texlength_s="1" texlength_t="1"/>
 		<texture id="tex_wood_planks" file="textures/wood_planks_tiled.png" texlength_s="1" texlength_t="1"/>
+		<texture id="tex_wood" file="textures/wood_fine.png" texlength_s="1" texlength_t="1"/>
 	</textures>
 	
 	<!-- Appearances -->
@@ -38,13 +41,31 @@
 			<component type="specular" value="1.0 1.0 1.0 1.0"/>
 		</appearance>
 		
-		<appearance id="app_sub" shininess="0.8" textureref="tex_sub_metal">
+		<appearance id="app_metal" shininess="0.8" textureref="tex_metal">
 			<component type="ambient" value="0.8 0.8 0.8 1.0"/>
 			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
 			<component type="specular" value="1.0 1.0 1.0 1.0"/>
 		</appearance>
 		
-		<appearance id="app_windmill" shininess="0.8" textureref="tex_wood_planks">
+		<appearance id="app_metal_dark" shininess="0.8" textureref="tex_metal_black">
+			<component type="ambient" value="0.8 0.8 0.8 1.0"/>
+			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
+		
+		<appearance id="app_metal_white" shininess="0.8" textureref="tex_metal_white">
+			<component type="ambient" value="0.8 0.8 0.8 1.0"/>
+			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
+		
+		<appearance id="app_wood_planks" shininess="0.8" textureref="tex_wood_planks">
+			<component type="ambient" value="0.8 0.8 0.8 1.0"/>
+			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
+		
+		<appearance id="app_wood" shininess="0.8" textureref="tex_wood">
 			<component type="ambient" value="0.8 0.8 0.8 1.0"/>
 			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
 			<component type="specular" value="1.0 1.0 1.0 1.0"/>
@@ -80,53 +101,49 @@
 			<descendants>
 				<noderef id="sea" />
 				<noderef id="beach" />
-				<noderef id="flag" />
+				<noderef id="standard" />
 				<noderef id="submarine" />
-				<noderef id="windmill" />
-			</descendants>
-		</node>
-		
-		<node id="animated_platform">
-			<transforms>
-			</transforms>
-			
-			<!-- referência ao bloco de animação por cada "node". nó opcional  -->
-            <animationref id="line_anim" />
-			
-			<appearanceref id="inherit" />
-			
-			<primitives>
-				<patch order="2" partsU="40" partsV="40" compute="fill">
-					<controlpoint x="-2" y="0" z="2" />
-					<controlpoint x="0" y="1" z="2" />
-					<controlpoint x="2" y="0" z="2" />
-					
-					<controlpoint x="-2" y="1" z="0" />
-					<controlpoint x="0" y="-2" z="0" />
-					<controlpoint x="2" y="1" z="0" />	
-					
-					<controlpoint x="-2" y="0" z="-2" />
-					<controlpoint x="0" y="1" z="-2" />
-					<controlpoint x="2" y="0" z="-2" />
-				</patch>
-			</primitives>
-			
-			<descendants>
+				<noderef id="radar" />
 			</descendants>
 		</node>
 		
 		<!-- FLAG -->
-		<node id="flag" displaylist="false">
+		<node id="standard" displaylist="false">
 			<transforms>
-				<transform type="translate" to="4 4 4" />
+				<transform type="translate" to="20 11 20" />
 			</transforms>
 			
-			<animationref id="circular_anim" />
+			<appearanceref id="app_wood" />
+			
+			<descendants>
+				<noderef id="flag_pole" />
+				<noderef id="flag" />
+			</descendants>
+		</node>
+		<node id="flag_pole" displaylist="true">
+			<transforms>
+				<transform type="rotate" axis="x" angle="90" />
+			</transforms>
 			
 			<appearanceref id="inherit" />
 			
 			<primitives>			
-				<flag texture="textures/flag.png"/>	
+				<cylinder base="0.1" top="0.1" height="6" slices="16" stacks="4" />
+			</primitives>
+			
+		</node>
+		<node id="flag">
+			<transforms>
+				<transform type="translate" to="-1 -0.8 0" />
+				<transform type="scale" factor="2 1.4 1"/>
+				<transform type="rotate" axis="y" angle="180" />
+				<transform type="rotate" axis="x" angle="90" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>			
+				<flag texture="textures/feup.png"/>	
 			</primitives>
 			
 			<descendants>
@@ -137,10 +154,10 @@
 		<node id="submarine">
 			<transforms>
 				<!--<transform type="translate" to="6 0 3" />-->
-				<transform type="scale" factor="0.4 0.4 0.4" />
+				<transform type="scale" factor="1.5 1.2 1.5" />
 			</transforms>
 			
-			<appearanceref id="app_sub" />
+			<appearanceref id="app_metal_dark" />
 			
 			<primitives>
 				<vehicle /> <!-- it's a submarine... Yeah... -->
@@ -153,8 +170,8 @@
 		<!-- SEA -->
 		<node id="sea">
 			<transforms>
-				<transform type="translate" to="10 0 0" />
-				<transform type="scale" factor="40 1 40" />
+				<transform type="translate" to="20 0 20" />
+				<transform type="scale" factor="80 1 80" />
 			</transforms>
 			
 			<appearanceref id="inherit" />
@@ -164,7 +181,7 @@
 			</primitives>
 			
 			<descendants>
-				<noderef id="sea_2" />
+				<!--<noderef id="sea_2" />-->
 			</descendants>
 		</node>
 		<node id="sea_2">
@@ -185,9 +202,9 @@
 		<!-- BEACH -->
 		<node id="beach">
 			<transforms>
-				<transform type="translate" to="10 0.4 14" />	
-				<transform type="rotate" axis="x" angle="-5" />
-				<transform type="scale" factor="40 1 12" />
+				<transform type="translate" to="20 -1.2 20" />	
+				<!--<transform type="rotate" axis="x" angle="7" />-->
+				<transform type="scale" factor="40 1 40" />
 			</transforms>
 			
 			<appearanceref id="inherit" />
@@ -201,20 +218,23 @@
 		</node>
 		
 		<!-- WINDMILL -->
-		<node id="windmill" displaylist="false">
+		<node id="radar" displaylist="false">
 			<transforms>
-				<transform type="translate" to="10 1 10" />
+				<transform type="translate" to="13.5 4.5 13.5" />
+				<transform type="rotate" axis="y" angle="-30" />
 			</transforms>
 
-			<appearanceref id="app_windmill" />
+			<appearanceref id="app_metal" />
 
 			<descendants>
-				<noderef id="windmill_legs" />
-				<noderef id="windmill_wheel" />
+				<noderef id="radar_legs" />
+				<noderef id="radar_floors" />
+				<noderef id="radar_antena_pos" />
+				<noderef id="radar_antena_pole" />
 			</descendants>
 		</node>
 		
-		<node id="windmill_legs" displaylist="true">
+		<node id="radar_legs" displaylist="true">
 			<transforms>
 				<transform type="translate" to="0 1 0" />
 			</transforms>
@@ -222,16 +242,17 @@
 			<appearanceref id="inherit" />
 
 			<descendants>
-				<noderef id="windmill_legs_1" />
-				<noderef id="windmill_legs_2" />
-				<noderef id="windmill_legs_3" />
+				<noderef id="radar_leg_1" />
+				<noderef id="radar_leg_2" />
+				<noderef id="radar_leg_3" />
+				<noderef id="radar_leg_4" />
 			</descendants>
 		</node>
 		
-		<node id="windmill_legs_1" >
+		<node id="radar_leg_1" >
 			<transforms>
-				<transform type="translate" to="1.1 0 0" />
-				<transform type="rotate" axis="z" angle="20" />
+				<transform type="translate" to="1 0 1" />
+				<transform type="rotate" axis="y" angle="45" />
 				<transform type="scale" factor="0.2 6 0.2" />
 			</transforms>
 
@@ -242,10 +263,10 @@
 			</descendants>
 		</node>
 		
-		<node id="windmill_legs_2" >
+		<node id="radar_leg_2" >
 			<transforms>
-				<transform type="translate" to="-1.1 0 0" />
-				<transform type="rotate" axis="z" angle="-20" />
+				<transform type="translate" to="-1 0 -1" />
+				<transform type="rotate" axis="y" angle="45" />
 				<transform type="scale" factor="0.2 6 0.2" />
 			</transforms>
 
@@ -256,10 +277,10 @@
 			</descendants>
 		</node>
 		
-		<node id="windmill_legs_3" >
+		<node id="radar_leg_3" >
 			<transforms>
-				<transform type="translate" to="0 0 1.1" />
-				<transform type="rotate" axis="x" angle="-20" />
+				<transform type="translate" to="1 0 -1" />
+				<transform type="rotate" axis="y" angle="45" />
 				<transform type="scale" factor="0.2 6 0.2" />
 			</transforms>
 
@@ -270,18 +291,123 @@
 			</descendants>
 		</node>
 		
-		<node id="windmill_wheel">
+		<node id="radar_leg_4" >
+			<transforms>
+				<transform type="translate" to="-1 0 1" />
+				<transform type="rotate" axis="y" angle="45" />
+				<transform type="scale" factor="0.2 6 0.2" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="radar_floors" >
+			<transforms>
+				<transform type="translate" to="0 0 0" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="radar_floors_1" />
+				<noderef id="radar_floors_2" />
+			</descendants>
+		</node>
+		
+		<node id="radar_floors_1" >
+			<transforms>
+				<transform type="translate" to="0 2 0" />
+				<transform type="scale" factor="2.1 0.3 2.1" />
+			</transforms>
+
+			<appearanceref id="app_wood_planks" />
+
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="radar_floors_2" >
 			<transforms>
 				<transform type="translate" to="0 4 0" />
+				<transform type="scale" factor="2.3 0.3 2.3" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="radar_antena_pos" >
+			<transforms>
+				<transform type="translate" to="0 6 0" />
 			</transforms>
 			
 			<animationref id="circular_anim" />
-
+			
 			<appearanceref id="inherit" />
-
+			
 			<descendants>
-				<noderef id="box" />
+				<noderef id="radar_antena" />
 			</descendants>
+		</node>
+		
+		<node id="radar_antena" >
+			<transforms>
+				<transform type="translate" to="0 0 0.3" />
+			</transforms>
+			
+			<appearanceref id="app_metal_white" />
+			
+			<primitives>
+				<patch order="2" partsU="10" partsV="10" compute="fill">
+					<controlpoint x="-2" y="-0.3" z="0" />
+					<controlpoint x="0" y="-0.5" z="0" />
+					<controlpoint x="2" y="-0.3" z="0" />
+					
+					<controlpoint x="-2" y="0" z="0" />
+					<controlpoint x="0" y="0" z="-1" />
+					<controlpoint x="2" y="0" z="0" />
+					
+					<controlpoint x="-2" y="0.3" z="0" />
+					<controlpoint x="0" y="0.5" z="0" />
+					<controlpoint x="2" y="0.3" z="0" />
+				</patch>
+				
+				<patch order="2" partsU="10" partsV="10" compute="fill">
+					<controlpoint x="-2" y="0.3" z="0" />
+					<controlpoint x="0" y="0.5" z="0" />
+					<controlpoint x="2" y="0.3" z="0" />
+					
+					<controlpoint x="-2" y="0" z="0" />
+					<controlpoint x="0" y="0" z="-1" />
+					<controlpoint x="2" y="0" z="0" />
+					
+					<controlpoint x="-2" y="-0.3" z="0" />
+					<controlpoint x="0" y="-0.5" z="0" />
+					<controlpoint x="2" y="-0.3" z="0" />
+				</patch>
+			</primitives>
+		</node>
+		
+		<node id="radar_antena_pole" >
+			<transforms>
+				<transform type="translate" to="0 4 0" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<appearanceref id="app_metal_dark" />
+			
+			<primitives>
+				<cylinder base="0.06" top="0.02" height="3" slices="16" stacks="4" />
+			</primitives>
+
 		</node>
 		
 		<!-- BOX -->

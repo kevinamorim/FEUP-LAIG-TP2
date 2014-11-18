@@ -14,19 +14,12 @@ public:
 	virtual void bind();
 	virtual void unbind();
 
-	//void setTime(float time);
-
 protected:
 	Texture* baseTexture;
 	int baseTextureLoc;
 
-	//int wind;
-	//int windLoc;
-
-	//float deltaTime;
-	//int deltaTimeLoc;
-
-	//float startTime;
+	Texture* heightMap;
+	int heightMapLoc;
 };
 
 class Sand : public Plane {
@@ -36,8 +29,6 @@ public:
 	string Type();
 	void draw();
 	void update(unsigned long t);
-
-	//void setWind(int wind);
 
 protected:
 	SandShader* shader;

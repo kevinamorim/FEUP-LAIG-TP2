@@ -30,15 +30,8 @@ void Sand::draw()
 
 void Sand::update(unsigned long t)
 {
-	//float time_s = t * 0.001; // <-- seconds
-
-	//this->shader->setTime(time_s);
+	//
 }
-
-//void Sand::setWind(int wind)
-//{
-//	this->shader->wind = wind;
-//}
 
 // =======================
 //    Sand Shader
@@ -46,6 +39,7 @@ void Sand::update(unsigned long t)
 SandShader::SandShader(Texture* tex)
 {
 	this->baseTexture = tex;
+	this->heightMap = new Texture("sand_height_map","textures/sand_height_map.png", 1, 1); 
 
 	init("data/sandShader.vert", "data/sandShader.frag");
 
@@ -53,12 +47,12 @@ SandShader::SandShader(Texture* tex)
 
 	// get the uniform location for the sampler
 	baseTextureLoc = glGetUniformLocation(id(), "baseTexture");
-
 	// set the texture id for that sampler to match the GL_TEXTUREn that you 
 	// will use later e.g. if using GL_TEXTURE0, set the uniform to 0
 	glUniform1i(baseTextureLoc, 0);
 
-	CGFshader::unbind();
+	heightMapLoc = glGetUniformLocation(id(), "heightMap");
+	glUniform1i(heightMapLoc, 1);
 }
 
 void SandShader::bind()
@@ -66,8 +60,10 @@ void SandShader::bind()
 	CGFshader::bind();
 
 	// make sure the correct texture unit is active
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
+	heightMap->apply();
 
+	glActiveTexture(GL_TEXTURE0);
 	// apply/activate the texture you want, so that it is bound to GL_TEXTURE0
 	baseTexture->apply();
 }
@@ -76,15 +72,3 @@ void SandShader::unbind()
 {
 	CGFshader::unbind();
 }
-
-//void SandShader::setTime(float time)
-//{
-//	if(this->startTime == 0)
-//	{
-//		this->startTime = time;
-//	}
-//	else
-//	{
-//		this->deltaTime = time - startTime;
-//	}
-//}

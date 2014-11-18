@@ -3,8 +3,8 @@
 Vehicle::Vehicle()
 {
 	// Animation
-	//this->createAnimation();
-	this->hasAnimation = false;
+	this->createAnimation();
+	//this->hasAnimation = false;
 
 	// Object
 	this->obj = vector<Primitive *>();
@@ -23,14 +23,14 @@ void Vehicle::createAnimation()
 	// Animations
 	vector<Point3d *> points = vector<Point3d *>();
 	points.push_back(new Point3d(0,0,0));
-	points.push_back(new Point3d(1,0,0));
-	points.push_back(new Point3d(2,0,1));
-	points.push_back(new Point3d(2,0,2));
+	points.push_back(new Point3d(20,-1,0));
+	points.push_back(new Point3d(30,-1,15));
+	points.push_back(new Point3d(30,0,30));
 
 	ComposedAnimation* comp = new ComposedAnimation("composed");
 
-	comp->addAnimation(new LinearAnimation("anim_1", 5, points));
-	comp->addAnimation(new CircularAnimation("circ", 5, new Point3d(0,0,2), 2, 0, -270));
+	comp->addAnimation(new LinearAnimation("anim_1", 10, points));
+	comp->addAnimation(new CircularAnimation("circ", 5, new Point3d(15, 0, 15), 20, -45, -180));
 
 	this->setAnimation(comp);
 	this->hasAnimation = true;
