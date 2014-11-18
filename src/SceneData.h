@@ -87,6 +87,7 @@ public:
 	void setAnimation(Animation* anim);
 
 	void setFlagWind(float wind);
+	void resetAnimation();
 
 	// ==============================
 	//	GET
@@ -144,6 +145,7 @@ public:
 	void Update(unsigned long t);	// for animations update
 
 	void setFlagWind(float wind);
+	void resetAnimations();
 };
 
 /*

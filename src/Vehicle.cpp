@@ -352,3 +352,11 @@ void Vehicle::setAnimation(Animation * animation)
 {
 	this->animation = animation;
 }
+
+void Vehicle::resetAnimation()
+{
+	if(hasAnimation)
+	{
+		animation->reset();
+	}
+}

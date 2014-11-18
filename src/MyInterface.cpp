@@ -31,6 +31,10 @@ void MyInterface::initGUI()
 	panelDL = addPanel("Display Lists");
 	createDLMenu();
 	addColumn();
+
+	panelAnimations = addPanel("Animations");
+	createAnimationsMenu();
+	addColumn();
 }
 
 void MyInterface::processGUI(GLUI_Control *ctrl)
@@ -56,6 +60,10 @@ void MyInterface::processGUI(GLUI_Control *ctrl)
 		else if(id == windSpinner1->get_id())
 		{
 			((MainScene *) scene)->toggleWind(wind);
+		}
+		else if(id == resetAnimations->get_id())
+		{
+			((MainScene *) scene)->toggleAnimationsReset();
 		}
 	}
 
@@ -106,5 +114,11 @@ void MyInterface::createDLMenu()
 	useDL = 0;
 
 	checkDL = addCheckboxToPanel(panelDL, "Use", &useDL, currentID);
+	currentID++;
+}
+
+void MyInterface::createAnimationsMenu()
+{
+	resetAnimations = addButtonToPanel(panelAnimations, "Reset", currentID);
 	currentID++;
 }

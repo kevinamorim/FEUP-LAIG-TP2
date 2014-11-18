@@ -16,6 +16,7 @@ public:
 	void createDrawingMenu();
 	void createFlagsMenu();
 	void createDLMenu();
+	void createAnimationsMenu();
 
 private:
 
@@ -29,6 +30,9 @@ private:
 
 	GLUI_Panel * panelDL;
 	GLUI_Checkbox * checkDL;
+
+	GLUI_Panel * panelAnimations;
+	GLUI_Button * resetAnimations;
 
 	int currentID;
 

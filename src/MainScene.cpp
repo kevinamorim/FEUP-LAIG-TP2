@@ -231,6 +231,11 @@ void MainScene::toggleWind(int wind)
 	this->sceneData->getSceneGraph()->setFlagWind(wind);
 }
 
+void MainScene::toggleAnimationsReset()
+{
+	sceneData->getSceneGraph()->resetAnimations();
+}
+
 // **************************************************************
 int MainScene::getNumberOfLights()
 {

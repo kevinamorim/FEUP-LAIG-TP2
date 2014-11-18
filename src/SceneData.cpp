@@ -295,6 +295,15 @@ void SceneGraph::setFlagWind(float wind)
 	}
 }
 
+void SceneGraph::resetAnimations()
+{
+	int size = nodes.size();
+	for(int i = 0; i < size; i++)
+	{
+		nodes.at(i)->resetAnimation();
+	}
+}
+
 // ***********************************************************
 // ***********************************************************
 // =======================
@@ -462,6 +471,27 @@ void SceneNode::Display()
 	}
 }
 
+void SceneNode::drawPrimitives()
+{
+	for(unsigned int i = 0; i < primitives.size(); i++) 
+	{
+		if(!appearancesStack->empty())
+		{
+			if(appearancesStack->top())
+			{
+				if(appearancesStack->top()->hasTexture())
+				{
+					Texture* tex = appearancesStack->top()->getTexture();
+
+					primitives.at(i)->setTexture(tex);
+				}
+			}
+		}
+
+		primitives.at(i)->draw();
+	}
+}
+
 //TP2
 void SceneNode::Update(unsigned long t)
 {
@@ -486,13 +516,11 @@ void SceneNode::Update(unsigned long t)
 	}
 }
 
-//TP2
 bool SceneNode::hasDisplayList()
 {
 	return (displayListIndex != 0);
 }
 
-//TP2
 void SceneNode::createDisplayTree()
 {
 	for(unsigned int i = 0; i < this->descendants.size(); i++)
@@ -506,7 +534,6 @@ void SceneNode::createDisplayTree()
 	}
 }
 
-//TP2
 void SceneNode::createDisplayList()
 {
 	bool firstTime = false;
@@ -553,7 +580,6 @@ void SceneNode::createDisplayList()
 	}
 }
 
-//TP2
 void SceneNode::setFlagWind(float wind)
 {
 	int size = this->primitives.size();
@@ -573,23 +599,23 @@ void SceneNode::setFlagWind(float wind)
 	}
 }
 
-void SceneNode::drawPrimitives()
+void SceneNode::resetAnimation()
 {
-	for(unsigned int i = 0; i < primitives.size(); i++) 
+	if(hasAnimation)
 	{
-		if(!appearancesStack->empty())
+		this->animation->reset();
+	}
+
+	int size = this->primitives.size();
+
+	for(int i = 0; i < size; i++)
+	{
+		Primitive *p = primitives.at(i);
+
+		if(p->Type() == "Vehicle")
 		{
-			if(appearancesStack->top())
-			{
-				if(appearancesStack->top()->hasTexture())
-				{
-					Texture* tex = appearancesStack->top()->getTexture();
-
-					primitives.at(i)->setTexture(tex);
-				}
-			}
+			((Vehicle *)primitives.at(i))->resetAnimation();
 		}
-
-		primitives.at(i)->draw();
 	}
 }
+

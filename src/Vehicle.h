@@ -15,6 +15,7 @@ public:
 	void update(unsigned long t);
 
 	void setAnimation(Animation * animation);
+	void resetAnimation();
 
 	// create animation
 	void createAnimation();

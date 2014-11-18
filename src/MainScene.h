@@ -25,6 +25,7 @@ public:
 	void toggleDrawingMode(int mode);
 	void toggleUseDL(int value);
 	void toggleWind(int wind);
+	void toggleAnimationsReset();
 
 	// Get Methods
 	int getNumberOfLights();
