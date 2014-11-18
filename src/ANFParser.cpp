@@ -1811,9 +1811,24 @@ int ANFParser::parseNodePrimitives(TiXmlElement* nodeElement, SceneNode* node)
 						primErrors++;
 					}
 				}
+				// extra
+				else if (strType == "water")
+				{
+					if(parseWater(primitive, node) != OK)
+					{
+						primErrors++;
+					}
+				}
+				else if (strType == "sand")
+				{
+					if(parseSand(primitive, node) != OK)
+					{
+						primErrors++;
+					}
+				}
 				else
 				{
-					printMsg(ERROR, "Invalid primitive - must be in {triangle, rectangle, cylinder, torus, sphere, patch, plane, vehicle, flag}");
+					printMsg(ERROR, "Invalid primitive - must be in {triangle, rectangle, cylinder, torus, sphere, patch, plane, vehicle, flag, water, sand}");
 					localErrors++;
 				}
 
@@ -2182,11 +2197,65 @@ int ANFParser::parseFlag(TiXmlElement* primitive, SceneNode* node)
 	}
 }
 
-int ANFParser::parseVehicle(TiXmlElement* primitiveElement, SceneNode* node)
+int ANFParser::parseVehicle(TiXmlElement* primitive, SceneNode* node)
 {
 	node->addPrimitive(new Vehicle());
 
 	return OK;
+}
+// extra
+int ANFParser::parseWater(TiXmlElement* primitive, SceneNode* node)
+{
+	out << "                > Water" << endl;
+
+	int localErrors = 0;
+
+	string strTexture;
+
+	if(readString(&primitive, &strTexture, "texture", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(!localErrors)
+	{
+		Texture *tex = new Texture("Water_tex", strTexture, 1, 1);
+
+		node->addPrimitive(new Water(tex));
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
+}
+
+int ANFParser::parseSand(TiXmlElement* primitive, SceneNode* node)
+{
+	out << "                > Sand" << endl;
+
+	int localErrors = 0;
+
+	string strTexture;
+
+	if(readString(&primitive, &strTexture, "texture", ERROR) != OK)
+	{
+		localErrors++;
+	}
+
+	if(!localErrors)
+	{
+		Texture *tex = new Texture("Sand_tex", strTexture, 1, 1);
+
+		node->addPrimitive(new Sand(tex));
+		return OK;
+	}
+	else
+	{
+		errors += localErrors;
+		return ERROR;
+	}
 }
 
 /* Animation */

@@ -83,10 +83,12 @@
     <ClCompile Include="src\Patch.cpp" />
     <ClCompile Include="src\Point.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
+    <ClCompile Include="src\Sand.cpp" />
     <ClCompile Include="src\SceneData.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Transforms.cpp" />
     <ClCompile Include="src\Vehicle.cpp" />
+    <ClCompile Include="src\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ANFParser.h" />
@@ -101,10 +103,12 @@
     <ClInclude Include="src\Patch.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Primitives.h" />
+    <ClInclude Include="src\Sand.h" />
     <ClInclude Include="src\SceneData.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Transforms.h" />
     <ClInclude Include="src\Vehicle.h" />
+    <ClInclude Include="src\Water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

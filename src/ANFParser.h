@@ -11,6 +11,8 @@
 #include "Patch.h"
 #include "Transforms.h"
 #include "Flag.h"
+#include "Water.h"
+#include "Sand.h"
 #include "Vehicle.h"
 
 #include <ctime>
@@ -152,6 +154,9 @@ private:
 	int parsePatch(TiXmlElement* primitiveElement, SceneNode* node);
 	int parseFlag(TiXmlElement* primitiveElement, SceneNode* node);
 	int parseVehicle(TiXmlElement* primitiveElement, SceneNode* node);
+	// extra
+	int parseWater(TiXmlElement* primitiveElement, SceneNode* node);
+	int parseSand(TiXmlElement* primitiveElement, SceneNode* node);
 
 	//Animations
 	int parserNodeAnimation(TiXmlElement* nodeElement, SceneNode* node);

@@ -9,7 +9,11 @@
 #include "Light.h"
 #include "Appearance.h"
 #include "Animation.h"
+// TP2
 #include "Flag.h"
+#include "Vehicle.h"
+#include "Water.h"
+#include "Sand.h"
 
 #include <vector>
 #include <string>

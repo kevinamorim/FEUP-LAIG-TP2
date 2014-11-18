@@ -18,26 +18,9 @@ void MainScene::init()
 	initGlobals();
 	initCameras();
 	initLights();
-	
-	anim = new ComposedAnimation("mixed");
-
-	vector<Point3d *> controls = vector<Point3d *>();
-	controls.push_back(new Point3d(0, 0, 0));
-	controls.push_back(new Point3d(2, 0, 0));
-	controls.push_back(new Point3d(2, 0, 2));
-
-	Animation * linear = new LinearAnimation("linear", 4, controls);
-	Animation * circular = new CircularAnimation("circular", 4, new Point3d(0,0,2), 2, 0, -270);
-
-	anim->addAnimation(linear);
-	anim->addAnimation(circular);
 
 	unsigned long updatePeriod = 50;
 	setUpdatePeriod(updatePeriod);
-
-	Texture* tex = new Texture("flag","textures/bricks.png", 1.0, 1.0);
-
-	flag = new Flag(tex);
 
 	display();
 }
@@ -78,19 +61,11 @@ void MainScene::display()
 
 	updateLights();
 
-	//flag->draw();
-
-	//glPushMatrix();
-
-	//anim->draw();
-
 	long double time_0 = GetTickCount();
 
 	sceneData->getSceneGraph()->Display();
 
 	long double time_1 = GetTickCount();
-
-	//glPopMatrix();
 
 	//cout << "Time between: " << time_1 - time_0 << endl;
 
@@ -107,10 +82,6 @@ void MainScene::display()
 void MainScene::update(unsigned long t)
 {
 	this->sceneData->getSceneGraph()->Update(t);
-
-	//anim->update(t);
-
-	//flag->update(t);
 }
 
 void MainScene::setDefaults()

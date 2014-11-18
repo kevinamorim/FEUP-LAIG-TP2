@@ -471,8 +471,10 @@ void SceneNode::Update(unsigned long t)
 	}
 
 	int size = this->primitives.size();
+	//cout << "size: " << size << endl;
 	for(int x = 0; x < size; x++)
 	{
+		//cout << "t: " << t << endl;
 		primitives[x]->update(t);
 	}
 
@@ -558,9 +560,15 @@ void SceneNode::setFlagWind(float wind)
 
 	for(int i = 0; i < size; i++)
 	{
-		if(primitives.at(i)->Type() == "Flag")
+		Primitive *p = primitives.at(i);
+
+		if(p->Type() == "Flag")
 		{
 			((Flag *)primitives.at(i))->setWind(wind);
+		}
+		else if(p->Type() == "Water")
+		{
+			((Water *)primitives.at(i))->setWind(wind);
 		}
 	}
 }

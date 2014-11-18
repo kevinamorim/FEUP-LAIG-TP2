@@ -20,18 +20,14 @@
 		   <component type="diffuse" value="0.8 0.3 0.4 1" />
 		   <component type="specular" value="0.2 0.2 0.2 1" />
 		</light>
-		
-		<light id="light_2" type="omni" enabled="true" marker="true" pos="0 -3 -4" >
-		   <component type="ambient" value="0.2 0.2 0.2 0.8" />
-		   <component type="diffuse" value="0.4 0.4 0.4 0.8" />
-		   <component type="specular" value="0.4 0.4 0.4 0.8" />
-		</light>
     </lights>
 	
 	<!-- Textures -->
 	<textures>
 		<texture id="tex_checkers" file="textures/checkers.png" texlength_s="10" texlength_t="10"/>
 		<texture id="tex_sub_metal" file="textures/rubik.png" texlength_s="2" texlength_t="1"/>
+		<texture id="tex_water" file="textures/water.png" texlength_s="1" texlength_t="1"/>
+		<texture id="tex_wood_planks" file="textures/wood_planks_tiled.png" texlength_s="1" texlength_t="1"/>
 	</textures>
 	
 	<!-- Appearances -->
@@ -47,6 +43,12 @@
 			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
 			<component type="specular" value="1.0 1.0 1.0 1.0"/>
 		</appearance>
+		
+		<appearance id="app_windmill" shininess="0.8" textureref="tex_wood_planks">
+			<component type="ambient" value="0.8 0.8 0.8 1.0"/>
+			<component type="diffuse" value="0.4 0.4 0.4 1.0"/>
+			<component type="specular" value="1.0 1.0 1.0 1.0"/>
+		</appearance>
 	</appearances>
 	
 	<!-- Animations -->
@@ -58,9 +60,8 @@
 			<controlpoint x="0" y="0" z="0" />
 		</animation>
 		
-		<animation id="circular_anim" span="5" type="circular" center="5 4 0" radius="2" startang="0" rotang="360"/>
+		<animation id="circular_anim" span="5" type="circular" center="0 0 0" radius="0" startang="0" rotang="360"/>
 	</animations>
-	
 	
 	<!----------->
 	<!-- Graph -->
@@ -77,9 +78,11 @@
 			</primitives>
 			
 			<descendants>
-				<!--<noderef id="animated_platform" />-->
+				<noderef id="sea" />
+				<noderef id="beach" />
 				<noderef id="flag" />
 				<noderef id="submarine" />
+				<noderef id="windmill" />
 			</descendants>
 		</node>
 		
@@ -146,7 +149,236 @@
 			<descendants>
 			</descendants>
 		</node>
-				
+		
+		<!-- SEA -->
+		<node id="sea">
+			<transforms>
+				<transform type="translate" to="10 0 0" />
+				<transform type="scale" factor="40 1 40" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<water texture="textures/water.png" />
+			</primitives>
+			
+			<descendants>
+				<noderef id="sea_2" />
+			</descendants>
+		</node>
+		<node id="sea_2">
+			<transforms>
+				<transform type="translate" to="0 -0.1 0" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<plane parts="10"/>
+			</primitives>
+			
+			<descendants>
+			</descendants>
+		</node>
+		
+		<!-- BEACH -->
+		<node id="beach">
+			<transforms>
+				<transform type="translate" to="10 0.4 14" />	
+				<transform type="rotate" axis="x" angle="-5" />
+				<transform type="scale" factor="40 1 12" />
+			</transforms>
+			
+			<appearanceref id="inherit" />
+			
+			<primitives>
+				<sand texture="textures/sand.png" />
+			</primitives>
+			
+			<descendants>
+			</descendants>
+		</node>
+		
+		<!-- WINDMILL -->
+		<node id="windmill" displaylist="false">
+			<transforms>
+				<transform type="translate" to="10 1 10" />
+			</transforms>
+
+			<appearanceref id="app_windmill" />
+
+			<descendants>
+				<noderef id="windmill_legs" />
+				<noderef id="windmill_wheel" />
+			</descendants>
+		</node>
+		
+		<node id="windmill_legs" displaylist="true">
+			<transforms>
+				<transform type="translate" to="0 1 0" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="windmill_legs_1" />
+				<noderef id="windmill_legs_2" />
+				<noderef id="windmill_legs_3" />
+			</descendants>
+		</node>
+		
+		<node id="windmill_legs_1" >
+			<transforms>
+				<transform type="translate" to="1.1 0 0" />
+				<transform type="rotate" axis="z" angle="20" />
+				<transform type="scale" factor="0.2 6 0.2" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="windmill_legs_2" >
+			<transforms>
+				<transform type="translate" to="-1.1 0 0" />
+				<transform type="rotate" axis="z" angle="-20" />
+				<transform type="scale" factor="0.2 6 0.2" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="windmill_legs_3" >
+			<transforms>
+				<transform type="translate" to="0 0 1.1" />
+				<transform type="rotate" axis="x" angle="-20" />
+				<transform type="scale" factor="0.2 6 0.2" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<node id="windmill_wheel">
+			<transforms>
+				<transform type="translate" to="0 4 0" />
+			</transforms>
+			
+			<animationref id="circular_anim" />
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="box" />
+			</descendants>
+		</node>
+		
+		<!-- BOX -->
+		 <node id="box" displaylist="true">
+			<transforms>
+				<transform type="translate" to="0 0 0" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<descendants>
+				<noderef id="boxTop" />
+				<noderef id="boxBottom" />
+				<noderef id="boxFront" />
+				<noderef id="boxBack" />
+				<noderef id="boxRight" />
+				<noderef id="boxLeft" />
+			</descendants>
+		</node>
+
+		<node id="boxTop">
+			<transforms>
+				<transform type="translate" to="0 0.5 0" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+		</node>
+
+		<node id="boxBottom">
+			<transforms>
+				<transform type="translate" to="0 -0.5 0" />
+				<transform type="rotate" axis="x" angle="90" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+		</node>
+
+		<node id="boxFront">
+			<transforms>
+				<transform type="translate" to="0 0 0.5" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+		</node>
+
+		<node id="boxBack">
+			<transforms>
+				<transform type="translate" to="0 0 -0.5" />
+				<transform type="rotate" axis="x" angle="180" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+		</node>
+
+		<node id="boxRight">
+			<transforms>
+				<transform type="translate" to="0.5 0 0" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+		</node>
+
+		<node id="boxLeft">
+			<transforms>
+				<transform type="translate" to="-0.5 0 0" />
+				<transform type="rotate" axis="y" angle="-90" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+		</node>
+ 
 	</graph>
 	
 </anf>

@@ -5,8 +5,6 @@
 #include "CGFscene.h"
 #include "SceneData.h"
 
-#include "Flag.h"
-
 #include <vector>
 
 using namespace std;
@@ -62,10 +60,6 @@ private:
 	
 	// The following are used only for ease of access and reading (since all of this data is in the sceneData instance)
 	int numLights;
-
-	ComposedAnimation* anim;
-
-	Flag* flag;
 };
 
 #endif
